@@ -3,7 +3,7 @@
   "theme": "mint",
   "name": "Open Response API",
   "colors": {
-    "primary": "#00CCFF",
+    "primary": "#2A2A2A",
     "light": "#FFFFFF",
     "dark": "#000000"
   },
