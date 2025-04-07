@@ -25,6 +25,20 @@ This guide will help you get up and running with OpenResponses API quickly. We'l
     Run with built-in tools like web search and GitHub integration
   </Card>
   <Card
+    title="Custom Tool Configuration"
+    icon="gear"
+    href="#custom-tool-configuration"
+  >
+    Configure your own custom tools
+  </Card>
+  <Card
+    title="OpenAI Agent SDK Integration"
+    icon="robot"
+    href="#openai-agent-sdk-integration"
+  >
+    Run examples with OpenAI Agent SDK
+  </Card>
+  <Card
     title="Persistent Storage"
     icon="database"
     href="#setup-with-persistent-storage"
@@ -55,13 +69,18 @@ The simplest way to get started is using Docker:
 docker run -p 8080:8080 masaicai/open-responses:latest
 ```
 
-Alternatively, you can use Docker Compose:
+### Clone the Repository
+
+If you prefer using Docker Compose or want to explore the codebase, begin by cloning the repository:
 
 ```bash
-# Clone the repository
 git clone https://github.com/masaic-ai-platform/open-responses.git
 cd open-responses
+```
 
+### Run with Docker Compose
+
+```bash
 # Start with Docker Compose
 docker-compose up open-responses
 ```
@@ -88,6 +107,7 @@ Once OpenResponses is running, you can start making API calls. Here are some exa
         ]
     }'
     ```
+    Get your [OpenAI key here](https://platform.openai.com/settings)
   </Tab>
   <Tab title="Claude">
     ```bash
@@ -106,6 +126,7 @@ Once OpenResponses is running, you can start making API calls. Here are some exa
         ]
     }'
     ```
+    Get your [Anthropic key here](https://console.anthropic.com/dashboard)
   </Tab>
   <Tab title="Groq">
     ```bash
@@ -123,6 +144,7 @@ Once OpenResponses is running, you can start making API calls. Here are some exa
         ]
     }'
     ```
+    Open your [Groq key page](https://console.groq.com/keys) to create a key if you haven't done so already.
   </Tab>
 </Tabs>
 
@@ -161,41 +183,9 @@ BRAVE_API_KEY=your_brave_key_value
   </Tab>
 </Tabs>
 
-### Custom Tool Configuration
-
-If you want to add your own custom tools, you'll need to create or modify the `mcp-servers-config.json` file with your own tool definitions. Here's how to configure custom tools:
-
-1. **Create a Custom Configuration File**:
-   Create a file named `mcp-servers-config.json`.
-
-2. MCP_CONFIG_FILE_PATH=path_to_mcp_config_file
-
-2. **Mount the Configuration File**:
-   Update your docker-compose command to mount your custom configuration:
-
-   ```bash
-   docker-compose --profile mcp up -d -e MCP_SERVER_CONFIG_FILE_PATH=/path/to/your/mcp-servers-config.json
-   ```
-
-4. **Test Your Custom Tool**:
-   Once configured, you can use your custom tool in API calls:
-
-   ```json
-   {
-     "model": "gpt-4o",
-     "tools": [
-       {
-         "type": "your_custom_tool_name"
-       }
-     ],
-     "input": [
-       {
-         "role": "user",
-         "content": "Use the custom tool to..."
-       }
-     ]
-   }
-   ```
+<Note>
+Stop previously running docker-compose (if any) before running this command.
+</Note>
 
 ### Example Tool-enabled API Calls
 
@@ -245,51 +235,233 @@ If you want to add your own custom tools, you'll need to create or modify the `m
     }'
     ```
   </Tab>
+  <Tab title="Claude Think">
+    ```bash
+    curl --location 'http://localhost:8080/v1/responses' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer ANTHROPIC_API_KEY' \
+    --header 'x-model-provider: claude' \
+    --data '{
+        "model": "claude-3-7-sonnet-20250219",
+        "stream": false,
+        "tools": [
+           {"type": "think"}
+        ],
+        "input": [
+            {
+                "role": "system",
+                "content": "You are an experienced system design architect. Use the think tool to cross confirm thoughts before preparing the final answer."
+            },
+            {
+                "role": "user",
+                "content": "Give me the guidelines on designing a multi-agent distributed system with the following constraints in mind: 1. compute costs minimal, 2. the system should be horizontally scalable, 3. the behavior should be deterministic."
+            }
+        ]
+    }'
+    ```
+  </Tab>
 </Tabs>
 
-## Python SDK Integration
+## Custom Tool Configuration
 
-You can also use OpenResponses with the OpenAI Python SDK:
+If you want to add your own custom tools, you'll need to create or modify the `mcp-servers-config.json` file with your own tool definitions.
 
-```python
-from openai import OpenAI
-import os
+### Update the .env File
 
-# Initialize client
-openai_client = OpenAI(
-    base_url="http://localhost:8080/v1", 
-    api_key=os.getenv("OPENAI_API_KEY"), 
-    default_headers={'x-model-provider': 'openai'}
-)
+Add or update the following property in your `.env` file:
 
-# Create a response
-response = openai_client.responses.create(
-    model="gpt-4o-mini",
-    input="Write a poem on Masaic"
-)
-
-print(response.response)
 ```
+MCP_CONFIG_FILE_PATH=path_to_mcp_config_file
+```
+
+### Run the Service with Custom MCP Configuration
+
+<Tabs>
+  <Tab title="macOS">
+    ```bash
+    docker-compose --profile mcp up open-responses-custom-mcp
+    ```
+  </Tab>
+  <Tab title="Windows">
+    ```bash
+    docker-compose --profile mcp up open-responses-custom-mcp-windows
+    ```
+  </Tab>
+</Tabs>
+
+<Note>
+Stop previously running docker-compose (if any) before running this command.
+</Note>
+
+## OpenAI Agent SDK Integration
+
+You can run examples provided by the openai-agent-python SDK using your locally deployed open-responses API.
+
+### Running Example Scripts with OpenAI Agent SDK
+
+1. Start the service using:
+
+```bash
+docker-compose up open-responses-with-openai
+```
+
+<Note>
+Stop previously running docker-compose (if any) before running this command.
+</Note>
+
+2. Clone the forked repository:
+
+```bash
+git clone https://github.com/masaic-ai-platform/openai-agents-python.git
+cd openai-agents-python
+```
+
+3. Configure the SDK in your Python script:
+
+   - Define the environment variable `OPENAI_API_KEY` with your OpenAI API key
+   - Define the environment variable `OPEN_RESPONSES_URL` to specify the URL for your local open-responses API
+   - If not set, it will default to "http://localhost:8080/v1"
+
+4. Run the examples:
+   - Follow [Get started](https://github.com/masaic-ai-platform/openai-agents-python/tree/main?tab=readme-ov-file#get-started) instructions to install the SDK
+   - All examples should work as expected except for the [research_bot example](https://github.com/masaic-ai-platform/openai-agents-python/tree/main/examples/research_bot) which uses OpenAI's proprietary WebSearchTool
+
+### Running Agent Examples with Built-In Tools
+
+Before running any example, ensure you are in the openai-agents-python folder.
+
+1. Run the service with MCP tools:
+
+<Tabs>
+  <Tab title="macOS">
+    ```bash
+    docker-compose --profile mcp up open-responses-mcp
+    ```
+  </Tab>
+  <Tab title="Windows">
+    ```bash
+    docker-compose --profile mcp up open-responses-mcp-windows
+    ```
+  </Tab>
+</Tabs>
+
+<Note>
+  If you require SDK traces, ensure that you set the environment variable OPENAI_API_KEY.
+  Otherwise, you may see a warning "OPENAI_API_KEY is not set, skipping trace export". 
+  To disable tracing explicitly, add the statement:
+  ```python
+  set_tracing_disabled(disabled=False)
+  ```
+</Note>
+
+2. Set up your environment variables:
+   - `GROQ_API_KEY`
+   - `OPEN_RESPONSES_URL`
+   - `CLAUDE_API_KEY` (for specific examples)
+
+3. Run the example scripts:
+
+```bash
+# Run agent_hands_off.py
+python -m examples.open_responses.agent_hands_off
+```
+
+```bash
+# Run brave_search_agent_with_groq.py
+python -m examples.open_responses.brave_search_agent_with_groq
+```
+
+```bash
+# Run brave_search_agent_with_groq_stream (requires CLAUDE_API_KEY)
+python -m examples.open_responses.brave_search_agent_with_groq_stream
+```
+
+```bash
+# Run think_tool_agent_with_claude.py (requires CLAUDE_API_KEY)
+python -m examples.open_responses.think_tool_agent_with_claude
+```
+
+You can review the example scripts under the [open_responses examples](https://github.com/masaic-ai-platform/openai-agents-python/tree/main/examples/open_responses) repository.
 
 ## Setup with Persistent Storage
 
 For production environments, you can enable persistent storage with MongoDB:
 
+### Prerequisites
+- Ensure port 8080 is available for the Open Responses service
+- Ensure port 27017 is available for MongoDB
+- Docker daemon must be running on your local machine
+
+### Run with MongoDB
+
 ```bash
 # Start MongoDB and OpenResponses
-docker-compose --profile mongodb up -d
+docker-compose --profile mongodb up
 ```
+
+This will launch both the MongoDB database and the Open Responses service configured to use MongoDB as its storage backend.
+
+### Testing Persistent Storage
+
+To test that responses are being stored, make an API call with the `store` parameter set to `true`:
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer OPENAI_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "store": true,
+    "input": [
+        {
+            "role": "user",
+            "content": "Write a short poem about persistence"
+        }
+    ]
+}'
+```
+
+The response will include a `response_id` that you can use to reference this conversation in future requests.
+
+### Following Up on a Stored Conversation
+
+To continue a stored conversation, use the `previous_response_id` from your earlier response:
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer OPENAI_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "store": true,
+    "previous_response_id": "resp_abc123",
+    "input": [
+        {
+            "role": "user",
+            "content": "Make it longer and add a rhyme scheme"
+        }
+    ]
+}'
+```
+
+For more details on response storage options and configuration, refer to the [Response Store Configuration](/openresponses/store) documentation.
 
 ## Setup with Observability
 
-Setting up the observability stack requires a more comprehensive configuration. The simple command below does not fully enable the observability stack:
+OpenResponses provides comprehensive observability features including metrics collection, distributed tracing, and pre-configured dashboards.
 
 ```bash
-# This alone is not sufficient for a production observability setup
+# Start the observability stack
 docker-compose --profile observability up -d
 ```
 
-OpenResponses provides comprehensive observability features including metrics collection, distributed tracing, and pre-configured dashboards. The proper setup requires configuring several components:
+<Note>
+This alone is not sufficient for a production observability setup
+</Note>
+
+The proper setup requires configuring several components:
 
 - OpenTelemetry collector for data collection
 - Prometheus for metrics storage
