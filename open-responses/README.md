@@ -1,10 +1,18 @@
+---
+
+title: "Page Title"
+
+sidebarTitle: "Sidebar title (optional - if different from page title)"
+
+description: "Subtitle (optional)"
+
+---
+
 # OpenResponses API
 
 ![OpenResponses - All-in-One AI Toolkit](/open-responses/assets/about.png)
 
 > **Unlock enterprise-grade AI capabilities through a single, powerful API — simplify development, accelerate deployment, and maintain complete data control**
-
-
 
 ## Overview
 
