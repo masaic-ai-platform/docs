@@ -1,5 +1,25 @@
 {
   "name": "Masaic AI Platform",
+  "favicon": "/favicon.svg",
+  "colors": {
+    "accent": "#6366f1",
+    "background": "#ffffff",
+    "text": "#111111"
+  },
+  "navigation": [
+    {
+      "title": "Introduction",
+      "url": "/intro"
+    },
+    {
+      "title": "Guide",
+      "url": "/guide"
+    },
+    {
+      "title": "API",
+      "url": "/api"
+    }
+  ],
   "docs": {
     "root": "/open-responses"
   }
