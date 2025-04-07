@@ -2,22 +2,26 @@
   "name": "Masaic AI Platform",
   "favicon": "/favicon.svg",
   "colors": {
-    "accent": "#6366f1",
-    "background": "#ffffff",
-    "text": "#111111"
+    "primary": "#6366f1",
+    "light": "#a5b4fc",
+    "dark": "#4f46e5",
+    "background": {
+      "light": "#ffffff",
+      "dark": "#1e1e1e"
+    }
   },
   "navigation": [
     {
-      "title": "Introduction",
-      "url": "/intro"
+      "group": "Introduction",
+      "pages": ["/intro"]
     },
     {
-      "title": "Guide",
-      "url": "/guide"
+      "group": "Guide",
+      "pages": ["/guide"]
     },
     {
-      "title": "API",
-      "url": "/api"
+      "group": "API",
+      "pages": ["/api"]
     }
   ],
   "docs": {
