@@ -27,7 +27,6 @@
               "openresponses/compatibility",
               "openresponses/observability",
               "openresponses/storage",
-              "openresponses/deployment",
               "openresponses/runwithobs"
             ]
           }
