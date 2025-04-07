@@ -17,6 +17,7 @@ OpenResponses implements an OpenAI-compatible API interface, making it easy to i
 | `input.content`                     | `messages.content`                                | Content structure for messages                               |
 | `input.content.text`                | `messages.content.text`                           | Text content in message                                      |
 | `input.content.image_url`           | `messages.content.image_url`                      | Image URL for multimodal inputs                              |
+| `input.content.file_id`             | `messages.content.file_id`                        | File reference                                               |
 | `input.role`                        | `messages.role`                                   | User, assistant, or system role                              |
 | `model`                             | `model`                                           | Model identifier                                             |
 | `instructions`                      | `messages` (role: `system` or `developer`)        | Add as system/developer messages                             |
@@ -29,6 +30,10 @@ OpenResponses implements an OpenAI-compatible API interface, making it easy to i
 | `metadata`                          | `metadata`                                        | Custom metadata for the request                              |
 | `stream`                            | `stream`                                          | Enable streaming response                                    |
 | `store`                             | N/A (OpenResponses enhancement)                   | Persist conversation history                                 |
+| `reasoning.effort`                  | `reasoning_effort`                                | Controls reasoning depth                                     |
+| `text.format`                       | `response_format.type`                            | Specifies response format                                    |
+| `text.format.type`                  | `response_format.type`                            | Type of response format                                      |
+| `text.format.json_schema`           | `response_format.json_schema`                     | JSON schema for structured responses                         |
 
 ### Response Properties
 

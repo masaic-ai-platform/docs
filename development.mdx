@@ -3,65 +3,67 @@ title: 'Development'
 description: 'Learn how to develop with OpenResponses API'
 ---
 
-# Development Guide
+# Local Development
 
-This guide provides everything you need to know about contributing to OpenResponses or using it as part of your development workflow.
-
-## Setting Up the Development Environment
+Follow these instructions to set up the project locally for development:
 
 ### Prerequisites
 
-- Java JDK 21 or higher
-- Gradle (optional, as the project includes Gradle Wrapper)
-- Docker (for containerized development)
-- Git
+- Java JDK 21+
+- [Gradle](https://gradle.org/) (optional, as project includes Gradle Wrapper)
+- [Docker](https://www.docker.com/) (optional, for containerized setup)
 
-### Clone the Repository
+### Steps
+
+1. **Clone the repository**
 
 ```bash
 git clone https://github.com/masaic-ai-platform/open-responses.git
 cd open-responses
 ```
 
-### Build the Project
+1. **Build the project**
+
+Use the Gradle Wrapper included in the project:
 
 ```bash
-# Using Gradle Wrapper
 ./gradlew build
-
-# Or if you have Gradle installed
-gradle build
 ```
 
-### Run Locally
+1. **Configure Environment Variables**
+
+Create or update the `application.properties` file with necessary configuration under `src/main/resources`:
+
+```properties
+server.port: 8080
+```
+
+Set any additional configuration required by your project.
+
+1. **Run the server**
+
+To start the server in development mode:
 
 ```bash
 ./gradlew bootRun
 ```
 
-The service will be available at `http://localhost:8080`.
+### Docker Setup (Optional)
 
-## Project Structure
+Build and run the application using Docker:
 
-The OpenResponses project is organized as follows:
-
+```bash
+./gradlew build
+docker build -t openresponses .
+docker run -p 8080:8080 -d openresponses
 ```
-open-responses/
-  ├── src/                          # Source code
-  │   ├── main/
-  │   │   ├── kotlin/               # Kotlin source files
-  │   │   │   └── ai/masaic/openresponses/
-  │   │   │       ├── api/          # API controllers and models
-  │   │   │       ├── service/      # Business logic services
-  │   │   │       ├── config/       # Configuration classes
-  │   │   │       ├── store/        # Storage implementations
-  │   │   │       └── tools/        # Built-in tool implementations
-  │   │   └── resources/            # Application resources
-  │   └── test/                     # Test code
-  ├── gradle/                       # Gradle wrapper files
-  ├── docker/                       # Docker-related files
-  ├── docs/                         # Documentation
-  └── examples/                     # Example code and scripts
+
+### Testing
+
+Run the tests with:
+
+```bash
+./gradlew test
 ```
 
 ## Key Components
@@ -105,24 +107,6 @@ The main configuration files are:
 
 - `application.properties`: Default application configuration
 - `application-otel.properties`: OpenTelemetry configuration
-
-Key configuration properties include:
-
-```properties
-# Server configuration
-server.port=8080
-
-# Response store configuration
-open-responses.response-store.type=in-memory
-
-# MongoDB configuration (when using MongoDB)
-open-response.mongodb.uri=mongodb://localhost:27017
-open-response.mongodb.database=openresponses
-
-# Tool configuration
-masaic.max.tool.calls=10
-masaic.max.streaming.timeout=60000
-```
 
 ## API Testing
 

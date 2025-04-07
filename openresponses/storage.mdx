@@ -9,13 +9,13 @@ OpenResponses provides configurable storage mechanisms for AI responses and thei
 
 ## Key Benefits
 
-Unlike cloud-based AI services, OpenResponses storage offers:
+Unlike OpenAI's managed service, our Response Store implementation offers:
 
-1. **Complete Data Control**: Store all conversation data on your own infrastructure
-2. **Flexible Storage Options**: Choose between in-memory storage or MongoDB for persistence
-3. **Customizable Retention**: Define your own data retention policies
-4. **Integration Flexibility**: Easily integrate with your existing systems and data pipelines
-5. **Cost Management**: Optimize storage based on your specific usage patterns
+1. **Complete Data Control**: Store all your conversation data on your own infrastructure, ensuring data sovereignty and compliance with your organization's data policies.
+2. **Flexible Storage Options**: Choose between in-memory storage for development or MongoDB for persistent storage in production environments.
+3. **Customizable Retention**: Define your own data retention policies without being constrained by OpenAI's limits.
+4. **Integration Flexibility**: Easily integrate with your existing systems and data pipelines for analytics, auditing, or other business processes.
+5. **Cost Management**: Potentially reduce costs by optimizing storage and retrieval according to your specific usage patterns.
 
 ## Storage Options
 
@@ -48,8 +48,8 @@ Use the `store` parameter in your API requests to control whether responses are 
 }
 ```
 
-- When `store=true`, the response and its inputs are saved in the configured store
-- When `store=false` or omitted, no data is stored regardless of configuration
+- When `store=true`, the response and its inputs are saved in the configured store.
+- When `store=false` or omitted, no data is stored regardless of configuration.
 
 ## Configuration
 
@@ -65,19 +65,27 @@ open-responses.response-store.type=in-memory
 
 ### MongoDB Store
 
-For production environments, configure MongoDB storage:
+For production environments where persistence is required, the MongoDB store provides durable storage of response data.
+
+To enable the MongoDB store:
+
+1. Add the following properties to your configuration:
 
 ```properties
-# Enable MongoDB storage
 open-responses.response-store.type=mongodb
 open-response.mongodb.uri=mongodb://localhost:27017
 open-response.mongodb.database=openresponses
 ```
 
-You can also use environment variables:
+2. Ensure you have MongoDB installed and running, or provide the connection string to your MongoDB instance.
+
+You can also configure the response store using environment variables:
 
 ```bash
+# Set the response store type
 export OPEN_RESPONSES_RESPONSE_STORE_TYPE=mongodb
+
+# Configure MongoDB (when using mongodb store type)
 export OPEN_RESPONSES_MONGODB_URI=mongodb://localhost:27017
 export OPEN_RESPONSES_MONGODB_DATABASE=openresponses
 ```
@@ -130,48 +138,12 @@ curl http://localhost:8080/v1/responses \
 
 ## Python SDK Example
 
-Using the OpenAI Python SDK with persistent storage:
-
-```python
-from openai import OpenAI
-import os
-
-# Initialize client
-client = OpenAI(
-    base_url="http://localhost:8080/v1",
-    api_key=os.getenv("OPENAI_API_KEY"),
-    default_headers={'x-model-provider': 'openai'}
-)
-
-# Start a conversation with storage enabled
-response = client.chat.completions.create(
-    model="gpt-4o",
-    messages=[
-        {"role": "user", "content": "Tell me a story about a robot."}
-    ],
-    store=True  # Enable storage
-)
-
-# Save the response ID
-conversation_id = response.id
-
-# Continue the conversation later
-follow_up = client.chat.completions.create(
-    model="gpt-4o",
-    previous_response_id=conversation_id,
-    messages=[
-        {"role": "user", "content": "Continue the story."}
-    ],
-    store=True
-)
-```
+- Usage Example Python OpenAI SDK example can be found here [example](https://github.com/masaic-ai-platform/openai-agents-python/blob/main/examples/open_responses/conversation_state.py)
 
 ## Best Practices
 
-1. Only enable storage (`store=true`) for conversations that need persistence
-2. For ephemeral interactions, omit the `store` parameter or set it to `false`
-3. Use MongoDB storage in production for data durability
-4. Implement appropriate backup strategies for your MongoDB database
-5. Consider GDPR and other data protection regulations when storing conversation data
-
-For more detailed examples and advanced configurations, see the [API Reference](/api-reference/endpoint/storage). 
+1. Only enable storage (`store=true`) for conversations that need persistence.
+2. For ephemeral interactions, omit the `store` parameter or set it to `false`.
+3. Use MongoDB storage in production for data durability.
+4. Implement appropriate backup strategies for your MongoDB database.
+5. Consider GDPR and other data protection regulations when storing conversation data. 

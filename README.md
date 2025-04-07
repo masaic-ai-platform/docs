@@ -1,6 +1,6 @@
 # OpenResponses API
 
-![OpenResponses - All-in-One AI Toolkit](/open-responses/assets/about.png)
+![OpenResponses - All-in-One AI Toolkit](/assets/about.png)
 
 > **Unlock enterprise-grade AI capabilities through a single, powerful API — simplify development, accelerate deployment, and maintain complete data control**
 
@@ -27,7 +27,7 @@ openai_client = OpenAI(base_url="http://localhost:8080/v1", api_key=os.getenv("O
 
 response = openai_client.responses.create(
     model="gpt-4o-mini",
-    input="Write a poem on Masaic"
+    input="Tell me a joke"
 )
 ```
 
@@ -55,7 +55,7 @@ curl --location 'http://localhost:8080/v1/responses' \
     "input": [
         {
             "role": "user",
-            "content": "Write a poem on Masaic"
+            "content": "Tell me a joke"
         }
     ]
 }'
