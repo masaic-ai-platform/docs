@@ -3,11 +3,17 @@
   "theme": "mint",
   "name": "Open Response API",
   "colors": {
-    "primary": "#2A2A2A",
-    "light": "#505050",
-    "dark": "#09090B"
+    "primary": "#00CCFF",
+    "light": "#FFFFFF",
+    "dark": "#000000"
   },
   "favicon": "/favicon.svg",
+  "darkMode": {
+    "contrast": "high"
+  },
+  "style": {
+    "css": "/custom.css"
+  },
   "navigation": {
     "tabs": [
       {
