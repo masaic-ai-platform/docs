@@ -31,25 +31,6 @@
             ]
           }
         ]
-      },
-      {
-        "tab": "API Reference",
-        "groups": [
-          {
-            "group": "API Documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint Examples",
-            "pages": [
-              "api-reference/endpoint/responses",
-              "api-reference/endpoint/tools",
-              "api-reference/endpoint/storage"
-            ]
-          }
-        ]
       }
     ],
     "global": {
