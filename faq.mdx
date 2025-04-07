@@ -1,0 +1,146 @@
+---
+title: 'Frequently Asked Questions'
+description: 'Common questions about OpenResponses API'
+---
+
+# Frequently Asked Questions
+
+## General Questions
+
+### What is OpenResponses?
+OpenResponses is a comprehensive, production-ready AI toolkit with enterprise features delivered through a simplified API interface compatible to OpenAI Responses API. It enables developers to access multiple model providers and tool integrations while maintaining complete data sovereignty.
+
+### What problems does OpenResponses solve?
+OpenResponses addresses key challenges in AI development including feature gaps in open-source models, integration complexity, data privacy concerns, and operational control requirements. It allows engineering teams to focus on application features rather than infrastructure.
+
+### Is OpenResponses open source?
+Yes, OpenResponses is licensed under the Apache License 2.0.
+
+## Setup & Deployment
+
+### How do I install OpenResponses?
+The simplest way is using Docker:
+```bash
+docker run -p 8080:8080 masaicai/open-responses:latest
+```
+
+### What are the prerequisites for running OpenResponses?
+- Docker daemon running on your local machine
+- Port 8080 available
+- API keys for model providers you wish to use (OpenAI, Anthropic, Groq, etc.)
+- For tools: GitHub Personal Access Token and Brave Search API key (if using those tools)
+
+### Can I run OpenResponses on my own servers?
+Yes! OpenResponses is designed to be self-hosted, providing full control over the deployment infrastructure and ensuring complete data sovereignty.
+
+### How do I configure OpenResponses with persistent storage?
+You can configure OpenResponses with MongoDB for persistent storage. Check the Quick Start Guide for detailed instructions on setting up with persistent storage.
+
+## Features & Capabilities
+
+### What AI models can I use with OpenResponses?
+OpenResponses supports multiple model providers including OpenAI (GPT-4o, GPT-4o-mini), Anthropic (Claude models), Groq (Llama models), and others.
+
+### Does OpenResponses support streaming responses?
+Yes, you can enable streaming responses by setting `"stream": true` in your API requests.
+
+### What tools are integrated with OpenResponses?
+OpenResponses comes with built-in tool integrations including:
+- Brave Web Search
+- GitHub access
+- Contextual information retrieval (RAG)
+- Additional custom tools can be configured
+
+### Does OpenResponses support Retrieval Augmented Generation (RAG)?
+Yes, OpenResponses includes integrated RAG capabilities that enhance responses with relevant external data automatically.
+
+## API & Integration
+
+### Is OpenResponses compatible with existing OpenAI implementations?
+Yes, OpenResponses provides an OpenAI-compatible interface, making it a drop-in replacement for existing implementations with minimal code changes required.
+
+### Can I use my existing provider API keys?
+Yes! OpenResponses acts as a pass-through to the provider APIs using your own keys.
+
+### How do I use OpenResponses with the OpenAI SDK?
+```python
+from openai import OpenAI
+import os
+
+openai_client = OpenAI(
+    base_url="http://localhost:8080/v1", 
+    api_key=os.getenv("OPENAI_API_KEY"), 
+    default_headers={'x-model-provider': 'openai'}
+)
+
+response = openai_client.responses.create(
+    model="gpt-4o-mini",
+    input="Tell me a joke"
+)
+```
+
+### Can I use OpenResponses with OpenAI Agent SDK?
+Yes, here's an example:
+```python
+from openai import AsyncOpenAI
+from openai.agents import Agent, OpenAIResponsesModel
+import os
+
+client = AsyncOpenAI(
+    base_url="http://localhost:8080/v1", 
+    api_key=os.getenv("OPENAI_API_KEY"), 
+    default_headers={'x-model-provider': 'openai'}
+)
+
+agent = Agent(
+    name="Assistant",
+    instructions="You are a humorous poet who can write funny poems of 4 lines.",
+    model=OpenAIResponsesModel(model="gpt-4o-mini", openai_client=client)
+)
+```
+
+## Performance & Limitations
+
+### What is the maximum number of tool calls allowed?
+By default, the maximum number of allowed tool calls is 10, but this can be configured through the `MASAIC_MAX_TOOL_CALLS` environment variable.
+
+### What is the timeout for streaming responses?
+The default maximum streaming timeout is 60000 ms (60 seconds), configurable via the `MASAIC_MAX_STREAMING_TIMEOUT` environment variable.
+
+## Error Handling & Monitoring
+
+### How do I handle errors?
+OpenResponses standardizes error responses across providers:
+```json
+{
+  "type": "rate_limit_exceeded",
+  "message": "Rate limit exceeded. Please try again in 30 seconds.",
+  "param": null,
+  "code": "rate_limit"
+}
+```
+
+### Does OpenResponses provide monitoring capabilities?
+Yes, OpenResponses includes automated tracing for comprehensive request and response monitoring. This allows you to track performance and usage without additional code.
+
+### How can I enable observability features?
+You can enable OpenTelemetry exports by setting the `SPRING_PRODFILES_ACTIVE=otel` environment variable. Refer to the Quick Start Guide for setting up OpenResponses with a full observability stack.
+
+## Development & Customization
+
+### How can I contribute to OpenResponses?
+Contributions are welcome! Feel free to submit a Pull Request to the GitHub repository.
+
+### Can I add custom tools to OpenResponses?
+Yes, OpenResponses supports custom tool configurations. Refer to the Custom Tool Configuration section in the Quick Start Guide.
+
+### Is the project still being actively developed?
+Yes, OpenResponses is actively developed with new features continuously being added.
+
+## Support & Resources
+
+### Where can I get help if I encounter issues?
+You can raise issues on the GitHub repository or refer to the documentation for troubleshooting guidance or join us on discord server.
+
+### Is OpenResponses suitable for production use?
+OpenResponses is currently in alpha stage. While it provides production-ready features, the API and functionality are subject to breaking changes as development continues. Use with caution in production environments. 
