@@ -1,107 +1,199 @@
 ---
 title: 'Development'
-description: 'Preview changes locally to update your docs'
+description: 'Learn how to develop with OpenResponses API'
 ---
 
-<Info>
-  **Prerequisite**: Please install Node.js (version 19 or higher) before proceeding. <br />
-  Please upgrade to ```docs.json``` before proceeding and delete the legacy ```mint.json``` file.
-</Info>
+# Development Guide
 
-Follow these steps to install and run Mintlify on your operating system:
+This guide provides everything you need to know about contributing to OpenResponses or using it as part of your development workflow.
 
-**Step 1**: Install Mintlify:
+## Setting Up the Development Environment
 
-<CodeGroup>
+### Prerequisites
 
-  ```bash npm
-  npm i -g mintlify
-  ```
+- Java JDK 21 or higher
+- Gradle (optional, as the project includes Gradle Wrapper)
+- Docker (for containerized development)
+- Git
 
-```bash yarn
-yarn global add mintlify
-```
-
-</CodeGroup>
-
-**Step 2**: Navigate to the docs directory (where the `docs.json` file is located) and execute the following command:
+### Clone the Repository
 
 ```bash
-mintlify dev
+git clone https://github.com/masaic-ai-platform/open-responses.git
+cd open-responses
 ```
 
-A local preview of your documentation will be available at `http://localhost:3000`.
-
-### Custom Ports
-
-By default, Mintlify uses port 3000. You can customize the port Mintlify runs on by using the `--port` flag. To run Mintlify on port 3333, for instance, use this command:
+### Build the Project
 
 ```bash
-mintlify dev --port 3333
+# Using Gradle Wrapper
+./gradlew build
+
+# Or if you have Gradle installed
+gradle build
 ```
 
-If you attempt to run Mintlify on a port that's already in use, it will use the next available port:
-
-```md
-Port 3000 is already in use. Trying 3001 instead.
-```
-
-## Mintlify Versions
-
-Please note that each CLI release is associated with a specific version of Mintlify. If your local website doesn't align with the production version, please update the CLI:
-
-<CodeGroup>
-
-```bash npm
-npm i -g mintlify@latest
-```
-
-```bash yarn
-yarn global upgrade mintlify
-```
-
-</CodeGroup>
-
-## Validating Links
-
-The CLI can assist with validating reference links made in your documentation. To identify any broken links, use the following command:
+### Run Locally
 
 ```bash
-mintlify broken-links
+./gradlew bootRun
 ```
 
-## Deployment
+The service will be available at `http://localhost:8080`.
 
-<Tip>
-  Unlimited editors available under the [Pro
-  Plan](https://mintlify.com/pricing) and above.
-</Tip>
+## Project Structure
 
-If the deployment is successful, you should see the following:
+The OpenResponses project is organized as follows:
 
-<Frame>
-  <img src="/images/checks-passed.png" style={{ borderRadius: '0.5rem' }} />
-</Frame>
+```
+open-responses/
+  ├── src/                          # Source code
+  │   ├── main/
+  │   │   ├── kotlin/               # Kotlin source files
+  │   │   │   └── ai/masaic/openresponses/
+  │   │   │       ├── api/          # API controllers and models
+  │   │   │       ├── service/      # Business logic services
+  │   │   │       ├── config/       # Configuration classes
+  │   │   │       ├── store/        # Storage implementations
+  │   │   │       └── tools/        # Built-in tool implementations
+  │   │   └── resources/            # Application resources
+  │   └── test/                     # Test code
+  ├── gradle/                       # Gradle wrapper files
+  ├── docker/                       # Docker-related files
+  ├── docs/                         # Documentation
+  └── examples/                     # Example code and scripts
+```
 
-## Code Formatting
+## Key Components
 
-We suggest using extensions on your IDE to recognize and format MDX. If you're a VSCode user, consider the [MDX VSCode extension](https://marketplace.visualstudio.com/items?itemName=unifiedjs.vscode-mdx) for syntax highlighting, and [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) for code formatting.
+### API Layer
+
+The API layer is responsible for handling HTTP requests and responses. Key files include:
+
+- `ResponsesController.kt`: Handles requests to the `/v1/responses` endpoint
+- `ResponsesInputItemsController.kt`: Manages input items for responses
+
+### Service Layer
+
+The service layer contains the business logic for the application:
+
+- `ModelServiceClient.kt`: Interface for model provider-specific implementations
+- `ResponsesService.kt`: Core service for handling responses
+- `TelemetryService.kt`: Service for collecting telemetry data
+
+### Storage Layer
+
+The storage layer manages data persistence:
+
+- `ResponseStore.kt`: Interface for response storage
+- `InMemoryResponseStore.kt`: In-memory implementation
+- `MongoDBResponseStore.kt`: MongoDB implementation
+
+### Tool Integration
+
+The tools package contains implementations for built-in tools:
+
+- `BraveWebSearchTool.kt`: Implementation of web search
+- `GitHubTools.kt`: GitHub integration tools
+- `ClaudeThinkTool.kt`: Claude's think tool integration
+
+## Configuration
+
+### Application Properties
+
+The main configuration files are:
+
+- `application.properties`: Default application configuration
+- `application-otel.properties`: OpenTelemetry configuration
+
+Key configuration properties include:
+
+```properties
+# Server configuration
+server.port=8080
+
+# Response store configuration
+open-responses.response-store.type=in-memory
+
+# MongoDB configuration (when using MongoDB)
+open-response.mongodb.uri=mongodb://localhost:27017
+open-response.mongodb.database=openresponses
+
+# Tool configuration
+masaic.max.tool.calls=10
+masaic.max.streaming.timeout=60000
+```
+
+## API Testing
+
+### Using cURL
+
+```bash
+# Test the API with a simple request
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer YOUR_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "input": [
+        {
+            "role": "user",
+            "content": "Hello, how are you?"
+        }
+    ]
+}'
+```
+
+## Debugging
+
+### Logs
+
+By default, logs are written to the console. You can increase the log level by setting:
+
+```properties
+logging.level.ai.masaic=DEBUG
+```
+
+### Metrics and Health
+
+The application exposes several endpoints for monitoring:
+
+- `/actuator/health`: Health check endpoint
+- `/actuator/metrics`: Metrics endpoint
+- `/actuator/info`: Application info
+
+## Contributing
+
+We welcome contributions to OpenResponses! To contribute:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/my-feature`)
+3. Make your changes
+4. Add tests for your changes
+5. Run the tests (`./gradlew test`)
+6. Commit your changes (`git commit -am 'Add my feature'`)
+7. Push to the branch (`git push origin feature/my-feature`)
+8. Create a new Pull Request
+
+Please follow the [Kotlin coding conventions](https://kotlinlang.org/docs/coding-conventions.html) for your code.
 
 ## Troubleshooting
 
-<AccordionGroup>
-  <Accordion title='Error: Could not load the "sharp" module using the darwin-arm64 runtime'>
+### Common Issues
 
-    This may be due to an outdated version of node. Try the following:
-    1. Remove the currently-installed version of mintlify: `npm remove -g mintlify`
-    2. Upgrade to Node v19 or higher.
-    3. Reinstall mintlify: `npm install -g mintlify`
-  </Accordion>
+#### API Key Issues
 
-  <Accordion title="Issue: Encountering an unknown error">
-  
-    Solution: Go to the root of your device and delete the \~/.mintlify folder. Afterwards, run `mintlify dev` again.
-  </Accordion>
-</AccordionGroup>
+If you're having issues with API keys, ensure that:
 
-Curious about what changed in the CLI version? [Check out the CLI changelog.](https://www.npmjs.com/package/mintlify?activeTab=versions)
+- The API key is correctly set in the `Authorization` header
+- The model provider header is correctly set
+- The API key has the necessary permissions
+
+#### MongoDB Connection Issues
+
+If using MongoDB and experiencing connection issues:
+
+- Verify the MongoDB URI is correct
+- Ensure MongoDB is running and accessible
+- Check that the database name is correct

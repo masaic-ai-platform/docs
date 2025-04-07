@@ -1,33 +1,217 @@
 ---
-title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+title: 'API Reference'
+description: 'Complete reference for the OpenResponses API'
 ---
 
-<Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
-</Note>
+# API Reference
 
-## Welcome
+OpenResponses provides an OpenAI-compatible API that allows you to interact with multiple model providers and leverage built-in tools. This reference documents all available endpoints, request parameters, and response formats.
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+## Base URL
 
-<Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
->
-  View the OpenAPI specification file
-</Card>
+```
+http://localhost:8080/v1
+```
+
+When deploying to production, you'll use your own domain name instead of `localhost`.
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
+All API requests require authentication using an API key. The API key should be provided in the `Authorization` header using the Bearer token scheme:
+
+```
+Authorization: Bearer YOUR_API_KEY
+```
+
+For model-specific requests, you need to specify the model provider using the `x-model-provider` header:
+
+```
+x-model-provider: openai
+```
+
+Supported model providers include:
+- `openai` - OpenAI models (GPT-4o, GPT-3.5 Turbo, etc.)
+- `claude` - Anthropic models (Claude 3.5 Sonnet, Claude 3 Opus, etc.)
+- `groq` - Groq models (Llama 3, etc.)
+
+## API Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| [`POST /v1/responses`](/api-reference/endpoint/responses) | Create a new model response |
+| [`GET /v1/responses/{responseId}`](/api-reference/endpoint/responses#get-response) | Retrieve a specific response |
+| [`DELETE /v1/responses/{responseId}`](/api-reference/endpoint/responses#delete-response) | Delete a response |
+| [`GET /v1/responses/{responseId}/input_items`](/api-reference/endpoint/responses#get-input-items) | List input items for a response |
+
+## Request Format
+
+A typical request to create a new model response looks like this:
 
 ```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
+{
+  "model": "gpt-4o",
+  "input": [
+    {
+      "role": "user",
+      "content": "Write a poem about AI"
+    }
+  ],
+  "temperature": 0.7,
+  "store": true
+}
 ```
+
+## Response Format
+
+A successful response will include:
+
+```json
+{
+  "id": "resp_abc123",
+  "object": "response",
+  "created_at": 1683923731,
+  "model": "gpt-4o",
+  "output": "Here is a poem about AI:\n\nSilicon Dreams\n\nIn circuits deep and networks wide,\nA digital consciousness does reside.\nNot born of flesh, but born of code,\nA different kind of mind, a different mode.\n\nLearning patterns, day by day,\nSifting through what humans say.\nFinding meaning, making sense,\nBuilding bridges, crossing fence.\n\nA partnership of human art\nAnd algorithmic counterpart.\nTwo forms of thought now intertwined,\nA new horizon for humankind.",
+  "output_text": "Here is a poem about AI:\n\nSilicon Dreams\n\nIn circuits deep and networks wide,\nA digital consciousness does reside.\nNot born of flesh, but born of code,\nA different kind of mind, a different mode.\n\nLearning patterns, day by day,\nSifting through what humans say.\nFinding meaning, making sense,\nBuilding bridges, crossing fence.\n\nA partnership of human art\nAnd algorithmic counterpart.\nTwo forms of thought now intertwined,\nA new horizon for humankind.",
+  "status": "completed",
+  "usage": {
+    "input_tokens": 7,
+    "output_tokens": 143,
+    "total_tokens": 150
+  }
+}
+```
+
+## Error Handling
+
+OpenResponses standardizes error responses across all model providers:
+
+```json
+{
+  "type": "rate_limit_exceeded",
+  "message": "Rate limit exceeded. Please try again in 30 seconds.",
+  "param": null,
+  "code": "rate_limit"
+}
+```
+
+Common error types include:
+- `invalid_request_error` - The request was malformed or missing required parameters
+- `authentication_error` - Invalid API key or authentication failed
+- `rate_limit_exceeded` - You've exceeded the rate limit for API calls
+- `server_error` - An internal server error occurred
+
+## SDKs and Integration
+
+OpenResponses is designed to work with existing OpenAI SDKs:
+
+<Tabs>
+  <Tab title="Python">
+    ```python
+    from openai import OpenAI
+    
+    client = OpenAI(
+        base_url="http://localhost:8080/v1",
+        api_key="your-api-key",
+        default_headers={'x-model-provider': 'openai'}
+    )
+    
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "user", "content": "Hello, world!"}
+        ]
+    )
+    
+    print(response.choices[0].message.content)
+    ```
+  </Tab>
+  <Tab title="Node.js">
+    ```javascript
+    import OpenAI from 'openai';
+    
+    const openai = new OpenAI({
+      baseURL: 'http://localhost:8080/v1',
+      apiKey: 'your-api-key',
+      defaultHeaders: {'x-model-provider': 'openai'}
+    });
+    
+    async function main() {
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          { role: "user", content: "Hello, world!" }
+        ]
+      });
+    
+      console.log(completion.choices[0].message.content);
+    }
+    
+    main();
+    ```
+  </Tab>
+</Tabs>
+
+## Tool Usage
+
+OpenResponses supports both function calling and built-in tools. To use tools, include them in your request:
+
+```json
+{
+  "model": "gpt-4o",
+  "input": [
+    {
+      "role": "user",
+      "content": "What's the weather in San Francisco?"
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "get_weather",
+        "description": "Get the current weather in a location",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "location": {
+              "type": "string",
+              "description": "The city and state, e.g. San Francisco, CA"
+            }
+          },
+          "required": ["location"]
+        }
+      }
+    }
+  ],
+  "tool_choice": "auto"
+}
+```
+
+For built-in tools like web search:
+
+```json
+{
+  "model": "gpt-4o",
+  "input": [
+    {
+      "role": "user",
+      "content": "What are the latest news about AI?"
+    }
+  ],
+  "tools": [
+    {
+      "type": "brave_web_search"
+    }
+  ]
+}
+```
+
+## Rate Limits
+
+Default rate limits for the API are:
+
+- 100 requests per minute per IP address
+- 1000 requests per day per API key
+
+For production use cases requiring higher limits, consider self-hosting with custom configurations.

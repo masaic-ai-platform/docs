@@ -1,71 +1,57 @@
 ---
-title: Introduction
-description: "Welcome to the home of your new documentation"
+title: 'Introduction'
+description: 'Unlock enterprise-grade AI capabilities through a single, powerful API'
 ---
 
-<img
-  className="block dark:hidden"
-  src="/images/hero-light.png"
-  alt="Hero Light"
-/>
-<img
-  className="hidden dark:block"
-  src="/images/hero-dark.png"
-  alt="Hero Dark"
-/>
+# Masaic AI Platform
 
-## Setting up
+<img src="/open-responses/assets/about.png" alt="Masaic AI Platform - All-in-One AI Toolkit" className="w-full" />
 
-The first step to world-class documentation is setting up your editing environments.
+## Overview
 
-<CardGroup cols={2}>
-  <Card
-    title="Edit Your Docs"
-    icon="pen-to-square"
-    href="https://mintlify.com/docs/quickstart"
-  >
-    Get your docs set up locally for easy development
-  </Card>
-  <Card
-    title="Preview Changes"
-    icon="image"
-    href="https://mintlify.com/docs/development"
-  >
-    Preview your changes before you push to make sure they're perfect
-  </Card>
-</CardGroup>
+Masaic AI Platform revolutionizes how developers build AI applications by providing a comprehensive, production-ready toolkit with essential enterprise features—all through an elegantly simplified API interface. Stop cobbling together disparate tools and start building what matters.
 
-## Make it yours
+Our flagship product, **OpenResponses API**, provides a unified interface to interact with multiple AI models, integrate tools, and maintain complete data control.
 
-Update your docs to your brand and add valuable content for the best user conversion.
+## Core Capabilities
 
-<CardGroup cols={2}>
-  <Card
-    title="Customize Style"
-    icon="palette"
-    href="https://mintlify.com/docs/settings/global"
-  >
-    Customize your docs to your company's colors and brands
-  </Card>
-  <Card
-    title="Reference APIs"
-    icon="code"
-    href="https://mintlify.com/docs/api-playground/openapi"
-  >
-    Automatically generate endpoints from an OpenAPI spec
-  </Card>
-  <Card
-    title="Add Components"
-    icon="screwdriver-wrench"
-    href="https://mintlify.com/docs/content/components/accordions"
-  >
-    Build interactive features and designs to guide your users
-  </Card>
-  <Card
-    title="Get Inspiration"
-    icon="stars"
-    href="https://mintlify.com/customers"
-  >
-    Check out our showcase of our favorite documentation
-  </Card>
-</CardGroup>
+| Feature                         | Description                                             | Benefit                                                     |
+| ------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------- |
+| **Automated Tracing**           | Comprehensive request and response monitoring           | Track performance and usage without additional code         |
+| **Integrated RAG**              | Contextual information retrieval                        | Enhance responses with relevant external data automatically |
+| **Pre-built Tool Integrations** | Web search, GitHub access, and more                     | Deploy advanced capabilities instantly                      |
+| **Self-Hosted Architecture**    | Full control of deployment infrastructure               | Maintain complete data sovereignty                          |
+| **OpenAI-Compatible Interface** | Drop-in replacement for existing OpenAI implementations | Minimal code changes for migration                          |
+
+## Why Engineering Teams Choose Masaic
+
+- **Developer Productivity**: Focus engineering efforts on application features rather than infrastructure
+- **Production Readiness**: Enterprise capabilities and batteries included out-of-the-box
+- **Compliance Confidence**: Deploy with data privacy requirements fully addressed
+- **Simplified Architecture**: Consolidate AI infrastructure through widely used OpenAI API Specifications
+
+## Get Started in Minutes
+
+```bash
+# Run with Docker
+docker run -p 8080:8080 masaicai/open-responses:latest
+```
+
+```python
+# Using with OpenAI SDK
+from openai import OpenAI
+import os
+
+openai_client = OpenAI(
+    base_url="http://localhost:8080/v1", 
+    api_key=os.getenv("OPENAI_API_KEY"), 
+    default_headers={'x-model-provider': 'openai'}
+)
+
+response = openai_client.responses.create(
+    model="gpt-4o-mini",
+    input="Write a poem on Masaic"
+)
+```
+
+Ready to dive deeper? Check out our [Quick Start Guide](/quickstart) or explore the [API Reference](/api-reference/introduction).

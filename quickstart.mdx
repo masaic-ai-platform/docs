@@ -1,97 +1,307 @@
 ---
-title: 'Quickstart'
-description: 'Start building awesome documentation in under 5 minutes'
+title: 'Quick Start Guide'
+description: 'Get started with OpenResponses API in minutes'
 ---
 
-## Setup your development
+# Quick Start Guide
 
-Learn how to update your docs locally and deploy them to the public.
+This guide will help you get up and running with OpenResponses API quickly. We'll cover several deployment options and provide example API calls to get you started.
 
-### Edit and preview
+## Setup Options
 
-<AccordionGroup>
-  <Accordion icon="github" title="Clone your docs locally">
-    During the onboarding process, we created a repository on your Github with
-    your docs content. You can find this repository on our
-    [dashboard](https://dashboard.mintlify.com). To clone the repository
-    locally, follow these
-    [instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
-    in your terminal.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Preview changes">
-    Previewing helps you make sure your changes look as intended. We built a
-    command line interface to render these changes locally. 
-    1. Install the
-    [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the
-    documentation changes locally with this command: ``` npm i -g mintlify ```
-    2. Run the following command at the root of your documentation (where
-    `docs.json` is): ``` mintlify dev ```
-    <Note>
-      If you’re currently using the legacy ```mint.json``` configuration file, please update the Mintlify CLI:
-
-
-      ```npm i -g mintlify@latest```
-      And run the new upgrade command in your docs repository:
-
-      ```mintlify upgrade```
-      You should now be using the new ```docs.json``` configuration file. Feel free to delete the ```mint.json``` file from your repository.
-    </Note>
-  </Accordion>
-</AccordionGroup>
-
-### Deploy your changes
-
-<AccordionGroup>
-
-<Accordion icon="message-bot" title="Install our Github app">
-  Our Github app automatically deploys your changes to your docs site, so you
-  don't need to manage deployments yourself. You can find the link to install on
-  your [dashboard](https://dashboard.mintlify.com). Once the bot has been
-  successfully installed, there should be a check mark next to the commit hash
-  of the repo.
-</Accordion>
-<Accordion icon="rocket" title="Push your changes">
-  [Commit and push your changes to
-  Git](https://docs.github.com/en/get-started/using-git/pushing-commits-to-a-remote-repository#about-git-push)
-  for your changes to update in your docs site. If you push and don't see that
-  the Github app successfully deployed your changes, you can also manually
-  update your docs through our [dashboard](https://dashboard.mintlify.com).
-</Accordion>
-
-</AccordionGroup>
-
-## Update your docs
-
-Add content directly in your files with MDX syntax and React components. You can use any of our components, or even build your own.
-
-<CardGroup>
-
-<Card title="Add Content With MDX" icon="file" href="/essentials/markdown">
-  Add content to your docs with MDX syntax.
-</Card>
-
-<Card
-  title="Add Code Blocks"
-  icon="square-code"
-  href="/essentials/code"
->
-  Add code directly to your docs with syntax highlighting.
-</Card>
-
-<Card
-  title="Add Images"
-  icon="image"
-  href="/essentials/images"
->
-  Add images to your docs to make them more engaging.
-</Card>
-
-<Card
-  title="Add Custom Components"
-  icon="puzzle-piece"
-  href="/essentials/reusable-snippets"
->
-  Add templates to your docs to make them more reusable.
-</Card>
-
+<CardGroup cols={2}>
+  <Card
+    title="Basic Setup"
+    icon="rocket"
+    href="#basic-setup"
+  >
+    Run OpenResponses with default configuration
+  </Card>
+  <Card
+    title="Tool-enabled Setup"
+    icon="wrench"
+    href="#tool-enabled-setup"
+  >
+    Run with built-in tools like web search and GitHub integration
+  </Card>
+  <Card
+    title="Persistent Storage"
+    icon="database"
+    href="#setup-with-persistent-storage"
+  >
+    Configure with MongoDB for persistent storage
+  </Card>
+  <Card
+    title="Observability Stack"
+    icon="chart-line"
+    href="#setup-with-observability"
+  >
+    Run with monitoring and observability capabilities
+  </Card>
 </CardGroup>
+
+## Basic Setup
+
+### Prerequisites
+
+- Ensure port **8080** is available
+- Docker daemon must be running on your local machine
+
+### Run with Docker
+
+The simplest way to get started is using Docker:
+
+```bash
+docker run -p 8080:8080 masaicai/open-responses:latest
+```
+
+Alternatively, you can use Docker Compose:
+
+```bash
+# Clone the repository
+git clone https://github.com/masaic-ai-platform/open-responses.git
+cd open-responses
+
+# Start with Docker Compose
+docker-compose up open-responses
+```
+
+### Example API Calls
+
+Once OpenResponses is running, you can start making API calls. Here are some examples:
+
+<Tabs>
+  <Tab title="OpenAI">
+    ```bash
+    curl --location 'http://localhost:8080/v1/responses' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer OPENAI_API_KEY' \
+    --header 'x-model-provider: openai' \
+    --data '{
+        "model": "gpt-4o",
+        "stream": false,
+        "input": [
+            {
+                "role": "user",
+                "content": "Write a poem on Masaic"
+            }
+        ]
+    }'
+    ```
+  </Tab>
+  <Tab title="Claude">
+    ```bash
+    curl --location 'http://localhost:8080/v1/responses' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer ANTHROPIC_API_KEY' \
+    --header 'x-model-provider: claude' \
+    --data '{
+        "model": "claude-3-5-sonnet-20241022",
+        "stream": false,
+        "input": [
+            {
+                "role": "user",
+                "content": "Write a poem on Masaic"
+            }
+        ]
+    }'
+    ```
+  </Tab>
+  <Tab title="Groq">
+    ```bash
+    curl --location 'http://localhost:8080/v1/responses' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer GROQ_API_KEY' \
+    --data '{
+        "model": "llama-3.2-3b-preview",
+        "stream": true,
+        "input": [
+            {
+                "role": "user",
+                "content": "Write a poem on Masaic"
+            }
+        ]
+    }'
+    ```
+  </Tab>
+</Tabs>
+
+## Tool-enabled Setup
+
+OpenResponses comes with built-in tools that enhance the capabilities of your AI applications. The pre-packaged `mcp-servers-config.json` file includes configurations for Brave Web Search and GitHub tools.
+
+### Prerequisites
+
+Before using built-in tools, you'll need:
+
+- GitHub Personal Access Token - [Generate here](https://github.com/settings/personal-access-tokens)
+- Brave Search API key - [Get from Brave API Dashboard](https://api-dashboard.search.brave.com/app/keys)
+
+### Configuration
+
+Create a `.env` file with your API keys:
+
+```
+GITHUB_TOKEN=your_github_token
+BRAVE_API_KEY=your_brave_key_value
+```
+
+### Run with Built-in Tools
+
+<Tabs>
+  <Tab title="macOS">
+    ```bash
+    docker-compose --profile mcp up open-responses-mcp
+    ```
+  </Tab>
+  <Tab title="Windows">
+    ```bash
+    docker-compose --profile mcp up open-responses-mcp-windows
+    ```
+  </Tab>
+</Tabs>
+
+### Custom Tool Configuration
+
+If you want to add your own custom tools, you'll need to create or modify the `mcp-servers-config.json` file with your own tool definitions. Here's how to configure custom tools:
+
+1. **Create a Custom Configuration File**:
+   Create a file named `mcp-servers-config.json`.
+
+2. MCP_CONFIG_FILE_PATH=path_to_mcp_config_file
+
+2. **Mount the Configuration File**:
+   Update your docker-compose command to mount your custom configuration:
+
+   ```bash
+   docker-compose --profile mcp up -d -e MCP_SERVER_CONFIG_FILE_PATH=/path/to/your/mcp-servers-config.json
+   ```
+
+4. **Test Your Custom Tool**:
+   Once configured, you can use your custom tool in API calls:
+
+   ```json
+   {
+     "model": "gpt-4o",
+     "tools": [
+       {
+         "type": "your_custom_tool_name"
+       }
+     ],
+     "input": [
+       {
+         "role": "user",
+         "content": "Use the custom tool to..."
+       }
+     ]
+   }
+   ```
+
+### Example Tool-enabled API Calls
+
+<Tabs>
+  <Tab title="Web Search">
+    ```bash
+    curl --location 'http://localhost:8080/v1/responses' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer GROQ_API_KEY' \
+    --data '{
+        "model": "qwen-2.5-32b",
+        "stream": false,
+        "tools": [
+            {
+                "type": "brave_web_search"
+            }
+        ],
+        "input": [
+            {
+                "role": "user",
+                "content": "Where did NVIDIA GTC happened in 2025 and what were the major announcements?"
+            }
+        ]
+    }'
+    ```
+  </Tab>
+  <Tab title="GitHub Search">
+    ```bash
+    curl --location 'http://localhost:8080/v1/responses' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer OPENAI_API_KEY' \
+    --header 'x-model-provider: openai' \
+    --data '{
+        "model": "gpt-4o",
+        "stream": false,
+        "tools": [
+            {
+                "type": "search_repositories"
+            }
+        ],
+        "input": [
+            {
+                "role": "user",
+                "content": "Give me details of all repositories in github org masaic-ai-platform"
+            }
+        ]
+    }'
+    ```
+  </Tab>
+</Tabs>
+
+## Python SDK Integration
+
+You can also use OpenResponses with the OpenAI Python SDK:
+
+```python
+from openai import OpenAI
+import os
+
+# Initialize client
+openai_client = OpenAI(
+    base_url="http://localhost:8080/v1", 
+    api_key=os.getenv("OPENAI_API_KEY"), 
+    default_headers={'x-model-provider': 'openai'}
+)
+
+# Create a response
+response = openai_client.responses.create(
+    model="gpt-4o-mini",
+    input="Write a poem on Masaic"
+)
+
+print(response.response)
+```
+
+## Setup with Persistent Storage
+
+For production environments, you can enable persistent storage with MongoDB:
+
+```bash
+# Start MongoDB and OpenResponses
+docker-compose --profile mongodb up -d
+```
+
+## Setup with Observability
+
+Setting up the observability stack requires a more comprehensive configuration. The simple command below does not fully enable the observability stack:
+
+```bash
+# This alone is not sufficient for a production observability setup
+docker-compose --profile observability up -d
+```
+
+OpenResponses provides comprehensive observability features including metrics collection, distributed tracing, and pre-configured dashboards. The proper setup requires configuring several components:
+
+- OpenTelemetry collector for data collection
+- Prometheus for metrics storage
+- Grafana for visualization
+- Jaeger for distributed tracing
+
+For a detailed guide on setting up a complete production-grade observability stack, please refer to our [Observability documentation](/openresponses/observability). This guide covers all the components, configuration options, and best practices for monitoring your OpenResponses deployment effectively.
+
+<img src="/open-responses/assets/observability.png" alt="Observability Dashboard" className="w-full" />
+
+## Next Steps
+
+- Explore [OpenAI Compatibility](/openresponses/compatibility) for detailed API compatibility information
+- Learn about [Tool Integrations](/api-reference/endpoint/tools) for extending functionality
+- Configure [Observability](/openresponses/observability) for production monitoring

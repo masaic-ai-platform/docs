@@ -1,0 +1,130 @@
+---
+title: 'Observability'
+description: 'Monitor and track performance of your OpenResponses deployment'
+---
+
+# Observability
+
+OpenResponses delivers enterprise-level observability out of the box, with zero configuration required to start collecting telemetry data across multiple dimensions.
+
+<img src="/open-responses/assets/observability.png" alt="Observability Architecture" className="w-full" />
+
+## Production-Grade Observability
+
+- **Launch and Monitor**: Start tracking critical GenAI metrics the moment your service goes live
+- **No Instrumentation Burden**: Skip weeks of custom instrumentation work with pre-built telemetry
+- **Immediate Insights**: Gain instant visibility into model performance, token usage, and system health
+- **Scale with Confidence**: Production-ready monitoring that grows with your deployment
+
+## What's Monitored
+
+OpenResponses uses OpenTelemetry standards to instrument:
+
+1. Model API calls across all providers (OpenAI, Claude, Groq, etc.)
+2. Built-in tool executions (web search, GitHub integration, etc.)
+3. Message content (user, system, assistant, and choices)
+4. Token usage metrics
+5. Performance metrics for various operations
+
+## Key Metrics
+
+The system produces the following key metrics:
+
+| Metric Name | Description |
+|------------|-------------|
+| `builtin.tool.execute` | Measures tool execution performance |
+| `gen_ai.client.operation.duration` | Tracks duration of model API calls |
+| `gen_ai.client.token.usage` | Counts input and output token usage |
+| `open.responses.create` | Measures non-streaming response generation time |
+| `open.responses.createStream` | Measures streaming response generation time |
+
+## Tracing
+
+OpenResponses creates detailed traces for:
+
+1. HTTP requests to `/v1/responses`
+2. Model response generation
+3. Built-in tool execution
+4. Streaming response generation
+
+<img src="/open-responses/assets/brave_search_agent_with_groq_stream-traces.png" alt="Tracing Example" className="w-full" />
+
+## Setting Up the Observability Stack
+
+Running OpenResponses with a production-grade observability stack requires more than just the simple Docker Compose command. For a complete setup, you need to follow the detailed guide in the [Running with Observability Stack](https://github.com/masaic-ai-platform/open-responses/blob/main/docs/OR-With-Obs.md) documentation.
+
+This guide provides step-by-step instructions for:
+
+1. Setting up the OTEL Collector
+2. Configuring Prometheus metrics collection
+3. Setting up Grafana with pre-configured dashboards
+4. Enabling Jaeger for distributed tracing
+5. Configuring OpenResponses to export telemetry data
+
+Here's a summary of the components needed for a complete observability stack:
+
+```bash
+# This is a simplified overview - see full documentation for complete setup
+docker-compose -f docker-compose.yml -f docker-compose.observability.yml up -d
+```
+
+## Accessing Dashboards
+
+Once the complete observability stack is properly configured, you can access the following dashboards:
+
+- **Grafana**: http://localhost:3000 (default credentials: admin/admin)
+- **Jaeger UI**: http://localhost:16686
+- **Prometheus**: http://localhost:9090
+
+## Dashboard Examples
+
+### GenAI Performance Metrics
+
+Monitor token usage, completion times, and other model performance metrics:
+
+<img src="/open-responses/assets/Genai-stats.png" alt="GenAI Metrics" className="w-full" />
+
+### System Health Monitoring
+
+Track the overall health and performance of your OpenResponses service:
+
+<img src="/open-responses/assets/Service-stats.png" alt="System Stats" className="w-full" />
+
+## Integration with Existing Systems
+
+The built-in observability in OpenResponses is compatible with any OpenTelemetry-compliant tool:
+
+- Use your existing tracing solution (Jaeger, Zipkin, Dynatrace)
+- Connect to your metrics platform (Prometheus, Datadog)
+- Integrate with specialized GenAI evaluation tools (LangFuse)
+
+## Configuration
+
+To customize the observability settings, modify the `application-otel.properties` file:
+
+```properties
+# OpenTelemetry exporter configuration
+otel.exporter.otlp.endpoint=http://otel-collector:4317
+otel.exporter.otlp.protocol=grpc
+otel.metrics.exporter=otlp
+otel.logs.exporter=otlp
+otel.traces.exporter=otlp
+
+# Service name and version
+otel.service.name=open-responses
+otel.resource.attributes=deployment.environment=local
+
+# Sampling configuration (1.0 = 100% of traces)
+otel.traces.sampler=parentbased_traceidratio
+otel.traces.sampler.arg=1.0
+```
+
+## OpenTelemetry Compliance
+
+OpenResponses follows OpenTelemetry specifications for:
+
+- **Spans**: [GenAI Agent Spans](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-agent-spans/)
+- **Metrics**: [GenAI Metrics](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-metrics/)
+- **Events**: [GenAI Events](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-events/)
+
+This ensures compatibility with standard observability tools and dashboards that support OpenTelemetry. 

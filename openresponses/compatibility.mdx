@@ -1,0 +1,168 @@
+---
+title: 'OpenAI Compatibility'
+description: 'Detailed guide on OpenAI API compatibility with OpenResponses'
+---
+
+# OpenAI API Compatibility
+
+OpenResponses implements an OpenAI-compatible API interface, making it easy to integrate with existing applications that use the OpenAI SDK or API directly. This page provides a comprehensive mapping between OpenResponses API and the OpenAI Chat Completions API.
+
+## Property Mappings
+
+### Request Parameters
+
+| Responses API Property              | Chat Completions API Equivalent                    | Notes                                                        |
+|------------------------------------|---------------------------------------------------|--------------------------------------------------------------|
+| `input`                             | `messages`                                        | Structure your input as messages array                       |
+| `input.content`                     | `messages.content`                                | Content structure for messages                               |
+| `input.content.text`                | `messages.content.text`                           | Text content in message                                      |
+| `input.content.image_url`           | `messages.content.image_url`                      | Image URL for multimodal inputs                              |
+| `input.role`                        | `messages.role`                                   | User, assistant, or system role                              |
+| `model`                             | `model`                                           | Model identifier                                             |
+| `instructions`                      | `messages` (role: `system` or `developer`)        | Add as system/developer messages                             |
+| `max_output_tokens`                 | `max_completion_tokens`                           | Maximum tokens in response                                   |
+| `parallel_tool_calls`               | `parallel_tool_calls`                             | Enable parallel tool calls                                   |
+| `temperature`                       | `temperature`                                     | Controls randomness                                          |
+| `top_p`                             | `top_p`                                           | Controls diversity via nucleus sampling                      |
+| `tools`                             | `tools`                                           | Available tools for the model                                |
+| `tool_choice`                       | `tool_choice`                                     | Specifies which tool to use                                  |
+| `metadata`                          | `metadata`                                        | Custom metadata for the request                              |
+| `stream`                            | `stream`                                          | Enable streaming response                                    |
+| `store`                             | N/A (OpenResponses enhancement)                   | Persist conversation history                                 |
+
+### Response Properties
+
+| Responses API Response Property     | Chat Completions API Response Equivalent          | Notes                                     |
+|-----------------------------------|--------------------------------------------------|-------------------------------------------|
+| `created_at`                        | `created`                                        | Timestamp of response creation            |
+| `id`                                | `id`                                             | Unique identifier for the response        |
+| `model`                             | `model`                                          | Model used for the response               |
+| `object`                            | `object` (always `chat.completion`)              | Object type identifier                    |
+| `output`                            | `choices[].message.content`                      | Main content of the response              |
+| `output_text`                       | `choices[].message.content`                      | Text content of the response              |
+| `status`                            | `choices[].finish_reason`                        | Reason for completion                     |
+| `usage`                             | `usage`                                          | Token usage statistics                    |
+| `tool_calls`                        | `choices[].message.tool_calls`                   | Tool calls in the response                |
+
+## OpenAI SDK Integration Example
+
+Using OpenResponses with the OpenAI Python SDK is straightforward. Here's an example:
+
+```python
+from openai import OpenAI
+import os
+
+# Initialize client with OpenResponses API endpoint
+client = OpenAI(
+    base_url="http://localhost:8080/v1", 
+    api_key=os.getenv("OPENAI_API_KEY"),
+    default_headers={'x-model-provider': 'openai'}
+)
+
+# Create a completion - identical to OpenAI API usage
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "Tell me about OpenResponses API."}
+    ],
+    temperature=0.7
+)
+
+print(response.choices[0].message.content)
+```
+
+## Tool Functionality
+
+OpenResponses supports OpenAI's tools functionality, allowing you to define custom functions that the model can use:
+
+```python
+# Define tools
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_weather",
+            "description": "Get the current weather in a location",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "description": "The city and state, e.g. San Francisco, CA"
+                    }
+                },
+                "required": ["location"]
+            }
+        }
+    }
+]
+
+# Create completion with tools
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[
+        {"role": "user", "content": "What's the weather like in Boston?"}
+    ],
+    tools=tools,
+    tool_choice="auto"
+)
+```
+
+## Streaming Support
+
+OpenResponses fully supports OpenAI's streaming API:
+
+```python
+# Stream the response
+stream = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "Write a poem about AI"}],
+    stream=True
+)
+
+for chunk in stream:
+    if chunk.choices[0].delta.content is not None:
+        print(chunk.choices[0].delta.content, end="")
+```
+
+## Enhanced Features
+
+OpenResponses extends the standard OpenAI API with additional features:
+
+### Persistent Storage
+
+```python
+# Enable conversation storage
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "Hello, how can you help me?"}],
+    store=True  # OpenResponses extension
+)
+
+# Reference the conversation by ID in future requests
+conversation_id = response.id
+```
+
+### Built-in Tools
+
+OpenResponses provides built-in tools that can be easily used:
+
+```python
+# Use web search capability
+response = client.chat.completions.create(
+    model="gpt-4o",
+    messages=[{"role": "user", "content": "What's the latest news about AI?"}],
+    tools=[{"type": "brave_web_search"}]  # OpenResponses built-in tool
+)
+```
+
+## Implementation Notes
+
+When migrating from the OpenAI API to OpenResponses:
+
+1. Update the `base_url` to point to your OpenResponses instance
+2. Add the `x-model-provider` header if using non-OpenAI models
+3. Keep all other code and parameters the same for seamless integration
+
+For advanced features specific to OpenResponses, refer to our [API Reference](/api-reference/introduction). 
