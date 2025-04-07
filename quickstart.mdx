@@ -450,27 +450,9 @@ For more details on response storage options and configuration, refer to the [Re
 
 ## Setup with Observability
 
-OpenResponses provides comprehensive observability features including metrics collection, distributed tracing, and pre-configured dashboards.
+OpenResponses can be run with a comprehensive observability stack that includes OpenTelemetry, Jaeger, Prometheus, and Grafana. This setup provides detailed monitoring, tracing, and metrics visualization capabilities.
 
-```bash
-# Start the observability stack
-docker-compose --profile observability up -d
-```
-
-<Note>
-This alone is not sufficient for a production observability setup
-</Note>
-
-The proper setup requires configuring several components:
-
-- OpenTelemetry collector for data collection
-- Prometheus for metrics storage
-- Grafana for visualization
-- Jaeger for distributed tracing
-
-For a detailed guide on setting up a complete production-grade observability stack, please refer to our [Observability documentation](/openresponses/observability). This guide covers all the components, configuration options, and best practices for monitoring your OpenResponses deployment effectively.
-
-<img src="/open-responses/assets/observability.png" alt="Observability Dashboard" className="w-full" />
+For detailed instructions on setting up and running OpenResponses with the observability stack, please refer to our [Running with Observability Stack](/openresponses/runwithobs) guide.
 
 ## Next Steps
 
