@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Open Response API",
   "colors": {
-    "primary": "#0077B6",
-    "light": "#00B4D8",
-    "dark": "#03045E"
+    "primary": "#2A2A2A",
+    "light": "#505050",
+    "dark": "#09090B"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -89,5 +89,6 @@
       "github": "https://github.com/masaic-ai-platform",
       "discord": "https://discord.com/channels/1335132819260702723/1354795442004820068"
     }
-  }
+  },
+  "defaultTheme": "dark"
 }

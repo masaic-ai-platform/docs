@@ -1,6 +1,6 @@
 # OpenResponses API
 
-![OpenResponses - All-in-One AI Toolkit](/open-responses/assets/about.png)
+![OpenResponses - All-in-One AI Toolkit](/assets/about.png)
 
 > **Unlock enterprise-grade AI capabilities through a single, powerful API — simplify development, accelerate deployment, and maintain complete data control**
 

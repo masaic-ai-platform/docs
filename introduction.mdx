@@ -3,42 +3,37 @@ title: 'Introduction'
 description: 'Unlock enterprise-grade AI capabilities through a single, powerful API'
 ---
 
-# Masaic AI Platform
+# Drive Business Impact with OpenResponses
 
-<img src="/open-responses/assets/about.png" alt="Masaic AI Platform - All-in-One AI Toolkit" className="w-full" />
+## Deliver Results Faster, at Lower Cost
+OpenResponses helps businesses streamline AI adoption without sacrificing security or compliance. By self-hosting the API, organizations retain full control over data and minimize risk—while still empowering teams to leverage the latest AI breakthroughs.
+- **Enterprise-Grade Data Privacy**: Keep sensitive information fully under your control—no external cloud dependencies.
+- **All-in-One Platform**: Eliminate the hassle of juggling multiple disjointed services. Access web search, GitHub, and context retrieval from a single API.
+- **Instant ROI**: Shorten time-to-value with prebuilt integrations and automated tracing for auditing performance and usage.
+- **Compliance Assured**: Meet regulatory requirements and internal security policies with a solution you manage on your own servers.
 
-## Overview
+# Empower AI Agent Builders
 
-Masaic AI Platform revolutionizes how developers build AI applications by providing a comprehensive, production-ready toolkit with essential enterprise features—all through an elegantly simplified API interface. Stop cobbling together disparate tools and start building what matters.
+## Focus on Innovation, Not Infrastructure
+OpenResponses supercharges your ability to build AI-driven agents and apps by providing the essential tools out of the box.
+- **Automatic Data Retrieval (RAG)**: Enhance chatbot or agent responses with real-time access to external and internal data.
+- **Integrated Tooling**: Leverage built-in web search, GitHub access, and more—no tedious setup required.
+- **Unified API Interface**: Add advanced AI features to your apps simply by calling an OpenAI-compatible endpoint.
+- **Real-Time Monitoring**: Gain immediate insights into performance, usage patterns, and debug logs through automated tracing.
 
-Our flagship product, **OpenResponses API**, provides a unified interface to interact with multiple AI models, integrate tools, and maintain complete data control.
+# Get Started in Minutes
 
-## Core Capabilities
-
-| Feature                         | Description                                             | Benefit                                                     |
-| ------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------- |
-| **Automated Tracing**           | Comprehensive request and response monitoring           | Track performance and usage without additional code         |
-| **Integrated RAG**              | Contextual information retrieval                        | Enhance responses with relevant external data automatically |
-| **Pre-built Tool Integrations** | Web search, GitHub access, and more                     | Deploy advanced capabilities instantly                      |
-| **Self-Hosted Architecture**    | Full control of deployment infrastructure               | Maintain complete data sovereignty                          |
-| **OpenAI-Compatible Interface** | Drop-in replacement for existing OpenAI implementations | Minimal code changes for migration                          |
-
-## Why Engineering Teams Choose Masaic
-
-- **Developer Productivity**: Focus engineering efforts on application features rather than infrastructure
-- **Production Readiness**: Enterprise capabilities and batteries included out-of-the-box
-- **Compliance Confidence**: Deploy with data privacy requirements fully addressed
-- **Simplified Architecture**: Consolidate AI infrastructure through widely used OpenAI API Specifications
-
-## Get Started in Minutes
+## Launch with a Single Docker Command
+Whether you're an experienced dev or just exploring AI, OpenResponses makes it dead simple to spin up your own AI environment.
 
 ```bash
-# Run with Docker
 docker run -p 8080:8080 masaicai/open-responses:latest
 ```
 
+## Seamless Integration
+If you already use the OpenAI SDK, just point your API calls to OpenResponses. Minimal code changes—maximum productivity.
+
 ```python
-# Using with OpenAI SDK
 from openai import OpenAI
 import os
 
@@ -54,4 +49,42 @@ response = openai_client.responses.create(
 )
 ```
 
-Ready to dive deeper? Check out our [Quick Start Guide](/quickstart) or explore the [API Reference](/api-reference/introduction).
+### Using with OpenAI Agent SDK
+```python
+from openai import AsyncOpenAI
+from openai.agents import Agent, OpenAIResponsesModel
+import os
+
+client = AsyncOpenAI(
+    base_url="http://localhost:8080/v1", 
+    api_key=os.getenv("OPENAI_API_KEY"), 
+    default_headers={'x-model-provider': 'openai'}
+)
+
+agent = Agent(
+    name="Assistant",
+    instructions="You are a humorous poet who can write funny poems of 4 lines.",
+    model=OpenAIResponsesModel(model="gpt-4o-mini", openai_client=client)
+)
+```
+
+### Using with cURL
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer OPENAI_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "stream": false,
+    "input": [
+        {
+            "role": "user",
+            "content": "Write a poem on Masaic"
+        }
+    ]
+}'
+```
+
+## Build and Iterate Faster
+Focus on creating AI-driven experiences, not wrestling with infrastructure. OpenResponses gives you a production-ready, enterprise-capable AI toolkit from day one.
