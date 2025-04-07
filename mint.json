@@ -12,16 +12,19 @@
   },
   "navigation": [
     {
-      "group": "Introduction",
-      "pages": ["/intro"]
+      "group": "Overview",
+      "pages": ["/"]
     },
     {
-      "group": "Guide",
-      "pages": ["/guide"]
-    },
-    {
-      "group": "API",
-      "pages": ["/api"]
+      "group": "Documentation",
+      "pages": [
+        "open-responses/Doc-Index",
+        "open-responses/Observability",
+        "open-responses/OpenAICompatibility",
+        "open-responses/OR=With-Obs",
+        "open-responses/Quickstart",
+        "open-responses/Store"
+      ]
     }
   ],
   "docs": {
