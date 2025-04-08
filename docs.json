@@ -65,12 +65,7 @@
         "label": "GitHub",
         "href": "https://github.com/masaic-ai-platform/open-responses"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Get Started",
-      "href": "https://docs.masaic-ai.com/quickstart"
-    }
+    ]
   },
   "footer": {
     "socials": {
