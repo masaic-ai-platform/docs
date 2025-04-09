@@ -29,6 +29,12 @@
             ]
           },
           {
+            "group": "Announcements",
+            "pages": [
+              "roadmap"
+            ]
+          },
+          {
             "group": "OpenResponses API",
             "pages": [
               "openresponses/compatibility",
