@@ -29,6 +29,12 @@
             ]
           },
           {
+            "group": "Announcements",
+            "pages": [
+              "roadmap"
+            ]
+          },
+          {
             "group": "OpenResponses API",
             "pages": [
               "openresponses/compatibility",
@@ -71,6 +77,14 @@
     "socials": {
       "github": "https://github.com/masaic-ai-platform",
       "discord": "https://discord.com/channels/1335132819260702723/1354795442004820068"
+    }
+  },
+  "seo": {
+    "indexing": "all",
+    "metatags": {
+      "og:site_name": "Open Response API Documentation",
+      "og:title": "Open Response API Documentation",
+      "og:description": "Documentation for the OpenResponses API"
     }
   },
   "defaultTheme": "dark"
