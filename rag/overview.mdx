@@ -1,0 +1,408 @@
+---
+title: 'Overview'
+description: 'Enhance AI responses with relevant information from your document collections'
+---
+The RAG system provides a comprehensive solution for enhancing your AI model outputs with relevant information from your document collections. This powerful capability enables more accurate, informative, and contextually relevant responses.
+
+## System Overview
+
+The RAG system exposes several APIs that you can use in your applications:
+
+<CardGroup cols={3}>
+  <Card
+    title="Files API"
+    icon="file"
+    href="/rag/files-api"
+  >
+    Upload, manage, and retrieve documents
+  </Card>
+  <Card
+    title="Vector Store API"
+    icon="database"
+    href="/rag/vectorstore-api"
+  >
+    Create and manage collections of document embeddings
+  </Card>
+  <Card
+    title="Search API"
+    icon="magnifying-glass"
+    href="/rag/search-api"
+  >
+    Perform semantic search across your document collections
+  </Card>
+</CardGroup>
+
+### How RAG Works
+
+1. You upload documents via the Files API
+2. You add these documents to vector stores using the Vector Store API
+3. The system automatically processes documents, extracting and embedding their content
+4. Your application or AI assistants query for relevant information using the Search API
+5. You enhance AI responses with the retrieved information
+
+## Getting Started
+
+### Prerequisites
+
+- An API key for authentication
+- Access to the Open Responses API endpoints
+- Documents you want to make searchable
+
+## Step-by-Step Integration Guide
+
+### 1. Configure Your Environment
+
+Set up your environment variables:
+
+```bash
+# For OpenAI integration
+export OPENAI_API_KEY=your_openai_api_key
+
+# For Groq integration
+export GROQ_API_KEY=your_groq_api_key
+```
+
+### 2. Upload Documents
+
+Upload documents using the Files API:
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/files' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--form 'file=@"/path/to/your/document.pdf"' \
+--form 'purpose="user_data"'
+```
+
+```python Python
+import requests
+
+url = "http://localhost:8080/v1/files"
+headers = {
+    "Authorization": f"Bearer {your_api_key}"
+}
+files = {
+    "file": open("/path/to/your/document.pdf", "rb")
+}
+data = {
+    "purpose": "user_data"
+}
+
+response = requests.post(url, headers=headers, files=files, data=data)
+print(response.json())
+```
+</CodeGroup>
+
+Response:
+```json
+{
+  "id": "file_abc123",
+  "object": "file",
+  "bytes": 12345,
+  "created_at": 1677610602,
+  "filename": "document.pdf",
+  "purpose": "user_data"
+}
+```
+
+### 3. Create a Vector Store
+
+Create a vector store to hold document embeddings:
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/vector_stores' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--data '{
+  "name": "My Knowledge Base",
+  "description": "Technical documentation and guides"
+}'
+```
+
+```python Python
+import requests
+import json
+
+url = "http://localhost:8080/v1/vector_stores"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {your_api_key}"
+}
+payload = {
+    "name": "My Knowledge Base",
+    "description": "Technical documentation and guides"
+}
+
+response = requests.post(url, headers=headers, data=json.dumps(payload))
+print(response.json())
+```
+</CodeGroup>
+
+Response:
+```json
+{
+  "id": "vs_def456",
+  "object": "vector_store",
+  "created_at": 1677610602,
+  "name": "My Knowledge Base",
+  "description": "Technical documentation and guides",
+  "file_count": 0,
+  "metadata": {}
+}
+```
+
+### 4. Add Files to the Vector Store
+
+Add your uploaded files to the vector store:
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/vector_stores/vs_def456/files' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--data '{
+  "file_id": "file_abc123",
+  "chunking_strategy": {
+    "type": "static",
+    "static": {
+      "max_chunk_size_tokens": 1000,
+      "chunk_overlap_tokens": 200
+    }
+  },
+  "attributes": {
+    "category": "documentation",
+    "language": "en"
+  }
+}'
+```
+
+```python Python
+import requests
+import json
+
+url = "http://localhost:8080/v1/vector_stores/vs_def456/files"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {your_api_key}"
+}
+payload = {
+    "file_id": "file_abc123",
+    "chunking_strategy": {
+        "type": "static",
+        "static": {
+            "max_chunk_size_tokens": 1000,
+            "chunk_overlap_tokens": 200
+        }
+    },
+    "attributes": {
+        "category": "documentation",
+        "language": "en"
+    }
+}
+
+response = requests.post(url, headers=headers, data=json.dumps(payload))
+print(response.json())
+```
+</CodeGroup>
+
+Response:
+```json
+{
+  "id": "vsfile_ghi789",
+  "object": "vector_store.file",
+  "created_at": 1677610603,
+  "vector_store_id": "vs_def456",
+  "status": "processing",
+  "usage_bytes": 0,
+  "chunking_strategy": {
+    "type": "static",
+    "static": {
+      "max_chunk_size_tokens": 1000,
+      "chunk_overlap_tokens": 200
+    }
+  },
+  "attributes": {
+    "category": "documentation",
+    "language": "en"
+  }
+}
+```
+
+### 5. Search the Vector Store
+
+Search for relevant content:
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/vector_stores/vs_def456/search' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--data '{
+  "query": "How do I configure the system?",
+  "max_num_results": 5,
+  "filters": {
+    "language": "en"
+  }
+}'
+```
+
+```python Python
+import requests
+import json
+
+url = "http://localhost:8080/v1/vector_stores/vs_def456/search"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {your_api_key}"
+}
+payload = {
+    "query": "How do I configure the system?",
+    "max_num_results": 5,
+    "filters": {
+        "language": "en"
+    }
+}
+
+response = requests.post(url, headers=headers, data=json.dumps(payload))
+print(response.json())
+```
+</CodeGroup>
+
+## Integration with AI Models
+
+### Using the file_search Tool with OpenAI
+
+You can integrate RAG with OpenAI models by using the `file_search` tool:
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $OPENAI_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "store": true,
+    "tools": [{
+      "type": "file_search",
+      "vector_store_ids": ["vs_def456"],
+      "max_num_results": 5
+    }],
+    "input": "How do I configure the system?",
+    "instructions": "Answer questions using information from the provided documents.",
+    "stream": false
+  }'
+```
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:8080/v1",
+    api_key="your_openai_api_key"
+)
+
+response = client.responses.create(
+    model="gpt-4o",
+    store=True,
+    tools=[{
+        "type": "file_search",
+        "vector_store_ids": ["vs_def456"],
+        "max_num_results": 5
+    }],
+    input="How do I configure the system?",
+    instructions="Answer questions using information from the provided documents.",
+    stream=False
+)
+
+print(response)
+```
+</CodeGroup>
+
+## Advanced Usage
+
+### Chunking Strategies
+
+When adding files to a vector store, you can specify how the documents should be chunked:
+
+```json
+"chunking_strategy": {
+  "type": "static",
+  "static": {
+    "max_chunk_size_tokens": 1000,
+    "chunk_overlap_tokens": 200
+  }
+}
+```
+
+<AccordionGroup>
+  <Accordion title="max_chunk_size_tokens">
+    Maximum size of each chunk in tokens. Larger chunks provide more context but may reduce retrieval precision.
+  </Accordion>
+  <Accordion title="chunk_overlap_tokens">
+    Overlap between consecutive chunks to maintain context and prevent information loss across chunk boundaries.
+  </Accordion>
+</AccordionGroup>
+
+### Filtering Results
+
+You can filter search results using file attributes:
+
+```json
+"filters": {
+  "language": "en",
+  "category": "documentation",
+  "version": "2.0",
+  "fileIds": ["file_abc123", "file_def456"]
+}
+```
+
+<Note>
+  Array values in filters are only supported for the `fileIds` field. Other filter fields only accept single values.
+</Note>
+
+## Best Practices
+
+<Steps>
+  <Step title="Document Preparation">
+    Use clear, well-structured documents for better search results. Split large documents into logical sections before uploading.
+  </Step>
+  <Step title="Vector Store Organization">
+    Create separate vector stores for different domains or use cases. Use file attributes to organize documents within a vector store.
+  </Step>
+  <Step title="Query Optimization">
+    Craft clear, specific queries for better results. Use filters to narrow down the search scope. Adjust chunking strategy based on your content and query patterns.
+  </Step>
+  <Step title="Performance Considerations">
+    Balance chunk size for optimal search precision and context. Limit the number of search results to what you actually need. Consider caching frequent search results.
+  </Step>
+</Steps>
+
+## API Reference
+
+For detailed information on individual APIs, refer to the dedicated documentation:
+
+<CardGroup cols={3}>
+  <Card
+    title="Files API"
+    icon="file"
+    href="/rag/files-api"
+  >
+    Upload and manage files
+  </Card>
+  <Card
+    title="Vector Store API"
+    icon="database"
+    href="/rag/vectorstore-api"
+  >
+    Create and manage vector stores
+  </Card>
+  <Card
+    title="Search API"
+    icon="magnifying-glass"
+    href="/rag/search-api"
+  >
+    Search vector stores for relevant content
+  </Card>
+</CardGroup> 

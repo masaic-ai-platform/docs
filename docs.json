@@ -42,6 +42,15 @@
               "openresponses/storage",
               "openresponses/runwithobs"
             ]
+          },
+          {
+            "group": "Retrieval (RAG)",
+            "pages": [
+              "rag/overview",
+              "rag/files-api",
+              "rag/vectorstore-api",
+              "rag/search-api"
+            ]
           }
         ]
       }
