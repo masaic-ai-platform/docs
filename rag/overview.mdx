@@ -32,6 +32,47 @@ The RAG system exposes several APIs that you can use in your applications:
   </Card>
 </CardGroup>
 
+<div className="my-6 overflow-auto max-w-full">
+  <Frame caption="RAG System API Overview">
+    <table className="w-full text-sm">
+      <thead>
+        <tr className="bg-gray-200 dark:bg-gray-800">
+          <th className="border border-gray-300 p-2">Feature</th>
+          <th className="border border-gray-300 p-2">Files API</th>
+          <th className="border border-gray-300 p-2">Vector Store API</th>
+          <th className="border border-gray-300 p-2">Search API</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="border border-gray-300 p-2 font-medium">Purpose</td>
+          <td className="border border-gray-300 p-2">Document management</td>
+          <td className="border border-gray-300 p-2">Embedding storage</td>
+          <td className="border border-gray-300 p-2">Content retrieval</td>
+        </tr>
+        <tr className="bg-gray-100 dark:bg-gray-700">
+          <td className="border border-gray-300 p-2 font-medium">Endpoints</td>
+          <td className="border border-gray-300 p-2"><code>/v1/files</code></td>
+          <td className="border border-gray-300 p-2"><code>/v1/vector_stores</code></td>
+          <td className="border border-gray-300 p-2"><code>/v1/vector_stores/:id/search</code></td>
+        </tr>
+        <tr>
+          <td className="border border-gray-300 p-2 font-medium">Input</td>
+          <td className="border border-gray-300 p-2">PDF, TXT, etc.</td>
+          <td className="border border-gray-300 p-2">File IDs</td>
+          <td className="border border-gray-300 p-2">Query, filters</td>
+        </tr>
+        <tr className="bg-gray-100 dark:bg-gray-700">
+          <td className="border border-gray-300 p-2 font-medium">Output</td>
+          <td className="border border-gray-300 p-2">File metadata</td>
+          <td className="border border-gray-300 p-2">Store metadata</td>
+          <td className="border border-gray-300 p-2">Content chunks</td>
+        </tr>
+      </tbody>
+    </table>
+  </Frame>
+</div>
+
 ### How RAG Works
 
 1. You upload documents via the Files API
@@ -40,11 +81,50 @@ The RAG system exposes several APIs that you can use in your applications:
 4. Your application or AI assistants query for relevant information using the Search API
 5. You enhance AI responses with the retrieved information
 
+<div className="my-8 overflow-auto">
+  <Frame caption="Detailed RAG API Data Flow">
+    <div style={{ minWidth: "600px" }}>
+      ```mermaid
+      %%{init: {'theme': 'neutral', 'themeVariables': {'primaryColor': '#f0f0f0', 'primaryTextColor': '#333', 'primaryBorderColor': '#666', 'lineColor': '#555', 'secondaryColor': '#e6e6e6', 'tertiaryColor': '#d9d9d9'}}}%%
+      sequenceDiagram
+        actor User
+        participant FA as Files API
+        participant VS as Vector Store API
+        participant S as Search API
+        participant AI as AI Model
+        
+        Note over User,AI: 1. Document Upload
+        User->>FA: Upload document
+        FA-->>User: Return file ID
+        
+        Note over User,AI: 2. Vector Store Creation
+        User->>VS: Create vector store
+        VS-->>User: Return store ID
+        
+        Note over User,AI: 3. File Processing
+        User->>VS: Add file to store
+        VS-->>User: Processing status
+        Note over VS: System embeds document
+        
+        Note over User,AI: 4. Search
+        User->>S: Query with filters
+        S-->>User: Relevant content
+        
+        Note over User,AI: 5. AI Enhancement
+        User->>AI: Query with file_search tool
+        AI->>S: Internal search
+        S-->>AI: Document context
+        AI-->>User: Enhanced response
+      ```
+    </div>
+  </Frame>
+</div>
+
 ## Getting Started
 
 ### Prerequisites
 
-- An API key for authentication
+- LLM provider's API key for authentication
 - Access to the Open Responses API endpoints
 - Documents you want to make searchable
 
@@ -115,8 +195,7 @@ curl --location 'http://localhost:8080/v1/vector_stores' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --data '{
-  "name": "My Knowledge Base",
-  "description": "Technical documentation and guides"
+  "name": "My Knowledge Base"
 }'
 ```
 
@@ -130,8 +209,7 @@ headers = {
     "Authorization": f"Bearer {your_api_key}"
 }
 payload = {
-    "name": "My Knowledge Base",
-    "description": "Technical documentation and guides"
+    "name": "My Knowledge Base"
 }
 
 response = requests.post(url, headers=headers, data=json.dumps(payload))
@@ -146,7 +224,6 @@ Response:
   "object": "vector_store",
   "created_at": 1677610602,
   "name": "My Knowledge Base",
-  "description": "Technical documentation and guides",
   "file_count": 0,
   "metadata": {}
 }
@@ -242,7 +319,9 @@ curl --location 'http://localhost:8080/v1/vector_stores/vs_def456/search' \
   "query": "How do I configure the system?",
   "max_num_results": 5,
   "filters": {
-    "language": "en"
+    "type": "eq",
+    "key": "language",
+    "value": "en"
   }
 }'
 ```
@@ -260,7 +339,9 @@ payload = {
     "query": "How do I configure the system?",
     "max_num_results": 5,
     "filters": {
-        "language": "en"
+        "type": "eq",
+        "key": "language",
+        "value": "en"
     }
 }
 
@@ -287,7 +368,22 @@ curl --location 'http://localhost:8080/v1/responses' \
     "tools": [{
       "type": "file_search",
       "vector_store_ids": ["vs_def456"],
-      "max_num_results": 5
+      "max_num_results": 5,
+      "filters": {
+        "type": "and",
+        "filters": [
+          {
+            "type": "eq",
+            "key": "language",
+            "value": "en"
+          },
+          {
+            "type": "eq",
+            "key": "category",
+            "value": "documentation"
+          }
+        ]
+      }
     }],
     "input": "How do I configure the system?",
     "instructions": "Answer questions using information from the provided documents.",
@@ -309,11 +405,26 @@ response = client.responses.create(
     tools=[{
         "type": "file_search",
         "vector_store_ids": ["vs_def456"],
-        "max_num_results": 5
+        "max_num_results": 5,
+        "filters": {
+            "type": "and",
+            "filters": [
+                {
+                    "type": "eq",
+                    "key": "language",
+                    "value": "en"
+                },
+                {
+                    "type": "eq",
+                    "key": "category",
+                    "value": "documentation"
+                }
+            ]
+        }
     }],
-    input="How do I configure the system?",
-    instructions="Answer questions using information from the provided documents.",
-    stream=False
+    "input": "How do I configure the system?",
+    "instructions": "Answer questions using information from the provided documents.",
+    "stream": False
 )
 
 print(response)
@@ -336,6 +447,51 @@ When adding files to a vector store, you can specify how the documents should be
 }
 ```
 
+<div className="my-6 overflow-auto">
+  <Frame caption="Document Chunking and Embedding Process">
+    <div style={{ minWidth: "500px" }}>
+      ```mermaid
+      %%{init: {'theme': 'neutral', 'themeVariables': {'primaryColor': '#f0f0f0', 'primaryTextColor': '#333', 'primaryBorderColor': '#666', 'lineColor': '#555', 'secondaryColor': '#e6e6e6', 'tertiaryColor': '#d9d9d9'}}}%%
+      flowchart TD
+        %% Nodes
+        Doc[Document]
+        Chunk1[Chunk 1]
+        Chunk2[Chunk 2]
+        Chunk3[Chunk 3]
+        Embed1[Vector 1]
+        Embed2[Vector 2]
+        Embed3[Vector 3]
+        VS[(Vector Store)]
+        
+        %% Styling with grayscale
+        classDef document fill:#4b5563,color:#ffffff,stroke-width:2px
+        classDef chunk fill:#666666,color:#ffffff,stroke-width:2px
+        classDef vector fill:#888888,color:#ffffff,stroke-width:2px
+        classDef store fill:#333333,color:#ffffff,stroke-width:2px
+        
+        %% Apply styles
+        class Doc document
+        class Chunk1,Chunk2,Chunk3 chunk
+        class Embed1,Embed2,Embed3 vector
+        class VS store
+        
+        %% Flow
+        Doc -->|Split| Chunk1 & Chunk2 & Chunk3
+        
+        %% Show overlap
+        Chunk1 -.->|Overlap| Chunk2
+        Chunk2 -.->|Overlap| Chunk3
+        
+        Chunk1 -->|Embed| Embed1
+        Chunk2 -->|Embed| Embed2
+        Chunk3 -->|Embed| Embed3
+        
+        Embed1 & Embed2 & Embed3 -->|Store| VS
+      ```
+    </div>
+  </Frame>
+</div>
+
 <AccordionGroup>
   <Accordion title="max_chunk_size_tokens">
     Maximum size of each chunk in tokens. Larger chunks provide more context but may reduce retrieval precision.
@@ -347,19 +503,33 @@ When adding files to a vector store, you can specify how the documents should be
 
 ### Filtering Results
 
-You can filter search results using file attributes:
+You can filter search results using file attributes with a structured filter format:
 
 ```json
 "filters": {
-  "language": "en",
-  "category": "documentation",
-  "version": "2.0",
-  "fileIds": ["file_abc123", "file_def456"]
+  "type": "and",
+  "filters": [
+    {
+      "type": "eq",
+      "key": "language",
+      "value": "en"
+    },
+    {
+      "type": "eq",
+      "key": "category",
+      "value": "documentation"
+    },
+    {
+      "type": "gte",
+      "key": "version",
+      "value": 2.0
+    }
+  ]
 }
 ```
 
 <Note>
-  Array values in filters are only supported for the `fileIds` field. Other filter fields only accept single values.
+  The filter system supports comparison operators (eq, ne, gt, gte, lt, lte) and logical operators (and, or) for powerful and flexible search filtering. For detailed information, see the [Search API documentation](/rag/search-api).
 </Note>
 
 ## Best Practices

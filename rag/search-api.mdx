@@ -62,6 +62,21 @@ curl --location 'http://localhost:8080/v1/vector_stores/vs_67f8046b1ad5d3000012/
 --data '{
   "query": "When did empress matilda reached england?",
   "max_num_results": 2,
+  "filters": {
+    "type": "and",
+    "filters": [
+      {
+        "type": "eq",
+        "key": "language",
+        "value": "en"
+      },
+      {
+        "type": "eq",
+        "key": "category",
+        "value": "api_reference" 
+      }
+    ]
+  },
   "ranking_options": {
     "score_threshold": 0.7
   }
@@ -80,6 +95,21 @@ headers = {
 payload = {
     "query": "When did empress matilda reached england?",
     "max_num_results": 2,
+    "filters": {
+        "type": "and",
+        "filters": [
+            {
+                "type": "eq",
+                "key": "language",
+                "value": "en"
+            },
+            {
+                "type": "eq",
+                "key": "category",
+                "value": "api_reference"
+            }
+        ]
+    },
     "ranking_options": {
         "score_threshold": 0.7
     }
@@ -183,35 +213,242 @@ The `max_num_results` parameter controls how many results are returned. The defa
   For applications that need more context, increase this value, but be aware that higher values may include less relevant results.
 </Note>
 
-### Filters (Coming Soon)
+### Filters
 
-The `filters` parameter lets you narrow search results based on file attributes:
+The `filters` parameter lets you narrow search results based on file attributes. Filters follow a structured format that enables both simple and complex filtering conditions.
 
-```json
-"filters": {
-  "language": "en",
-  "category": "user_manual",
-  "version": "2.0"
-}
-```
+#### Filter Types
 
-### Advanced Filters (Coming Soon)
+The API supports two types of filters:
 
-You can find advanced filters in the [OpenAI API Spec](https://platform.openai.com/docs/api-reference/vector-stores/search#vector-stores-search-filters) section.
+<CardGroup cols={2}>
+  <Card
+    title="Comparison Filters"
+    icon="equals"
+  >
+    Compare a property value against a specific value
+  </Card>
+  <Card
+    title="Compound Filters"
+    icon="layer-group"
+  >
+    Combine multiple filters using logical operators
+  </Card>
+</CardGroup>
 
-You can combine multiple filters to get very specific results. All specified attributes must match for a document to be included in results.
+#### Comparison Operators
 
-<Warning>
-  Array values in filters are only supported for the `fileIds` field. Other filter fields only accept single values.
-</Warning>
+<table>
+  <thead>
+    <tr>
+      <th>Operator</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>eq</code></td>
+      <td>Equal to</td>
+      <td>Match where language is "en"</td>
+    </tr>
+    <tr>
+      <td><code>ne</code></td>
+      <td>Not equal to</td>
+      <td>Match where status is not "archived"</td>
+    </tr>
+    <tr>
+      <td><code>gt</code></td>
+      <td>Greater than</td>
+      <td>Match where version > 1.0</td>
+    </tr>
+    <tr>
+      <td><code>gte</code></td>
+      <td>Greater than or equal to</td>
+      <td>Match where created_at ≥ 1672531200</td>
+    </tr>
+    <tr>
+      <td><code>lt</code></td>
+      <td>Less than</td>
+      <td>Match where priority < 3</td>
+    </tr>
+    <tr>
+      <td><code>lte</code></td>
+      <td>Less than or equal to</td>
+      <td>Match where size ≤ 1024</td>
+    </tr>
+  </tbody>
+</table>
 
-For filtering by specific files:
+#### Basic Filter Examples
 
-```json
-"filters": {
-  "fileIds": ["file_abc123", "file_def456"]
-}
-```
+<Tabs>
+  <Tab title="Equal To">
+    ```json
+    "filters": {
+      "type": "eq",
+      "key": "language",
+      "value": "en"
+    }
+    ```
+    Find documents where the language attribute equals "en".
+  </Tab>
+  <Tab title="Greater Than">
+    ```json
+    "filters": {
+      "type": "gt",
+      "key": "version",
+      "value": 2.0
+    }
+    ```
+    Find documents with version greater than 2.0.
+  </Tab>
+  <Tab title="Not Equal To">
+    ```json
+    "filters": {
+      "type": "ne",
+      "key": "status",
+      "value": "archived"
+    }
+    ```
+    Find documents where status is not "archived".
+  </Tab>
+</Tabs>
+
+#### Compound Filters
+
+Combine multiple conditions using logical operators:
+
+<AccordionGroup>
+  <Accordion title="AND Filter">
+    All conditions must be true for a document to be included:
+    
+    ```json
+    "filters": {
+      "type": "and",
+      "filters": [
+        {
+          "type": "eq",
+          "key": "category",
+          "value": "documentation"
+        },
+        {
+          "type": "eq",
+          "key": "language",
+          "value": "en"
+        }
+      ]
+    }
+    ```
+  </Accordion>
+  <Accordion title="OR Filter">
+    At least one condition must be true:
+    
+    ```json
+    "filters": {
+      "type": "or",
+      "filters": [
+        {
+          "type": "eq",
+          "key": "filename",
+          "value": "document1.txt"
+        },
+        {
+          "type": "eq",
+          "key": "filename",
+          "value": "document2.txt"
+        }
+      ]
+    }
+    ```
+  </Accordion>
+  <Accordion title="Nested Filters">
+    Combine AND and OR for complex conditions:
+    
+    ```json
+    "filters": {
+      "type": "and",
+      "filters": [
+        {
+          "type": "eq",
+          "key": "category",
+          "value": "documentation"
+        },
+        {
+          "type": "or",
+          "filters": [
+            {
+              "type": "eq",
+              "key": "language",
+              "value": "en"
+            },
+            {
+              "type": "eq",
+              "key": "language",
+              "value": "es"
+            }
+          ]
+        }
+      ]
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+#### Advanced Use Cases
+
+<CardGroup cols={2}>
+  <Card
+    title="Date Range Filtering"
+    icon="calendar"
+  >
+    ```json
+    "filters": {
+      "type": "and",
+      "filters": [
+        {
+          "type": "gte",
+          "key": "created_at",
+          "value": 1672531200
+        },
+        {
+          "type": "lt",
+          "key": "created_at",
+          "value": 1704067200
+        }
+      ]
+    }
+    ```
+    Filter documents created in 2023 (using Unix timestamps).
+  </Card>
+  <Card
+    title="Boolean Filters"
+    icon="toggle-on"
+  >
+    ```json
+    "filters": {
+      "type": "and",
+      "filters": [
+        {
+          "type": "eq",
+          "key": "is_approved",
+          "value": true
+        },
+        {
+          "type": "eq",
+          "key": "is_public",
+          "value": true
+        }
+      ]
+    }
+    ```
+    Find approved public documents.
+  </Card>
+</CardGroup>
+
+<Note>
+  When designing your document attributes, consider what filtering capabilities you'll need and ensure your attributes are structured accordingly.
+</Note>
 
 ### Ranking Options
 
@@ -283,7 +520,22 @@ curl --location 'http://localhost:8080/v1/responses' \
     "tools": [{
       "type": "file_search",
       "vector_store_ids": ["vs_abc123"],
-      "max_num_results": 5
+      "max_num_results": 5,
+      "filters": {
+        "type": "and",
+        "filters": [
+          {
+            "type": "eq",
+            "key": "category",
+            "value": "documentation"
+          },
+          {
+            "type": "eq",
+            "key": "language",
+            "value": "en"
+          }
+        ]
+      }
     }],
     "input": "How do I configure the system?",
     "instructions": "Answer questions using information from the provided documents."
@@ -303,10 +555,25 @@ response = client.responses.create(
     tools=[{
         "type": "file_search",
         "vector_store_ids": ["vs_abc123"],
-        "max_num_results": 5
+        "max_num_results": 5,
+        "filters": {
+            "type": "and",
+            "filters": [
+                {
+                    "type": "eq",
+                    "key": "category",
+                    "value": "documentation"
+                },
+                {
+                    "type": "eq",
+                    "key": "language",
+                    "value": "en"
+                }
+            ]
+        }
     }],
-    input="How do I configure the system?",
-    instructions="Answer questions using information from the provided documents."
+    "input": "How do I configure the system?",
+    "instructions": "Answer questions using information from the provided documents."
 )
 
 print(response)
