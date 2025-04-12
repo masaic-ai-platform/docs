@@ -52,6 +52,13 @@ This guide will help you get up and running with OpenResponses API quickly. We'l
   >
     Run with monitoring and observability capabilities
   </Card>
+  <Card
+    title="RAG Setup"
+    icon="book"
+    href="#setup-with-rag"
+  >
+    Configure Retrieval-Augmented Generation with vector search
+  </Card>
 </CardGroup>
 
 ## Basic Setup
@@ -501,6 +508,210 @@ For more details on response storage options and configuration, refer to the [Re
 OpenResponses can be run with a comprehensive observability stack that includes OpenTelemetry, Jaeger, Prometheus, and Grafana. This setup provides detailed monitoring, tracing, and metrics visualization capabilities.
 
 For detailed instructions on setting up and running OpenResponses with the observability stack, please refer to our [Running with Observability Stack](/openresponses/runwithobs) guide.
+
+## Setup with RAG
+
+RAG (Retrieval-Augmented Generation) enables you to enhance AI responses with information retrieved from your documents. OpenResponses provides a complete RAG solution with vector search capabilities powered by Qdrant.
+
+### Prerequisites
+
+- Ensure ports **8080** (Open Responses), **6333** (Qdrant REST API), and **6334** (Qdrant gRPC API) are available
+- Docker daemon must be running on your local machine
+- OpenAI API key for embedding generation and AI responses (or another supported provider)
+
+### Option 1: Basic RAG Setup with Qdrant
+
+This setup includes just the vector database for document storage and retrieval:
+
+```bash
+# Start Qdrant and OpenResponses with RAG capabilities
+docker-compose --profile qdrant up
+```
+
+### Option 2: Complete RAG Setup with MongoDB Storage
+
+For production environments, this setup combines vector search with persistent storage:
+
+```bash
+# Start MongoDB, Qdrant, and OpenResponses with full RAG capabilities
+docker-compose --profile qdrant-mongodb up
+```
+
+### Using the RAG System
+
+<Steps>
+  <Step title="Upload a File">
+    First, upload a file to be processed and stored:
+
+    ```bash
+    curl --location 'http://localhost:8080/v1/files' \
+    --header 'Authorization: Bearer YOUR_LLM_API_KEY' \
+    --form 'file=@"./path/to/your/document.pdf"' \
+    --form 'purpose="vector_search"'
+    ```
+
+    You'll receive a file_id in the response.
+  </Step>
+  <Step title="Create a Vector Store">
+    Create a vector store to hold your document embeddings:
+
+    ```bash
+    curl --location 'http://localhost:8080/v1/vector_stores' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer YOUR_LLM_API_KEY' \
+    --data '{
+      "name": "my-documents"
+    }'
+    ```
+
+    This returns a vector_store_id.
+  </Step>
+  <Step title="Add File to Vector Store">
+    Add your uploaded file to the vector store:
+
+    ```bash
+    curl --location 'http://localhost:8080/v1/vector_stores/YOUR_VECTOR_STORE_ID/files' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer YOUR_LLM_API_KEY' \
+    --data '{
+      "file_id": "YOUR_FILE_ID",
+      "chunking_strategy": {
+        "type": "static",
+        "static": {
+          "max_chunk_size_tokens": 1000,
+          "chunk_overlap_tokens": 200
+        }
+      },
+      "attributes": {
+        "category": "documentation",
+        "language": "en"
+      }
+    }'
+    ```
+  </Step>
+  <Step title="Search the Vector Store">
+    You can directly search for content in your vector store:
+
+    ```bash
+    curl --location 'http://localhost:8080/v1/vector_stores/YOUR_VECTOR_STORE_ID/search' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer YOUR_LLM_API_KEY' \
+    --data '{
+      "query": "What does the document say about configuration?",
+      "max_num_results": 5,
+      "filters": {
+        "type": "eq",
+        "key": "language",
+        "value": "en"
+      }
+    }'
+    ```
+  </Step>
+  <Step title="Ask Questions Using RAG">
+    Use the file_search tool to answer questions based on your documents:
+
+    ```bash
+    curl --location 'http://localhost:8080/v1/responses' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer YOUR_LLM_API_KEY' \
+    --data '{
+      "model": "gpt-4o",
+      "tools": [{
+        "type": "file_search",
+        "vector_store_ids": ["YOUR_VECTOR_STORE_ID"],
+        "max_num_results": 5,
+        "filters": {
+          "type": "and",
+          "filters": [
+            {
+              "type": "eq",
+              "key": "language",
+              "value": "en"
+            }
+          ]
+        }
+      }],
+      "input": "What does the document say about configuration?",
+      "instructions": "Answer questions using information from the provided documents only. If the information is not in the documents, say so."
+    }'
+    ```
+    
+    <Note>
+      If no x-model-provider header is specified, GROQ is used as the default provider.
+    </Note>
+  </Step>
+</Steps>
+
+### Using RAG with Different AI Models
+
+<Tabs>
+  <Tab title="OpenAI">
+    ```bash
+    curl --location 'http://localhost:8080/v1/responses' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer OPENAI_API_KEY' \
+    --header 'x-model-provider: openai' \
+    --data '{
+        "model": "gpt-4o",
+        "tools": [{
+          "type": "file_search",
+          "vector_store_ids": ["YOUR_VECTOR_STORE_ID"],
+          "max_num_results": 3
+        }],
+        "input": "Summarize what the document says about API usage",
+        "instructions": "Use only information from the documents to answer."
+    }'
+    ```
+  </Tab>
+  <Tab title="Claude">
+    ```bash
+    curl --location 'http://localhost:8080/v1/responses' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer ANTHROPIC_API_KEY' \
+    --header 'x-model-provider: claude' \
+    --data '{
+        "model": "claude-3-5-sonnet-20241022",
+        "tools": [{
+          "type": "file_search",
+          "vector_store_ids": ["YOUR_VECTOR_STORE_ID"],
+          "max_num_results": 3
+        }],
+        "input": "Summarize what the document says about API usage",
+        "instructions": "Use only information from the documents to answer."
+    }'
+    ```
+  </Tab>
+  <Tab title="Groq (Default)">
+    ```bash
+    curl --location 'http://localhost:8080/v1/responses' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer GROQ_API_KEY' \
+    --data '{
+        "model": "llama-3.2-3b-preview",
+        "tools": [{
+          "type": "file_search",
+          "vector_store_ids": ["YOUR_VECTOR_STORE_ID"],
+          "max_num_results": 3
+        }],
+        "input": "Summarize what the document says about API usage",
+        "instructions": "Use only information from the documents to answer."
+    }'
+    ```
+    <Note>
+      Groq is the default provider if no x-model-provider header is specified.
+    </Note>
+  </Tab>
+</Tabs>
+
+### Best Practices for RAG
+
+- Break large documents into logical sections before uploading
+- Use custom attributes to organize and filter your documents
+- Set a reasonable chunk size (800-1200 tokens) with some overlap
+- Provide clear and specific queries to get better results
+- Use filters to narrow down search results when you have many documents
+
+For more details on using the RAG system, refer to the [RAG Documentation](/rag/overview).
 
 ## Next Steps
 
