@@ -8,7 +8,7 @@ The RAG system provides a comprehensive solution for enhancing your AI model out
 
 The RAG system exposes several APIs that you can use in your applications:
 
-<CardGroup cols={3}>
+<CardGroup cols={4}>
   <Card
     title="Files API"
     icon="file"
@@ -30,17 +30,24 @@ The RAG system exposes several APIs that you can use in your applications:
   >
     Perform semantic search across your document collections
   </Card>
+  <Card
+    title="Embedding Models"
+    icon="microchip"
+    href="/rag/embedding"
+  >
+    Configure embedding models for vector representations
+  </Card>
 </CardGroup>
 
 <div className="my-6 overflow-auto max-w-full">
   <Frame caption="RAG System API Overview">
-    <table className="w-full text-sm">
+    <table className="w-full text-sm" style={{ borderCollapse: "separate", borderRadius: "4px", overflow: "hidden" }}>
       <thead>
         <tr className="bg-gray-200 dark:bg-gray-800">
-          <th className="border border-gray-300 p-2">Feature</th>
+          <th className="border border-gray-300 p-2" style={{ borderTopLeftRadius: "4px" }}>Feature</th>
           <th className="border border-gray-300 p-2">Files API</th>
           <th className="border border-gray-300 p-2">Vector Store API</th>
-          <th className="border border-gray-300 p-2">Search API</th>
+          <th className="border border-gray-300 p-2" style={{ borderTopRightRadius: "4px" }}>Search API</th>
         </tr>
       </thead>
       <tbody>
@@ -63,10 +70,10 @@ The RAG system exposes several APIs that you can use in your applications:
           <td className="border border-gray-300 p-2">Query, filters</td>
         </tr>
         <tr className="bg-gray-100 dark:bg-gray-700">
-          <td className="border border-gray-300 p-2 font-medium">Output</td>
+          <td className="border border-gray-300 p-2 font-medium" style={{ borderBottomLeftRadius: "4px" }}>Output</td>
           <td className="border border-gray-300 p-2">File metadata</td>
           <td className="border border-gray-300 p-2">Store metadata</td>
-          <td className="border border-gray-300 p-2">Content chunks</td>
+          <td className="border border-gray-300 p-2" style={{ borderBottomRightRadius: "4px" }}>Content chunks</td>
         </tr>
       </tbody>
     </table>
@@ -85,7 +92,7 @@ The RAG system exposes several APIs that you can use in your applications:
   <Frame caption="Detailed RAG API Data Flow">
     <div style={{ minWidth: "600px" }}>
       ```mermaid
-      %%{init: {'theme': 'neutral', 'themeVariables': {'primaryColor': '#f0f0f0', 'primaryTextColor': '#333', 'primaryBorderColor': '#666', 'lineColor': '#555', 'secondaryColor': '#e6e6e6', 'tertiaryColor': '#d9d9d9'}}}%%
+      %%{init: {'theme': 'neutral', 'themeVariables': {'primaryColor': '#f0f0f0', 'primaryTextColor': '#333', 'primaryBorderColor': '#666', 'lineColor': '#555', 'secondaryColor': '#e6e6e6', 'tertiaryColor': '#d9d9d9', 'linkColor': '#ffffff', 'edgeLabelBackground': '#333333'}}}%%
       sequenceDiagram
         actor User
         participant FA as Files API
@@ -140,7 +147,16 @@ export OPENAI_API_KEY=your_openai_api_key
 
 # For Groq integration
 export GROQ_API_KEY=your_groq_api_key
+
+# For embedding configuration (optional)
+export OPEN_RESPONSES_EMBEDDINGS_HTTP_ENABLED=true
+export OPEN_RESPONSES_EMBEDDINGS_API_KEY=your_openai_api_key
+export OPEN_RESPONSES_EMBEDDINGS_MODEL=text-embedding-3-small
 ```
+
+<Tip>
+  For detailed embedding configuration options, see the [Embedding Models](/rag/embedding) documentation.
+</Tip>
 
 ### 2. Upload Documents
 
@@ -451,7 +467,7 @@ When adding files to a vector store, you can specify how the documents should be
   <Frame caption="Document Chunking and Embedding Process">
     <div style={{ minWidth: "500px" }}>
       ```mermaid
-      %%{init: {'theme': 'neutral', 'themeVariables': {'primaryColor': '#f0f0f0', 'primaryTextColor': '#333', 'primaryBorderColor': '#666', 'lineColor': '#555', 'secondaryColor': '#e6e6e6', 'tertiaryColor': '#d9d9d9'}}}%%
+      %%{init: {'theme': 'neutral', 'themeVariables': {'primaryColor': '#f0f0f0', 'primaryTextColor': '#333', 'primaryBorderColor': '#666', 'lineColor': '#555', 'secondaryColor': '#e6e6e6', 'tertiaryColor': '#d9d9d9', 'linkColor': '#ffffff', 'edgeLabelBackground': '#333333'}}}%%
       flowchart TD
         %% Nodes
         Doc[Document]

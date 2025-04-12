@@ -49,7 +49,8 @@
               "rag/overview",
               "rag/files-api",
               "rag/vectorstore-api",
-              "rag/search-api"
+              "rag/search-api",
+              "rag/embedding"
             ]
           }
         ]
