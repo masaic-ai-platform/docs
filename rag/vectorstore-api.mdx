@@ -1,0 +1,714 @@
+---
+title: 'Vector Store API'
+description: 'Create and manage collections of document embeddings for semantic search'
+---
+The Vector Store API enables you to create and manage vector stores—specialized collections that transform your documents into searchable embeddings for semantic retrieval.
+
+The official documentation for the Vector Store API is available [here](https://platform.openai.com/docs/api-reference/vector-stores).
+
+## Key Concepts
+
+<CardGroup cols={2}>
+  <Card
+    title="Vector Stores"
+    icon="database"
+  >
+    Collections that organize and index document embeddings
+  </Card>
+  <Card
+    title="Document Embeddings"
+    icon="vector-square"
+  >
+    Numerical representations of document content that capture semantic meaning
+  </Card>
+  <Card
+    title="Chunking Strategies"
+    icon="puzzle-piece"
+  >
+    Methods for dividing documents into semantically meaningful segments
+  </Card>
+  <Card
+    title="File Attributes"
+    icon="tags"
+  >
+    Metadata tags that enable filtering and organizing documents
+  </Card>
+</CardGroup>
+
+## API Endpoints
+
+### Create a Vector Store
+
+Create a new vector store to hold document embeddings.
+
+**Endpoint:** `POST /v1/vector_stores`  
+**Content-Type:** `application/json`
+
+**Request Body:**
+- `name`: Name of the vector store (required)
+- `metadata`: Custom metadata for the vector store (optional)
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/vector_stores' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--data '{
+  "name": "Technical Documentation"
+}'
+```
+
+```python Python
+import requests
+import json
+
+url = "http://localhost:8080/v1/vector_stores"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {your_api_key}"
+}
+payload = {
+    "name": "Technical Documentation"
+}
+
+response = requests.post(url, headers=headers, data=json.dumps(payload))
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+    "id": "vs_67f802071ad5d3000001",
+    "object": "vector_store",
+    "created_at": 1744306695,
+    "name": "Technical Documentation",
+    "bytes": 0,
+    "file_counts": {
+        "in_progress": 0,
+        "completed": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "total": 0
+    },
+    "last_active_at": 1744306695,
+    "status": "in_progress"
+}
+```
+
+### List Vector Stores
+
+Retrieve a list of all your vector stores.
+
+**Endpoint:** `GET /v1/vector_stores`
+
+**Query Parameters:**
+- `limit`: Maximum number of vector stores to return (default: 20, range: 1-100)
+- `after`: Return vector stores after this ID for pagination (optional)
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/vector_stores?limit=10' \
+--header 'Authorization: Bearer $YOUR_API_KEY'
+```
+
+```python Python
+import requests
+
+url = "http://localhost:8080/v1/vector_stores"
+params = {
+    "limit": 10
+}
+headers = {
+    "Authorization": f"Bearer {your_api_key}"
+}
+
+response = requests.get(url, headers=headers, params=params)
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+    "data": [
+        {
+            "id": "vs_67f802071ad5d3000001",
+            "object": "vector_store",
+            "created_at": 1744306695,
+            "name": "Technical Documentation",
+            "bytes": 0,
+            "file_counts": {
+                "in_progress": 0,
+                "completed": 0,
+                "failed": 0,
+                "cancelled": 0,
+                "total": 0
+            },
+            "last_active_at": 1744306695,
+            "status": "in_progress"
+        }
+    ],
+    "object": "list",
+    "first_id": "vs_67f802071ad5d3000001",
+    "last_id": "vs_67f802071ad5d3000001",
+    "has_more": true
+}
+```
+
+### Retrieve a Vector Store
+
+Get details about a specific vector store.
+
+**Endpoint:** `GET /v1/vector_stores/{vector_store_id}`
+
+**Path Parameters:**
+- `vector_store_id`: The ID of the vector store to retrieve (required)
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/vector_stores/vs_abc123' \
+--header 'Authorization: Bearer $YOUR_API_KEY'
+```
+
+```python Python
+import requests
+
+url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}"
+headers = {
+    "Authorization": f"Bearer {your_api_key}"
+}
+
+response = requests.get(url, headers=headers)
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+    "id": "vs_67f802071ad5d3000001",
+    "object": "vector_store",
+    "created_at": 1744306695,
+    "name": "Technical Documentation",
+    "bytes": 0,
+    "file_counts": {
+        "in_progress": 0,
+        "completed": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "total": 0
+    },
+    "last_active_at": 1744306695,
+    "status": "in_progress"
+}
+```
+
+### Update a Vector Store
+
+Update the metadata of a vector store.
+
+**Endpoint:** `PATCH /v1/vector_stores/{vector_store_id}`  
+**Content-Type:** `application/json`
+
+**Path Parameters:**
+- `vector_store_id`: The ID of the vector store to update (required)
+
+**Request Body:**
+- `name`: New name for the vector store (optional)
+- `metadata`: New custom metadata for the vector store (optional)
+
+<CodeGroup>
+```bash cURL
+curl --location --request POST 'http://localhost:8080/v1/vector_stores/vs_67f802071ad5d3000001' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--data '{
+  "name": "Updated Technical Documentation",
+  "metadata": {
+    "department": "History",
+    "access_level": "internal"
+  }
+}'
+```
+
+```python Python
+import requests
+import json
+
+url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {your_api_key}"
+}
+payload = {
+    "name": "Updated Technical Documentation",
+    "metadata": {
+        "department": "History",
+        "access_level": "internal"
+    }
+}
+
+response = requests.patch(url, headers=headers, data=json.dumps(payload))
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+    "id": "vs_67f802071ad5d3000001",
+    "object": "vector_store",
+    "created_at": 1744306695,
+    "name": "Updated Technical Documentation",
+    "bytes": 0,
+    "file_counts": {
+        "in_progress": 0,
+        "completed": 0,
+        "failed": 0,
+        "cancelled": 0,
+        "total": 0
+    },
+    "last_active_at": 1744306902,
+    "status": "in_progress",
+    "metadata": {
+        "department": "History",
+        "access_level": "internal"
+    }
+}
+```
+
+### Delete a Vector Store
+
+Delete a vector store and all its files.
+
+**Endpoint:** `DELETE /v1/vector_stores/{vector_store_id}`
+
+**Path Parameters:**
+- `vector_store_id`: The ID of the vector store to delete (required)
+
+<CodeGroup>
+```bash cURL
+curl --location --request DELETE 'http://localhost:8080/v1/vector_stores/vs_abc123' \
+--header 'Authorization: Bearer $YOUR_API_KEY'
+```
+
+```python Python
+import requests
+
+url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}"
+headers = {
+    "Authorization": f"Bearer {your_api_key}"
+}
+
+response = requests.delete(url, headers=headers)
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+    "id": "vs_67f802071ad5d3000001",
+    "object": "vector_store.deleted",
+    "deleted": true
+}
+```
+
+<Warning>
+  Deleting a vector store permanently removes all associated file embeddings. The original files in the Files API are not affected.
+</Warning>
+
+## Working with Vector Store Files
+
+### Add a File to a Vector Store
+
+Add a file to a vector store for embedding and semantic search.
+
+**Endpoint:** `POST /v1/vector_stores/{vector_store_id}/files`  
+**Content-Type:** `application/json`
+
+**Path Parameters:**
+- `vector_store_id`: The ID of the vector store to add the file to (required)
+
+**Request Body:**
+- `file_id`: ID of the file to add (required)
+- `chunking_strategy`: Strategy for dividing the document (optional)
+- `attributes`: Custom attributes for filtering (optional)
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/vector_stores/vs_abc123/files' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--data '{
+  "file_id": "file_def456",
+  "chunking_strategy": {
+    "type": "static",
+    "static": {
+      "max_chunk_size_tokens": 1000,
+      "chunk_overlap_tokens": 200
+    }
+  },
+  "attributes": {
+    "category": "api_reference",
+    "language": "en",
+    "version": "2.0"
+  }
+}'
+```
+
+```python Python
+import requests
+import json
+
+url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}/files"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {your_api_key}"
+}
+payload = {
+    "file_id": "file_def456",
+    "chunking_strategy": {
+        "type": "static",
+        "static": {
+            "max_chunk_size_tokens": 1000,
+            "chunk_overlap_tokens": 200
+        }
+    },
+    "attributes": {
+        "category": "api_reference",
+        "language": "en",
+        "version": "2.0"
+    }
+}
+
+response = requests.post(url, headers=headers, data=json.dumps(payload))
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+    "id": "open-responses-file_67f803701ad5d3000002.pdf",
+    "object": "vector_store.file",
+    "created_at": 1744307109,
+    "usage_bytes": 422718,
+    "vector_store_id": "vs_67f65468f25fcc000001",
+    "status": "in_progress",
+    "chunking_strategy": {
+        "type": "static",
+        "static": {
+            "max_chunk_size_tokens": 1000,
+            "chunk_overlap_tokens": 200
+        }
+    },
+    "attributes": {
+        "category": "api_reference",
+        "language": "en",
+        "version": "2.0",
+        "filename": "Empress Matilda.pdf"
+    }
+}
+```
+
+<Note>
+  File processing happens asynchronously. The initial status will be "in_progress", and you'll need to check again later for the completed status.
+</Note>
+
+### List Files in a Vector Store
+
+Retrieve a list of all files in a vector store.
+
+**Endpoint:** `GET /v1/vector_stores/{vector_store_id}/files`
+
+**Path Parameters:**
+- `vector_store_id`: The ID of the vector store to list files from (required)
+
+**Query Parameters:**
+- `limit`: Maximum number of files to return (default: 20, range: 1-100)
+- `after`: Return files after this ID for pagination (optional)
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/vector_stores/vs_abc123/files?limit=10' \
+--header 'Authorization: Bearer $YOUR_API_KEY'
+```
+
+```python Python
+import requests
+
+url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}/files"
+params = {
+    "limit": 10
+}
+headers = {
+    "Authorization": f"Bearer {your_api_key}"
+}
+
+response = requests.get(url, headers=headers, params=params)
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+    "data": [
+        {
+            "id": "open-responses-file_67f803701ad5d3000002.pdf",
+            "object": "vector_store.file",
+            "created_at": 1744307397,
+            "usage_bytes": 422718,
+            "vector_store_id": "vs_67f8046b1ad5d3000012",
+            "status": "completed",
+            "chunking_strategy": {
+                "type": "static",
+                "static": {
+                    "max_chunk_size_tokens": 1000,
+                    "chunk_overlap_tokens": 200
+                }
+            },
+            "attributes": {
+                "category": "api_reference",
+                "language": "en",
+                "version": "2.0",
+                "filename": "Empress Matilda.pdf"
+            }
+        }
+    ],
+    "object": "list",
+    "first_id": "open-responses-file_67f803701ad5d3000002.pdf",
+    "last_id": "open-responses-file_67f803701ad5d3000002.pdf",
+    "has_more": false
+}
+```
+
+### Retrieve a File in a Vector Store
+
+Get details about a specific file in a vector store.
+
+**Endpoint:** `GET /v1/vector_stores/{vector_store_id}/files/{file_id}`
+
+**Path Parameters:**
+- `vector_store_id`: The ID of the vector store (required)
+- `file_id`: The ID of the file to retrieve (required)
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/vector_stores/vs_abc123/files/vsfile_ghi789' \
+--header 'Authorization: Bearer $YOUR_API_KEY'
+```
+
+```python Python
+import requests
+
+url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}/files/{file_id}"
+headers = {
+    "Authorization": f"Bearer {your_api_key}"
+}
+
+response = requests.get(url, headers=headers)
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+    "id": "open-responses-file_67f803701ad5d3000002.pdf",
+    "object": "vector_store.file",
+    "created_at": 1744307397,
+    "usage_bytes": 422718,
+    "vector_store_id": "vs_67f8046b1ad5d3000012",
+    "status": "completed",
+    "chunking_strategy": {
+        "type": "static",
+        "static": {
+            "max_chunk_size_tokens": 1000,
+            "chunk_overlap_tokens": 200
+        }
+    },
+    "attributes": {
+        "category": "api_reference",
+        "language": "en",
+        "version": "2.0",
+        "filename": "Empress Matilda.pdf"
+    }
+}
+```
+
+### Delete a File from a Vector Store
+
+Remove a file from a vector store.
+
+**Endpoint:** `DELETE /v1/vector_stores/{vector_store_id}/files/{file_id}`
+
+**Path Parameters:**
+- `vector_store_id`: The ID of the vector store (required)
+- `file_id`: The ID of the file to remove (required)
+
+<CodeGroup>
+```bash cURL
+curl --location --request DELETE 'http://localhost:8080/v1/vector_stores/vs_abc123/files/vsfile_ghi789' \
+--header 'Authorization: Bearer $YOUR_API_KEY'
+```
+
+```python Python
+import requests
+
+url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}/files/{file_id}"
+headers = {
+    "Authorization": f"Bearer {your_api_key}"
+}
+
+response = requests.delete(url, headers=headers)
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+    "id": "open-responses-file_67f803701ad5d3000002.pdf",
+    "object": "vector_store.file.deleted",
+    "deleted": true
+}
+```
+
+## Advanced Features
+
+### Chunking Strategies
+
+Chunking strategies determine how documents are divided for embedding and retrieval:
+
+<Tabs>
+  <Tab title="Static Chunking">
+    Divides documents into fixed-size chunks with configurable overlap:
+    ```json
+    "chunking_strategy": {
+      "type": "static",
+      "static": {
+        "max_chunk_size_tokens": 1000,
+        "chunk_overlap_tokens": 200
+      }
+    }
+    ```
+    Good for general-purpose document processing.
+  </Tab>
+<Tab title="Sentence Chunking">
+    Attempts to divide documents along natural sentence boundaries:
+    ```json
+    "chunking_strategy": {
+      "type": "sentence",
+      "sentence": {
+        "max_chunk_size_tokens": 1500,
+        "chunk_overlap_tokens": 200
+      }
+    }
+    ```
+    Better for technical documents with code blocks and equations.
+  </Tab>
+  <Tab title="Paragraph Chunking">
+    Attempts to divide documents along natural paragraph boundaries:
+    ```json
+    "chunking_strategy": {
+      "type": "paragraph",
+      "paragraph": {
+        "max_chunk_size_tokens": 1500,
+        "chunk_overlap_tokens": 200
+      }
+    }
+    ```
+    Better for preserving context in narrative documents.
+  </Tab>
+</Tabs>
+
+### File Attributes
+
+File attributes enable filtering and organization of documents within a vector store:
+
+```json
+"attributes": {
+  "category": "api_reference",
+  "language": "en",
+  "version": "2.0",
+  "department": "Engineering",
+  "access_level": "public"
+}
+```
+
+These attributes can later be used as filters in search queries to narrow down results.
+
+## Best Practices
+
+### Vector Store Organization
+
+<AccordionGroup>
+  <Accordion title="Create separate vector stores for different domains">
+    Having distinct vector stores for different subject areas improves search relevance. For example, separate "Technical Documentation" from "Marketing Materials."
+  </Accordion>
+  <Accordion title="Use meaningful names and descriptions">
+    Descriptive names and detailed descriptions make vector stores easier to manage as their number grows.
+  </Accordion>
+  <Accordion title="Leverage metadata for additional context">
+    Store information like department ownership, data sensitivity level, or content type in the vector store metadata.
+  </Accordion>
+</AccordionGroup>
+
+### File Management
+
+<AccordionGroup>
+  <Accordion title="Use consistent attribute schemes">
+    Develop a standardized set of attributes (like categories, versions, languages) and apply them consistently across files.
+  </Accordion>
+  <Accordion title="Include version information">
+    When dealing with versioned documentation, include version numbers in attributes to enable version-specific searches.
+  </Accordion>
+  <Accordion title="Update attributes as files change">
+    Keep attributes up-to-date as document content evolves to maintain search accuracy.
+  </Accordion>
+</AccordionGroup>
+
+### Chunking Strategy
+
+<AccordionGroup>
+  <Accordion title="Technical documentation">
+    For API references, code documentation, and technical guides, use 1000-1500 tokens per chunk.
+  </Accordion>
+  <Accordion title="Narrative content">
+    For user guides, case studies, and explanatory content, use 500-1000 tokens per chunk.
+  </Accordion>
+  <Accordion title="Tabular/structured data">
+    For content with tables, lists, or structured formats, use smaller chunks (300-500 tokens).
+  </Accordion>
+  <Accordion title="Include overlap between chunks">
+    Always include some overlap to maintain context between chunks, typically 10-20% of the chunk size.
+  </Accordion>
+</AccordionGroup>
+
+### Performance Considerations
+
+- Keep file count per vector store reasonable (less than 10,000 files for optimal performance)
+- Use pagination when listing files in large vector stores
+- Add files in batches rather than one by one for large collections
+
+## Related APIs
+
+<CardGroup cols={2}>
+  <Card
+    title="Files API"
+    icon="file"
+    href="/rag/files-api"
+  >
+    Upload and manage files before adding to vector stores
+  </Card>
+  <Card
+    title="Search API"
+    icon="magnifying-glass"
+    href="/rag/search-api"
+  >
+    Search vector stores for relevant content
+  </Card>
+</CardGroup> 

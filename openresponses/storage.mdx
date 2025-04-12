@@ -60,7 +60,7 @@ The in-memory store is enabled by default and requires no additional configurati
 To explicitly configure the in-memory store:
 
 ```properties
-open-responses.response-store.type=in-memory
+open-responses.store.type=in-memory
 ```
 
 ### MongoDB Store
@@ -72,9 +72,9 @@ To enable the MongoDB store:
 1. Add the following properties to your configuration:
 
 ```properties
-open-responses.response-store.type=mongodb
-open-response.mongodb.uri=mongodb://localhost:27017
-open-response.mongodb.database=openresponses
+open-responses.store.type=mongodb
+open-responses.mongodb.uri=mongodb://localhost:27017
+open-responses.mongodb.database=openresponses
 ```
 
 2. Ensure you have MongoDB installed and running, or provide the connection string to your MongoDB instance.
@@ -83,7 +83,7 @@ You can also configure the response store using environment variables:
 
 ```bash
 # Set the response store type
-export OPEN_RESPONSES_RESPONSE_STORE_TYPE=mongodb
+export OPEN_RESPONSES_STORE_TYPE=mongodb
 
 # Configure MongoDB (when using mongodb store type)
 export OPEN_RESPONSES_MONGODB_URI=mongodb://localhost:27017
@@ -117,6 +117,54 @@ curl http://localhost:8080/v1/responses \
   }'
 ```
 
+### Sample Response
+
+When you make a request to store a conversation, you'll receive a response that includes a unique ID for that response. This ID can be used to continue the conversation later:
+
+```json
+{
+    "id": "chatcmpl-BLB88IDIyyHjupNiAqOZQvAfT2T3K",
+    "created_at": 1744387372,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": null,
+    "model": "gpt-4o-2024-08-06",
+    "object": "response",
+    "output": [
+        {
+            "id": "589f0a06-ad6e-4a65-ae9f-1d2189c07813",
+            "content": [
+                {
+                    "annotations": [],
+                    "text": "In the tranquil heart of an ancient forest...",
+                    "type": "output_text"
+                }
+            ],
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+        }
+    ],
+    "parallel_tool_calls": null,
+    "temperature": 1.0,
+    "tool_choice": "none",
+    "top_p": null,
+    "max_output_tokens": null,
+    "previous_response_id": null,
+    "reasoning": null,
+    "status": "completed",
+    "usage": {
+        "input_tokens": 18,
+        "output_tokens": 84,
+        "output_tokens_details": {
+            "reasoning_tokens": 0
+        },
+        "total_tokens": 102
+    }
+}
+```
+
 ### Continuing a Stored Conversation
 
 To reference a previously stored conversation, use the response ID:
@@ -128,7 +176,7 @@ curl http://localhost:8080/v1/responses \
   -H "x-model-provider: openai" \
   -d '{
     "model": "gpt-4o",
-    "previous_response_id": "resp_abc123",
+    "previous_response_id": "chatcmpl-BLB88IDIyyHjupNiAqOZQvAfT2T3K",
     "input": [
       {"role": "user", "content": "Make the story longer."}
     ],

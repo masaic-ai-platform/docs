@@ -422,7 +422,55 @@ curl --location 'http://localhost:8080/v1/responses' \
 }'
 ```
 
-The response will include a `response_id` that you can use to reference this conversation in future requests.
+### Sample Response
+
+When you make a request to store a conversation, you'll receive a response that includes a unique ID which can be used for continuing the conversation:
+
+```json
+{
+    "id": "chatcmpl-BLB88IDIyyHjupNiAqOZQvAfT2T3K",
+    "created_at": 1744387372,
+    "error": null,
+    "incomplete_details": null,
+    "instructions": null,
+    "metadata": null,
+    "model": "gpt-4o-2024-08-06",
+    "object": "response",
+    "output": [
+        {
+            "id": "589f0a06-ad6e-4a65-ae9f-1d2189c07813",
+            "content": [
+                {
+                    "annotations": [],
+                    "text": "In the tranquil heart of an ancient forest...",
+                    "type": "output_text"
+                }
+            ],
+            "role": "assistant",
+            "status": "completed",
+            "type": "message"
+        }
+    ],
+    "parallel_tool_calls": null,
+    "temperature": 1.0,
+    "tool_choice": "none",
+    "top_p": null,
+    "max_output_tokens": null,
+    "previous_response_id": null,
+    "reasoning": null,
+    "status": "completed",
+    "usage": {
+        "input_tokens": 18,
+        "output_tokens": 84,
+        "output_tokens_details": {
+            "reasoning_tokens": 0
+        },
+        "total_tokens": 102
+    }
+}
+```
+
+The response will include an `id` that you can use to reference this conversation in future requests.
 
 ### Following Up on a Stored Conversation
 
@@ -436,7 +484,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 --data '{
     "model": "gpt-4o",
     "store": true,
-    "previous_response_id": "resp_abc123",
+    "previous_response_id": "chatcmpl-BLB88IDIyyHjupNiAqOZQvAfT2T3K",
     "input": [
         {
             "role": "user",

@@ -1,0 +1,666 @@
+---
+title: 'Search API'
+description: 'Perform semantic searches across your vector stores to find relevant document content'
+---
+The Search API enables you to perform semantic searches across your vector stores to find relevant document content. This API is at the core of the RAG system, allowing you to retrieve information based on meaning rather than just keywords.
+
+The official documentation for the Search API is available [here](https://platform.openai.com/docs/api-reference/vector-stores/search).
+
+## Key Benefits
+
+<CardGroup cols={2}>
+  <Card
+    title="Semantic Understanding"
+    icon="brain"
+  >
+    Find content based on meaning, not just exact keyword matches
+  </Card>
+  <Card
+    title="Contextual Results"
+    icon="puzzle-piece"
+  >
+    Retrieve document chunks with surrounding context preserved
+  </Card>
+  <Card
+    title="Flexible Filtering"
+    icon="filter"
+  >
+    Narrow results by document attributes and metadata
+  </Card>
+  <Card
+    title="AI Integration"
+    icon="robot"
+  >
+    Connect search results directly to AI responses
+  </Card>
+</CardGroup>
+
+## API Endpoints
+
+### Search a Vector Store
+
+Search for relevant content within a vector store.
+
+**Endpoint:** `POST /v1/vector_stores/{vector_store_id}/search`  
+**Content-Type:** `application/json`
+
+**Path Parameters:**
+- `vector_store_id`: The ID of the vector store to search (required)
+
+**Request Body:**
+- `query`: The search query string (required)
+- `max_num_results`: Maximum number of results to return (default: 10)
+- `filters`: Optional filters to apply based on file attributes
+- `rewrite_query`: Whether to rewrite the query for better vector search (default: false)
+- `ranking_options`: Options for ranking/scoring results
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/vector_stores/vs_67f8046b1ad5d3000012/search' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--data '{
+  "query": "When did empress matilda reached england?",
+  "max_num_results": 2,
+  "filters": {
+    "type": "and",
+    "filters": [
+      {
+        "type": "eq",
+        "key": "language",
+        "value": "en"
+      },
+      {
+        "type": "eq",
+        "key": "category",
+        "value": "api_reference" 
+      }
+    ]
+  },
+  "ranking_options": {
+    "score_threshold": 0.7
+  }
+}'
+```
+
+```python Python
+import requests
+import json
+
+url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}/search"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Bearer {your_api_key}"
+}
+payload = {
+    "query": "When did empress matilda reached england?",
+    "max_num_results": 2,
+    "filters": {
+        "type": "and",
+        "filters": [
+            {
+                "type": "eq",
+                "key": "language",
+                "value": "en"
+            },
+            {
+                "type": "eq",
+                "key": "category",
+                "value": "api_reference"
+            }
+        ]
+    },
+    "ranking_options": {
+        "score_threshold": 0.7
+    }
+}
+
+response = requests.post(url, headers=headers, data=json.dumps(payload))
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+    "object": "vector_store.search_results.page",
+    "search_query": "When did empress matilda reached england?",
+    "data": [
+        {
+            "file_id": "open-responses-file_67f803701ad5d3000002.pdf",
+            "filename": "Empress Matilda.pdf",
+            "score": 0.8449070359549928,
+            "attributes": {
+                "category": "api_reference",
+                "language": "en",
+                "version": "2.0",
+                "filename": "Empress Matilda.pdf",
+                "chunk_index": 10,
+                "total_chunks": 14,
+                "chunk_id": "c_67f8084e1ad5d3000039",
+                "file_id": "open-responses-file_67f803701ad5d3000002.pdf"
+            },
+            "content": [
+                {
+                    "type": "text",
+                    "text": "In 1108, Henry left Matilda..."
+                }
+            ]
+        },
+        {
+            "file_id": "open-responses-file_67f803701ad5d3000002.pdf",
+            "filename": "Empress Matilda.pdf",
+            "score": 0.8283641913829363,
+            "attributes": {
+                "category": "api_reference",
+                "language": "en",
+                "version": "2.0",
+                "filename": "Empress Matilda.pdf",
+                "chunk_index": 0,
+                "total_chunks": 14,
+                "chunk_id": "c_67f8084d1ad5d300002f",
+                "file_id": "open-responses-file_67f803701ad5d3000002.pdf"
+            },
+            "content": [
+                {
+                    "type": "text",
+                    "text": "Matilda Depiction of Matilda in the 12th-century..."
+                }
+            ]
+        }
+    ],
+    "has_more": false,
+    "next_page": null
+}
+```
+
+## Request Parameters in Detail
+
+### Query
+
+The `query` parameter is a natural language question or statement that describes the information you're looking for. The system converts this query into a vector embedding and finds document chunks with similar embeddings.
+
+<Tabs>
+  <Tab title="Simple Query">
+    ```json
+    "query": "How do I reset my password?"
+    ```
+    Straightforward queries work well for specific information needs.
+  </Tab>
+  <Tab title="Descriptive Query">
+    ```json
+    "query": "Explain the step-by-step process for configuring SSL certificates on the server"
+    ```
+    More detailed queries can help refine the search when looking for procedural information.
+  </Tab>
+  <Tab title="Conceptual Query">
+    ```json
+    "query": "What are the security implications of using default credentials?"
+    ```
+    Conceptual queries help find explanatory content about broader topics.
+  </Tab>
+</Tabs>
+
+### Max Number of Results
+
+The `max_num_results` parameter controls how many results are returned. The default is 10, but you can adjust this based on your needs:
+
+```json
+"max_num_results": 5
+```
+
+<Note>
+  For applications that need more context, increase this value, but be aware that higher values may include less relevant results.
+</Note>
+
+### Filters
+
+The `filters` parameter lets you narrow search results based on file attributes. Filters follow a structured format that enables both simple and complex filtering conditions.
+
+#### Filter Types
+
+The API supports two types of filters:
+
+<CardGroup cols={2}>
+  <Card
+    title="Comparison Filters"
+    icon="equals"
+  >
+    Compare a property value against a specific value
+  </Card>
+  <Card
+    title="Compound Filters"
+    icon="layer-group"
+  >
+    Combine multiple filters using logical operators
+  </Card>
+</CardGroup>
+
+#### Comparison Operators
+
+<table>
+  <thead>
+    <tr>
+      <th>Operator</th>
+      <th>Description</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>eq</code></td>
+      <td>Equal to</td>
+      <td>Match where language is "en"</td>
+    </tr>
+    <tr>
+      <td><code>ne</code></td>
+      <td>Not equal to</td>
+      <td>Match where status is not "archived"</td>
+    </tr>
+    <tr>
+      <td><code>gt</code></td>
+      <td>Greater than</td>
+      <td>Match where version > 1.0</td>
+    </tr>
+    <tr>
+      <td><code>gte</code></td>
+      <td>Greater than or equal to</td>
+      <td>Match where created_at ≥ 1672531200</td>
+    </tr>
+    <tr>
+      <td><code>lt</code></td>
+      <td>Less than</td>
+      <td>Match where priority < 3</td>
+    </tr>
+    <tr>
+      <td><code>lte</code></td>
+      <td>Less than or equal to</td>
+      <td>Match where size ≤ 1024</td>
+    </tr>
+  </tbody>
+</table>
+
+#### Basic Filter Examples
+
+<Tabs>
+  <Tab title="Equal To">
+    ```json
+    "filters": {
+      "type": "eq",
+      "key": "language",
+      "value": "en"
+    }
+    ```
+    Find documents where the language attribute equals "en".
+  </Tab>
+  <Tab title="Greater Than">
+    ```json
+    "filters": {
+      "type": "gt",
+      "key": "version",
+      "value": 2.0
+    }
+    ```
+    Find documents with version greater than 2.0.
+  </Tab>
+  <Tab title="Not Equal To">
+    ```json
+    "filters": {
+      "type": "ne",
+      "key": "status",
+      "value": "archived"
+    }
+    ```
+    Find documents where status is not "archived".
+  </Tab>
+</Tabs>
+
+#### Compound Filters
+
+Combine multiple conditions using logical operators:
+
+<AccordionGroup>
+  <Accordion title="AND Filter">
+    All conditions must be true for a document to be included:
+    
+    ```json
+    "filters": {
+      "type": "and",
+      "filters": [
+        {
+          "type": "eq",
+          "key": "category",
+          "value": "documentation"
+        },
+        {
+          "type": "eq",
+          "key": "language",
+          "value": "en"
+        }
+      ]
+    }
+    ```
+  </Accordion>
+  <Accordion title="OR Filter">
+    At least one condition must be true:
+    
+    ```json
+    "filters": {
+      "type": "or",
+      "filters": [
+        {
+          "type": "eq",
+          "key": "filename",
+          "value": "document1.txt"
+        },
+        {
+          "type": "eq",
+          "key": "filename",
+          "value": "document2.txt"
+        }
+      ]
+    }
+    ```
+  </Accordion>
+  <Accordion title="Nested Filters">
+    Combine AND and OR for complex conditions:
+    
+    ```json
+    "filters": {
+      "type": "and",
+      "filters": [
+        {
+          "type": "eq",
+          "key": "category",
+          "value": "documentation"
+        },
+        {
+          "type": "or",
+          "filters": [
+            {
+              "type": "eq",
+              "key": "language",
+              "value": "en"
+            },
+            {
+              "type": "eq",
+              "key": "language",
+              "value": "es"
+            }
+          ]
+        }
+      ]
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+#### Advanced Use Cases
+
+<CardGroup cols={2}>
+  <Card
+    title="Date Range Filtering"
+    icon="calendar"
+  >
+    ```json
+    "filters": {
+      "type": "and",
+      "filters": [
+        {
+          "type": "gte",
+          "key": "created_at",
+          "value": 1672531200
+        },
+        {
+          "type": "lt",
+          "key": "created_at",
+          "value": 1704067200
+        }
+      ]
+    }
+    ```
+    Filter documents created in 2023 (using Unix timestamps).
+  </Card>
+  <Card
+    title="Boolean Filters"
+    icon="toggle-on"
+  >
+    ```json
+    "filters": {
+      "type": "and",
+      "filters": [
+        {
+          "type": "eq",
+          "key": "is_approved",
+          "value": true
+        },
+        {
+          "type": "eq",
+          "key": "is_public",
+          "value": true
+        }
+      ]
+    }
+    ```
+    Find approved public documents.
+  </Card>
+</CardGroup>
+
+<Note>
+  When designing your document attributes, consider what filtering capabilities you'll need and ensure your attributes are structured accordingly.
+</Note>
+
+### Ranking Options
+
+The `ranking_options` parameter configures how results are scored and ranked:
+
+```json
+"ranking_options": {
+  "score_threshold": 0.7
+}
+```
+
+- `score_threshold`: Minimum similarity score (0.0-1.0) for results to be included
+
+<AccordionGroup>
+  <Accordion title="High Threshold (0.8-0.95)">
+    Returns only the most relevant matches. Good for precise answers when you need high confidence.
+  </Accordion>
+  <Accordion title="Medium Threshold (0.6-0.8)">
+    Balance between precision and recall. Suitable for most use cases.
+  </Accordion>
+  <Accordion title="Low Threshold (0.3-0.6)">
+    Casts a wider net to include more potential matches. Useful when you need broader coverage.
+  </Accordion>
+</AccordionGroup>
+
+## Response Format in Detail
+
+The search response includes:
+
+### Search Query
+
+The original query string used for the search:
+
+```json
+"search_query": "How do I configure the system?"
+```
+
+### Data Array
+
+An array of search results, each containing:
+
+- `file_id`: ID of the file containing the result
+- `filename`: Name of the file
+- `score`: Similarity score (0.0-1.0)
+- `attributes`: File attributes for filtering
+- `content`: Array of content segments
+
+The results are ordered by descending score (most relevant first).
+
+### Pagination Information
+
+- `has_more`: Boolean indicating if there are more results available
+- `next_page`: Token for retrieving the next page of results (if available)
+
+## Using the file_search Tool
+
+The `file_search` tool provides an alternative way to search vector stores through the AI assistant API. This is especially useful for integrating search within conversational AI flows.
+
+### Tool Usage with OpenAI Models
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $OPENAI_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [{
+      "type": "file_search",
+      "vector_store_ids": ["vs_abc123"],
+      "max_num_results": 5,
+      "filters": {
+        "type": "and",
+        "filters": [
+          {
+            "type": "eq",
+            "key": "category",
+            "value": "documentation"
+          },
+          {
+            "type": "eq",
+            "key": "language",
+            "value": "en"
+          }
+        ]
+      }
+    }],
+    "input": "How do I configure the system?",
+    "instructions": "Answer questions using information from the provided documents."
+}'
+```
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:8080/v1",
+    api_key="your_openai_api_key"
+)
+
+response = client.responses.create(
+    model="gpt-4o",
+    tools=[{
+        "type": "file_search",
+        "vector_store_ids": ["vs_abc123"],
+        "max_num_results": 5,
+        "filters": {
+            "type": "and",
+            "filters": [
+                {
+                    "type": "eq",
+                    "key": "category",
+                    "value": "documentation"
+                },
+                {
+                    "type": "eq",
+                    "key": "language",
+                    "value": "en"
+                }
+            ]
+        }
+    }],
+    "input": "How do I configure the system?",
+    "instructions": "Answer questions using information from the provided documents."
+)
+
+print(response)
+```
+</CodeGroup>
+
+<Note>
+  The file_search tool automatically performs the search and provides the results to the AI model in the same request. This creates a seamless RAG experience.
+</Note>
+
+## Advanced Search Techniques
+
+### Query Rewriting (Coming Soon)
+
+For improved search results, you can enable query rewriting:
+
+```json
+"rewrite_query": true
+```
+
+When enabled, the system will automatically reformulate the query to improve vector similarity matching. This is particularly helpful for:
+- Queries with ambiguous terms
+- Questions with implicit context
+- Queries that could benefit from expansion with related terms
+
+## Best Practices
+
+### Query Optimization
+
+<Steps>
+  <Step title="Be specific and clear">
+    Craft precise queries rather than broad ones. "How do I reset a user password?" is better than "password reset."
+  </Step>
+  <Step title="Use natural language">
+    Frame queries as complete questions or statements rather than keyword lists.
+  </Step>
+  <Step title="Include context">
+    If searching for domain-specific information, include relevant context in the query.
+  </Step>
+  <Step title="Use filters effectively">
+    Combine query text with appropriate filters to narrow down the search space.
+  </Step>
+</Steps>
+
+### Performance Considerations
+
+- Keep `max_num_results` reasonable (5-20) for better performance
+- Use filters to reduce the search space when applicable
+- Consider implementing client-side caching for frequent queries
+- For very large vector stores, use pagination to handle results efficiently
+
+## Integration Patterns
+
+### Direct API Integration
+
+Integrate the Search API directly into your application's backend:
+
+1. Capture user query from your application UI
+2. Send search request to the Search API 
+3. Process and display results in your application
+4. Optionally use results to enhance subsequent AI interactions
+
+### AI-Driven Search with file_search Tool
+
+Let the AI assistant drive the search interaction:
+
+1. Configure AI with the file_search tool
+2. User asks a question to the AI
+3. AI determines when to use the search tool and formulates appropriate queries
+4. AI incorporates search results into its response
+5. User receives a cohesive answer combining search results with AI capabilities
+
+## Related APIs
+
+<CardGroup cols={2}>
+  <Card
+    title="Files API"
+    icon="file"
+    href="/rag/files-api"
+  >
+    Upload and manage files for searching
+  </Card>
+  <Card
+    title="Vector Store API"
+    icon="database"
+    href="/rag/vectorstore-api"
+  >
+    Create and manage vector stores for embeddings
+  </Card>
+</CardGroup> 

@@ -1,0 +1,363 @@
+---
+title: 'Files API'
+description: 'Upload, manage, and retrieve documents for RAG integration'
+---
+The Files API allows you to upload, manage, and retrieve documents for use with the RAG system. This API serves as the foundation for document management before semantic search.
+
+The official documentation for the Files API is available [here](https://platform.openai.com/docs/api-reference/files). 
+
+## Key Capabilities
+
+<CardGroup cols={2}>
+  <Card
+    title="Document Upload"
+    icon="upload"
+  >
+    Upload documents in various formats (PDF, TXT, DOCX, CSV, JSON, etc.)
+  </Card>
+  <Card
+    title="File Management"
+    icon="folder-open"
+  >
+    List, retrieve, and delete files with filtering options
+  </Card>
+  <Card
+    title="Content Access"
+    icon="file-lines"
+  >
+    Access file content and metadata through a unified API
+  </Card>
+  <Card
+    title="RAG Integration"
+    icon="puzzle-piece"
+  >
+    Seamlessly connect with vector stores for embedding generation
+  </Card>
+</CardGroup>
+
+## API Endpoints
+
+### Upload a File
+
+Upload a document to make it available for vector stores and semantic search.
+
+**Endpoint:** `POST /v1/files`  
+**Content-Type:** `multipart/form-data`
+
+**Request Parameters:**
+- `file`: The file to upload (required)
+- `purpose`: The intended use of the file (required)
+  - Supported values: `assistants`, `batch`, `fine_tune`, `vision`, `user_data`, `evals`
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/files' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--form 'file=@"/path/to/your/document.pdf"' \
+--form 'purpose="user_data"'
+```
+
+```python Python
+import requests
+
+url = "http://localhost:8080/v1/files"
+headers = {
+    "Authorization": f"Bearer {your_api_key}"
+}
+files = {
+    "file": open("/path/to/your/document.pdf", "rb")
+}
+data = {
+    "purpose": "user_data"
+}
+
+response = requests.post(url, headers=headers, files=files, data=data)
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+  "id": "file_abc123",
+  "object": "file",
+  "bytes": 0,
+  "created_at": 1677610602,
+  "filename": "document.pdf",
+  "purpose": "user_data"
+}
+```
+
+<Note>
+  Supported formats include PDF, TXT, DOCX, CSV, JSON, and many others.
+  The returned file ID is used for all other operations with this file.
+  The bytes field will be 0 until the file is processed.
+</Note>
+
+### List Files
+
+Retrieve a list of all files you've uploaded, with optional filtering.
+
+**Endpoint:** `GET /v1/files`
+
+**Query Parameters:**
+- `purpose`: Filter files by purpose (optional)
+- `limit`: Maximum number of files to return (default: 100, range: 1-100)
+- `order`: Sort order by creation timestamp (`asc` or `desc`, default: `desc`)
+- `after`: Return files after this ID for pagination (optional)
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/files?purpose=user_data&limit=10&order=desc' \
+--header 'Authorization: Bearer $YOUR_API_KEY'
+```
+
+```python Python
+import requests
+
+url = "http://localhost:8080/v1/files"
+params = {
+    "purpose": "user_data",
+    "limit": 10,
+    "order": "desc"
+}
+headers = {
+    "Authorization": f"Bearer {your_api_key}"
+}
+
+response = requests.get(url, headers=headers, params=params)
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+    "data": [
+        {
+            "id": "open-responses-file_67f800891ad5d3000000.pdf",
+            "object": "file",
+            "bytes": 422718,
+            "created_at": 1744306313,
+            "filename": "Empress Matilda.pdf",
+            "purpose": "user_data",
+            "status": "processed"
+        }
+    ],
+    "object": "list"
+}
+```
+
+### Retrieve File Metadata
+
+Get metadata about a specific file.
+
+**Endpoint:** `GET /v1/files/{file_id}`
+
+**Path Parameters:**
+- `file_id`: The ID of the file to retrieve (required)
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/files/file_abc123' \
+--header 'Authorization: Bearer $YOUR_API_KEY'
+```
+
+```python Python
+import requests
+
+url = f"http://localhost:8080/v1/files/{file_id}"
+headers = {
+    "Authorization": f"Bearer {your_api_key}"
+}
+
+response = requests.get(url, headers=headers)
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+    "id": "open-responses-file_67f800891ad5d3000000.pdf",
+    "object": "file",
+    "bytes": 422718,
+    "created_at": 1744306313,
+    "filename": "Empress Matilda.pdf",
+    "purpose": "user_data",
+    "status": "processed"
+}
+```
+
+### Retrieve File Content
+
+Download the content of a specific file.
+
+**Endpoint:** `GET /v1/files/{file_id}/content`
+
+**Path Parameters:**
+- `file_id`: The ID of the file to retrieve (required)
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/files/file_abc123/content' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--output downloaded_document.pdf
+```
+
+```python Python
+import requests
+
+url = f"http://localhost:8080/v1/files/{file_id}/content"
+headers = {
+    "Authorization": f"Bearer {your_api_key}"
+}
+
+response = requests.get(url, headers=headers)
+with open("downloaded_document.pdf", "wb") as f:
+    f.write(response.content)
+```
+</CodeGroup>
+
+**Response:**
+The file content with appropriate Content-Type header.
+
+### Delete a File
+
+Delete a file when it's no longer needed.
+
+**Endpoint:** `DELETE /v1/files/{file_id}`
+
+**Path Parameters:**
+- `file_id`: The ID of the file to delete (required)
+
+<CodeGroup>
+```bash cURL
+curl --location --request DELETE 'http://localhost:8080/v1/files/file_abc123' \
+--header 'Authorization: Bearer $YOUR_API_KEY'
+```
+
+```python Python
+import requests
+
+url = f"http://localhost:8080/v1/files/{file_id}"
+headers = {
+    "Authorization": f"Bearer {your_api_key}"
+}
+
+response = requests.delete(url, headers=headers)
+print(response.json())
+```
+</CodeGroup>
+
+**Example Response:**
+```json
+{
+    "id": "open-responses-file_67f800891ad5d3000000.pdf",
+    "object": "file",
+    "deleted": true
+}
+```
+
+<Warning>
+  Deleting a file will also remove it from any vector stores it has been added to.
+</Warning>
+
+## Using Files with Vector Stores
+
+After uploading a file, you can add it to a vector store for semantic search. This workflow connects the Files API to the Vector Store API.
+
+<Steps>
+  <Step title="Upload a File">
+    Use the Files API to upload your document
+    ```bash
+    curl --location 'http://localhost:8080/v1/files' \
+    --header 'Authorization: Bearer $YOUR_API_KEY' \
+    --form 'file=@"/path/to/your/document.pdf"' \
+    --form 'purpose="user_data"'
+    ```
+  </Step>
+  <Step title="Create a Vector Store">
+    If you don't already have a vector store, create one
+    ```bash
+    curl --location 'http://localhost:8080/v1/vector_stores' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer $YOUR_API_KEY' \
+    --data '{
+      "name": "My Knowledge Base",
+      "description": "Technical documentation"
+    }'
+    ```
+  </Step>
+  <Step title="Add the File to Vector Store">
+    Add your uploaded file to the vector store
+    ```bash
+    curl --location 'http://localhost:8080/v1/vector_stores/vs_def456/files' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer $YOUR_API_KEY' \
+    --data '{
+      "file_id": "file_abc123",
+      "chunking_strategy": {
+        "type": "static",
+        "static": {
+          "max_chunk_size_tokens": 1000,
+          "chunk_overlap_tokens": 200
+        }
+      }
+    }'
+    ```
+  </Step>
+  <Step title="Search for Content">
+    Now you can search for content in your documents
+    ```bash
+    curl --location 'http://localhost:8080/v1/vector_stores/vs_def456/search' \
+    --header 'Content-Type: application/json' \
+    --header 'Authorization: Bearer $YOUR_API_KEY' \
+    --data '{
+      "query": "How do I configure the system?"
+    }'
+    ```
+  </Step>
+</Steps>
+
+## Best Practices
+
+### File Organization
+
+<AccordionGroup>
+  <Accordion title="Document Naming Conventions">
+    Use descriptive filenames to help identify content. Consider including version numbers or dates in filenames for versioned documentation.
+  </Accordion>
+  <Accordion title="Document Structure">
+    Organize content with clear sections and headers. Well-structured documents improve chunking and search results.
+  </Accordion>
+  <Accordion title="File Size Optimization">
+    For optimal performance, keep individual files under 25MB. Break larger documents into logical segments.
+  </Accordion>
+</AccordionGroup>
+
+### File Management
+
+- Regularly review and clean up unused files to maintain optimal performance
+- Use the `purpose` parameter to categorize files based on their intended use
+- Leverage file metadata for tracking document versions and categories
+- Consider creating a file inventory system for larger implementations
+
+## Related APIs
+
+<CardGroup cols={2}>
+  <Card
+    title="Vector Store API"
+    icon="database"
+    href="/rag/vectorstore-api"
+  >
+    Create and manage vector stores for your files
+  </Card>
+  <Card
+    title="Search API"
+    icon="magnifying-glass"
+    href="/rag/search-api"
+  >
+    Search across your document collections
+  </Card>
+</CardGroup> 
