@@ -1,0 +1,203 @@
+---
+title: 'Embedding Models'
+description: 'Configure embedding models for semantic search and similarity comparisons'
+---
+
+The Embedding Service transforms text content into vector embeddings that enable semantic search and similarity comparisons in your RAG implementation.
+
+## Overview
+
+Embeddings are numerical representations of text that capture semantic meaning. The application uses these vectors to power search functionality and document comparisons. By default, a local embedding model is used, but you can configure the system to use OpenAI's embedding API or custom ONNX models.
+
+## Quick Setup
+
+For most users, the default embedding configuration works out of the box. You can easily customize it using environment variables in your deployment.
+
+### Environment Variables
+
+<div className="my-6 overflow-auto max-w-full">
+  <Frame caption="Embedding Configuration Options">
+    <table className="w-full text-sm" style={{ borderCollapse: "separate", borderRadius: "4px", overflow: "hidden" }}>
+      <thead>
+        <tr className="bg-gray-200 dark:bg-gray-800">
+          <th className="border border-gray-300 p-2" style={{ borderTopLeftRadius: "4px" }}>Variable</th>
+          <th className="border border-gray-300 p-2">Default</th>
+          <th className="border border-gray-300 p-2" style={{ borderTopRightRadius: "4px" }}>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="border border-gray-300 p-2"><code>OPEN_RESPONSES_EMBEDDINGS_MODEL_TYPE</code></td>
+          <td className="border border-gray-300 p-2">all-minilm-l6-v2</td>
+          <td className="border border-gray-300 p-2">The type of embedding model to use (all-minilm-l6-v2 or onnx)</td>
+        </tr>
+        <tr className="bg-gray-100 dark:bg-gray-700">
+          <td className="border border-gray-300 p-2"><code>OPEN_RESPONSES_EMBEDDINGS_HTTP_ENABLED</code></td>
+          <td className="border border-gray-300 p-2">false</td>
+          <td className="border border-gray-300 p-2">Whether to use OpenAI API (true) or local model (false)</td>
+        </tr>
+        <tr>
+          <td className="border border-gray-300 p-2"><code>OPEN_RESPONSES_EMBEDDINGS_API_KEY</code></td>
+          <td className="border border-gray-300 p-2"></td>
+          <td className="border border-gray-300 p-2">Your OpenAI API key (required when HTTP_ENABLED is true)</td>
+        </tr>
+        <tr className="bg-gray-100 dark:bg-gray-700">
+          <td className="border border-gray-300 p-2"><code>OPEN_RESPONSES_EMBEDDINGS_MODEL</code></td>
+          <td className="border border-gray-300 p-2">text-embedding-3-small</td>
+          <td className="border border-gray-300 p-2">The OpenAI model to use (when HTTP_ENABLED is true)</td>
+        </tr>
+        <tr>
+          <td className="border border-gray-300 p-2"><code>OPEN_RESPONSES_EMBEDDINGS_URL</code></td>
+          <td className="border border-gray-300 p-2">https://api.openai.com/v1</td>
+          <td className="border border-gray-300 p-2">The base URL for OpenAI API (when HTTP_ENABLED is true)</td>
+        </tr>
+        <tr className="bg-gray-100 dark:bg-gray-700">
+          <td className="border border-gray-300 p-2"><code>OPEN_RESPONSES_EMBEDDINGS_ONNX_MODEL_PATH</code></td>
+          <td className="border border-gray-300 p-2"></td>
+          <td className="border border-gray-300 p-2">Path to custom ONNX model file (when MODEL_TYPE is onnx)</td>
+        </tr>
+        <tr>
+          <td className="border border-gray-300 p-2"><code>OPEN_RESPONSES_EMBEDDINGS_TOKENIZER_PATH</code></td>
+          <td className="border border-gray-300 p-2"></td>
+          <td className="border border-gray-300 p-2">Path to custom tokenizer JSON file (when MODEL_TYPE is onnx)</td>
+        </tr>
+        <tr className="bg-gray-100 dark:bg-gray-700">
+          <td className="border border-gray-300 p-2" style={{ borderBottomLeftRadius: "4px" }}><code>OPEN_RESPONSES_EMBEDDINGS_POOLING_MODE</code></td>
+          <td className="border border-gray-300 p-2">mean</td>
+          <td className="border border-gray-300 p-2" style={{ borderBottomRightRadius: "4px" }}>Pooling mode for ONNX models: mean, cls, or max</td>
+        </tr>
+      </tbody>
+    </table>
+  </Frame>
+</div>
+
+## Supported Models
+
+### Default Local Model
+
+By default, the application uses the AllMiniLmL6V2 model, which offers:
+- Fast, efficient embedding generation
+- 384-dimensional vectors
+- Good balance of performance and quality
+- No external API dependencies
+
+Example docker-compose setup for default model:
+
+```yaml
+services:
+  app:
+    image: masaicai/open-responses:latest
+    # No specific embedding environment variables needed for default setup
+```
+
+Or using Docker run command:
+
+```bash
+docker run -p 8080:8080 masaicai/open-responses:latest
+```
+
+### OpenAI Models
+
+For higher quality embeddings, you can use OpenAI's embedding models:
+
+```yaml
+services:
+  app:
+    image: masaicai/open-responses:latest
+    environment:
+      - OPEN_RESPONSES_EMBEDDINGS_HTTP_ENABLED=true
+      - OPEN_RESPONSES_EMBEDDINGS_API_KEY=your-openai-api-key
+      - OPEN_RESPONSES_EMBEDDINGS_MODEL=text-embedding-3-small
+```
+
+Or using Docker run command:
+
+```bash
+docker run -p 8080:8080 \
+  -e OPEN_RESPONSES_EMBEDDINGS_HTTP_ENABLED=true \
+  -e OPEN_RESPONSES_EMBEDDINGS_API_KEY=your-openai-api-key \
+  -e OPEN_RESPONSES_EMBEDDINGS_MODEL=text-embedding-3-small \
+  masaicai/open-responses:latest
+```
+
+Benefits of OpenAI models:
+- Higher quality embeddings
+- More dimensions (1536 for text-embedding-3-small)
+- Better semantic understanding
+
+Trade-offs:
+- Requires internet connectivity
+- Incurs API usage costs
+- Adds network latency
+
+### Custom ONNX Models
+
+For advanced users, custom ONNX models can be used:
+
+```yaml
+services:
+  app:
+    image: masaicai/open-responses:latest
+    environment:
+      - OPEN_RESPONSES_EMBEDDINGS_MODEL_TYPE=onnx
+      - OPEN_RESPONSES_EMBEDDINGS_ONNX_MODEL_PATH=/models/your-model.onnx
+      - OPEN_RESPONSES_EMBEDDINGS_TOKENIZER_PATH=/models/your-tokenizer.json
+      - OPEN_RESPONSES_EMBEDDINGS_POOLING_MODE=mean
+    volumes:
+      - ./models:/models
+```
+
+Or using Docker run command:
+
+```bash
+docker run -p 8080:8080 \
+  -e OPEN_RESPONSES_EMBEDDINGS_MODEL_TYPE=onnx \
+  -e OPEN_RESPONSES_EMBEDDINGS_ONNX_MODEL_PATH=/models/your-model.onnx \
+  -e OPEN_RESPONSES_EMBEDDINGS_TOKENIZER_PATH=/models/your-tokenizer.json \
+  -e OPEN_RESPONSES_EMBEDDINGS_POOLING_MODE=mean \
+  -v ./models:/models \
+  masaicai/open-responses:latest
+```
+
+## Performance Considerations
+
+<CardGroup cols={3}>
+  <Card title="OpenAI Models" icon="cloud">
+    Higher quality but add latency and cost
+  </Card>
+  <Card title="Local Models" icon="server">
+    Faster and work offline but may have lower quality
+  </Card>
+  <Card title="Custom ONNX" icon="gear">
+    Flexible, configurable for specific use cases
+  </Card>
+</CardGroup>
+
+Embedding generation happens when documents are uploaded and indexed. The vector similarity search performance depends on the vector database implementation used.
+
+## Troubleshooting
+
+### Common Issues
+
+<Accordion title="OpenAI Connection Errors">
+  - Check your OPEN_RESPONSES_EMBEDDINGS_API_KEY is correct
+  - Verify network connectivity to OPEN_RESPONSES_EMBEDDINGS_URL
+  - Confirm your OpenAI account has available quota
+</Accordion>
+
+<Accordion title="Local Model Performance">
+  - The default model requires approximately 150MB of RAM
+  - Ensure your container has sufficient memory allocated
+</Accordion>
+
+<Accordion title="Custom ONNX Model Issues">
+  - Verify file paths are correct and the files are accessible
+  - Ensure your model is compatible with the application
+  - Check logs for specific error messages
+</Accordion>
+
+## Further Resources
+
+- [Langchain4j Documentation](https://docs.langchain4j.dev/)
+- [OpenAI Embeddings Documentation](https://platform.openai.com/docs/guides/embeddings)
+- [ONNX Model Format](https://onnx.ai/) 

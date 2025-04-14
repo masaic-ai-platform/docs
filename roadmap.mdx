@@ -3,45 +3,123 @@ title: 'Platform Roadmap'
 description: 'Development roadmap for the platform'
 ---
 
-# Platform Roadmap
 
 ## Theme: Fastest Dev to Prod (Developer Productivity)
 
 This roadmap outlines the key initiatives focusing on enabling developers to move efficiently from development to production with enterprise-grade AI capabilities.
 
-## 1. Built-in File Tool
-- **Integrated Vector Database** - Built-in storage for embeddings.
-- **Bring Your OWn Vector Database** - Bring your favorite or existing vector database.
-- **Document Processing Pipeline** - Tools to ingest and process documents.
-- **Built-in File Search Tool** - File search tool executes within OpenResponses API.
+<CardGroup cols={3}>
+  <Card title="Completed" icon="check" color="#0D9373">
+    Features already implemented and available for use
+  </Card>
+  <Card title="In Progress" icon="hammer" color="#F59E0B">
+    Features currently being developed
+  </Card>
+  <Card title="Planned" icon="calendar" color="#3B82F6">
+    Features scheduled for future development
+  </Card>
+</CardGroup>
 
+## 1. Built-in File Tool
+<div className="steps-container">
+  <Steps>
+    <Step icon="check" status="complete">
+      <p><strong>Integrated Vector Database</strong> - Built-in storage for embeddings.</p>
+    </Step>
+    <Step icon="check" status="complete">
+      <p><strong>Bring Your Own Vector Database</strong> - Bring your favorite or existing vector database.</p>
+    </Step>
+    <Step icon="check" status="complete">
+      <p><strong>Document Processing Pipeline</strong> - Tools to ingest and process documents.</p>
+    </Step>
+    <Step icon="check" status="complete">
+      <p><strong>Built-in File Search Tool</strong> - File search tool executes within OpenResponses API.</p>
+    </Step>
+  </Steps>
+</div>
 
 ## 2. API Playground
-- **Model Configuration** - Configure your own model.
-- **Use Built-in tools** - Built in tools are supported by default.
-- **External tools** - Use any external tool for simulation.
-- **Even Traces** - Gives complete transparency of model executions, tool executions with input and output.
+<div className="steps-container">
+  <Steps>
+    <Step icon="check" status="complete">
+      <p><strong>Model Configuration</strong> - Configure your own model.</p>
+    </Step>
+    <Step icon="check" status="complete">
+      <p><strong>Use Built-in tools</strong> - Built in tools are supported by default.</p>
+    </Step>
+    <Step icon="check" status="complete">
+      <p><strong>External tools</strong> - Use any external tool for simulation.</p>
+    </Step>
+    <Step icon="check" status="complete">
+      <p><strong>Event Traces</strong> - Gives complete transparency of model executions, tool executions with input and output.</p>
+    </Step>
+  </Steps>
+</div>
 
-## 2. OpenEvals API
-- **Open Implementation** - Open implementation of OpenAI eval API [specifications](https://platform.openai.com/docs/api-reference/evals)
-- **Eval With Your Own Model** - Eval with your cost efficient small model or fine tuned model.
-- **Completely Connected Eval Cycle** - Out of the box connected eval with Agent building.
-- **Native Support** - Native support to Responses and ChatCompletions API.
+## 3. OpenEvals API
+<div className="steps-container">
+  <Steps>
+    <Step icon="hammer" status="in-progress">
+      <p><strong>Open Implementation</strong> - Open implementation of OpenAI eval API <a href="https://platform.openai.com/docs/api-reference/evals">specifications</a>.</p>
+    </Step>
+    <Step icon="hammer" status="in-progress">
+      <p><strong>Eval With Your Own Model</strong> - Eval with your cost efficient small model or fine tuned model.</p>
+    </Step>
+    <Step icon="hammer" status="in-progress">
+      <p><strong>Completely Connected Eval Cycle</strong> - Out of the box connected eval with Agent building.</p>
+    </Step>
+    <Step icon="hammer" status="in-progress">
+      <p><strong>Native Support</strong> - Native support to Responses and ChatCompletions API.</p>
+    </Step>
+  </Steps>
+</div>
 
-## 3. A/B Testing
-- **A/B Test Models** - Compare different models.
-- **Statistical Analysis** - Measure impact of changes with confidence intervals.
-- **Performance Comparison** - Side-by-side metrics for different configurations.
+## 4. A/B Testing
+<div className="steps-container">
+  <Steps>
+    <Step icon="calendar" status="planned">
+      <p><strong>A/B Test Models</strong> - Compare different models.</p>
+    </Step>
+    <Step icon="calendar" status="planned">
+      <p><strong>Statistical Analysis</strong> - Measure impact of changes with confidence intervals.</p>
+    </Step>
+    <Step icon="calendar" status="planned">
+      <p><strong>Performance Comparison</strong> - Side-by-side metrics for different configurations.</p>
+    </Step>
+  </Steps>
+</div>
 
-## 4. Built-In Browser Tool
-- **Bring Your Own Browser Tool** - Bring your own tool for to operate on computer like Computer use, browser use, operator, etc
-- **Browse With Optimization** - Optimised for faster executions.
+## 5. Built-In Browser Tool
+<div className="steps-container">
+  <Steps>
+    <Step icon="calendar" status="planned">
+      <p><strong>Bring Your Own Browser Tool</strong> - Bring your own tool for to operate on computer like Computer use, browser use, operator, etc.</p>
+    </Step>
+    <Step icon="calendar" status="planned">
+      <p><strong>Browse With Optimization</strong> - Optimised for faster executions.</p>
+    </Step>
+  </Steps>
+</div>
 
 ## 6. Simulations (KPI Dashboard)
-- **Load Testing** - Simulate high traffic scenarios.
-- **Scenario Replay** - Re-run production scenarios in test environments.
-- **Failure Mode Analysis** - Test system behavior under various error conditions.
-- **Performance Projections** - Estimate scaling requirements and costs.
-- **Custom KPI Tracking** - Build dashboards for business-specific metrics.
+<div className="steps-container">
+  <Steps>
+    <Step icon="hammer" status="in-progress">
+      <p><strong>Load Testing</strong> - Simulate high traffic scenarios.</p>
+    </Step>
+    <Step icon="calendar" status="planned">
+      <p><strong>Scenario Replay</strong> - Re-run production scenarios in test environments.</p>
+    </Step>
+    <Step icon="calendar" status="planned">
+      <p><strong>Failure Mode Analysis</strong> - Test system behavior under various error conditions.</p>
+    </Step>
+    <Step icon="calendar" status="planned">
+      <p><strong>Performance Projections</strong> - Estimate scaling requirements and costs.</p>
+    </Step>
+    <Step icon="calendar" status="planned">
+      <p><strong>Custom KPI Tracking</strong> - Build dashboards for business-specific metrics.</p>
+    </Step>
+  </Steps>
+</div>
 
 This roadmap will be regularly reviewed and updated based on user feedback, market changes, and technological advancements. 
