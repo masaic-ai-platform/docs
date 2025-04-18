@@ -70,5 +70,24 @@ codex -m "google@gemini-2.0-flash" "help me understand this code"
 
 The format for specifying a model is `provider@model-name` or `model_endpoint@model_name`, where:
 - `provider`: The model provider (e.g., claude, deepseek, google, openai)
-- `model_endpoint`: For locally deployed models, the endpoint URL where chat/completions is available
-- `model-name`: The specific model to use from that provider or endpoint 
+- `model_endpoint`: For locally deployed models or any custom model provider, the endpoint URL where chat/completions is available
+- `model-name`: The specific model to use from that provider or endpoint
+
+## Supported Model Providers
+
+OpenResponses supports the following model providers that can be used with the `provider@model_name` convention:
+
+| Provider | API Endpoint |
+|----------|--------------|
+| openai | https://api.openai.com/v1 |
+| claude | https://api.anthropic.com/v1 |
+| anthropic | https://api.anthropic.com/v1 |
+| groq | https://api.groq.com/openai/v1 |
+| togetherai | https://api.together.xyz/v1 |
+| gemini | https://generativelanguage.googleapis.com/v1beta/openai/ |
+| google | https://generativelanguage.googleapis.com/v1beta/openai/ |
+| deepseek | https://api.deepseek.com |
+| ollama | http://localhost:11434/v1 |
+| xai | https://api.x.ai/v1 |
+
+For any model provider not listed in the table above, you can use the `model_endpoint@model_name` convention by directly specifying the full API endpoint URL. This works for both locally deployed models and any third-party API services that follow the OpenAI-compatible chat/completions format. 
