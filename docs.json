@@ -35,6 +35,12 @@
             ]
           },
           {
+            "group": "Use Cases & Demos",
+            "pages": [
+              "use-cases/codex-demo"
+            ]
+          },
+          {
             "group": "OpenResponses API",
             "pages": [
               "openresponses/compatibility",
