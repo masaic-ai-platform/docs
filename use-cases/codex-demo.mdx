@@ -1,0 +1,93 @@
+---
+title: 'Codex With Your Own Model'
+description: 'Run OpenAI Codex with OpenResponses using any model of your choice'
+---
+
+# OpenAI Codex With Your Own Model
+
+## Key Benefits
+
+- **Run Codex with Custom Models**: Integrate [OpenAI Codex](https://github.com/openai/codex) with OpenResponses to use any model of your choice
+- **Extend Functionality**: Enhance Codex capabilities with additional MCP tools or custom tools and integrations
+- **Simple Deployment**: Quick setup with no separate installation needed - just follow the [quickstart guide](/quickstart)
+- **Full Control**: Maintain complete ownership of your code data and model choices
+
+## Step-by-Step Setup Instructions
+
+### 1. Run OpenResponses Service
+
+Launch OpenResponses using Docker:
+
+```bash
+docker run -p 8080:8080 masaicai/open-responses:latest
+```
+
+For advanced configuration options, refer to the detailed [quickstart guide](/quickstart).
+
+### 2. Install OpenAI Codex
+
+Install the Codex CLI globally:
+
+```bash
+npm i -g @openai/codex
+```
+
+For more information about Codex CLI, visit the [official repository](https://github.com/openai/codex).
+
+### 3. Configure and Run Codex with Your Preferred Model
+
+Set OpenResponses as your base API and configure your API key:
+
+```bash
+# Point to your OpenResponses instance
+export OPENAI_BASE_URL=http://localhost:8080/v1
+
+# Configure your API key (use the key from your model provider, e.g., OpenAI, Claude, etc.)
+export OPENAI_API_KEY=your-api-key-here
+```
+
+Run Codex with a specific model using the `-m` flag:
+
+### Example with Locally Deployed Model
+```bash
+codex -m "http://mymodel_host/v1@my_model" "explain me the structure of the codebase"
+```
+
+### Example with Claude
+```bash
+codex -m "claude@claude-3-5-haiku-20241022" "explain me the structure of the codebase"
+```
+
+### Example with DeepSeek
+```bash
+codex -m "deepseek@deepseek-chat" "analyze this repository"
+```
+
+### Example with Google Gemini
+```bash
+codex -m "google@gemini-2.0-flash" "help me understand this code"
+```
+
+The format for specifying a model is `provider@model-name` or `model_endpoint@model_name`, where:
+- `provider`: The model provider (e.g., claude, deepseek, google, openai)
+- `model_endpoint`: For locally deployed models or any custom model provider, the endpoint URL where chat/completions is available
+- `model-name`: The specific model to use from that provider or endpoint
+
+## Supported Model Providers
+
+OpenResponses supports the following model providers that can be used with the `provider@model_name` convention:
+
+| Provider | API Endpoint |
+|----------|--------------|
+| openai | https://api.openai.com/v1 |
+| claude | https://api.anthropic.com/v1 |
+| anthropic | https://api.anthropic.com/v1 |
+| groq | https://api.groq.com/openai/v1 |
+| togetherai | https://api.together.xyz/v1 |
+| gemini | https://generativelanguage.googleapis.com/v1beta/openai/ |
+| google | https://generativelanguage.googleapis.com/v1beta/openai/ |
+| deepseek | https://api.deepseek.com |
+| ollama | http://localhost:11434/v1 |
+| xai | https://api.x.ai/v1 |
+
+For any model provider not listed in the table above, you can use the `model_endpoint@model_name` convention by directly specifying the full API endpoint URL. This works for both locally deployed models and any third-party API services that follow the OpenAI-compatible chat/completions format. 
