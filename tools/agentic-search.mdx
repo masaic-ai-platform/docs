@@ -1,0 +1,620 @@
+---
+title: 'Agentic Search Tool'
+description: 'Tackle complex research questions with AI-guided iterative searching'
+---
+
+The Agentic Search tool uses AI to guide multi-step vector searches, refining queries and filters iteratively until finding the most comprehensive and relevant results for complex questions.
+
+## What It Is
+
+Unlike the simpler File Search tool, the Agentic Search tool employs AI to break down complex questions, perform multiple search iterations, and intelligently refine queries until it finds the most relevant and complete information. It excels at research-oriented tasks requiring deep exploration.
+
+<Frame caption="How Agentic Search Works">
+  <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+    <div className="flex flex-col space-y-6">
+      <div className="flex items-start space-x-3">
+        <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-600 dark:text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+        </div>
+        <div className="font-medium flex-1">Complex Query: "What are the security implications of using JWT for authentication, and how should we implement proper token validation?"</div>
+      </div>
+      
+      <div className="ml-10 pl-2 border-l-2 border-purple-400">
+        <div className="mb-4">
+          <div className="text-sm font-semibold mb-1">Iteration 1: Exploring JWT Security</div>
+          <div className="p-2 bg-white dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700 text-sm">
+            Query: "JWT authentication security implications"
+            <div className="text-xs text-gray-500 mt-1">Reasoning: Need to understand security risks before implementation details</div>
+          </div>
+        </div>
+        
+        <div className="mb-4">
+          <div className="text-sm font-semibold mb-1">Iteration 2: Token Validation Approaches</div>
+          <div className="p-2 bg-white dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700 text-sm">
+            Query: "JWT token validation best practices"
+            <div className="text-xs text-gray-500 mt-1">Reasoning: Initial results showed common attacks, now need implementation guidance</div>
+          </div>
+        </div>
+        
+        <div className="mb-4">
+          <div className="text-sm font-semibold mb-1">Iteration 3: Implementation Examples</div>
+          <div className="p-2 bg-white dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700 text-sm">
+            Query: "JWT validation implementation examples"
+            <div className="text-xs text-gray-500 mt-1">Reasoning: Need concrete code examples after understanding theoretical concepts</div>
+          </div>
+        </div>
+        
+        <div className="p-3 bg-green-50 dark:bg-green-900 rounded-lg border border-green-200 dark:border-green-700">
+          <div className="text-sm font-semibold mb-1 text-green-700 dark:text-green-300">Comprehensive Answer</div>
+          <div className="text-sm">
+            The search process revealed that JWT security implications include token hijacking, weak signature algorithms, and sensitive data exposure. Proper implementation requires validating the signature with a secure algorithm (at least HS256), checking expiration claims, validating issuer and audience claims, and implementing proper key rotation practices...
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Frame>
+
+## Configuration
+
+Basic configuration requires a query parameter and vector store IDs:
+
+<CodeGroup>
+```json Basic Configuration
+{
+  "query": "Your complex query here",
+  "vector_store_ids": ["vs_abc123"]
+}
+```
+
+```json Advanced Configuration
+{
+  "query": "What approaches can we take to implement rate limiting that scales across multiple service instances?",
+  "vector_store_ids": ["vs_architecture_docs", "vs_code_examples"],
+  "max_num_results": 5,
+  "max_iterations": 8,
+  "seed_strategy": "hybrid",
+  "alpha": 0.7,
+  "initial_seed_multiplier": 3,
+  "enable_temperature_tuning": true
+}
+```
+</CodeGroup>
+
+### Configuration Parameters
+
+<div className="my-6 overflow-auto max-w-full">
+  <table className="w-full text-sm" style={{ borderCollapse: "separate", borderRadius: "4px", overflow: "hidden" }}>
+    <thead>
+      <tr className="bg-gray-200 dark:bg-gray-800">
+        <th className="border border-gray-300 p-2" style={{ borderTopLeftRadius: "4px" }}>Parameter</th>
+        <th className="border border-gray-300 p-2">Description</th>
+        <th className="border border-gray-300 p-2">Default</th>
+        <th className="border border-gray-300 p-2" style={{ borderTopRightRadius: "4px" }}>Recommended Range</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td className="border border-gray-300 p-2 font-medium">`query`</td>
+        <td className="border border-gray-300 p-2">Complex query to research</td>
+        <td className="border border-gray-300 p-2">Required</td>
+        <td className="border border-gray-300 p-2">N/A</td>
+      </tr>
+      <tr className="bg-gray-100 dark:bg-gray-700">
+        <td className="border border-gray-300 p-2 font-medium">`vector_store_ids`</td>
+        <td className="border border-gray-300 p-2">List of vector store IDs to search</td>
+        <td className="border border-gray-300 p-2">Required</td>
+        <td className="border border-gray-300 p-2">N/A</td>
+      </tr>
+      <tr>
+        <td className="border border-gray-300 p-2 font-medium">`max_num_results`</td>
+        <td className="border border-gray-300 p-2">Maximum number of final results to return</td>
+        <td className="border border-gray-300 p-2">5</td>
+        <td className="border border-gray-300 p-2">3-10</td>
+      </tr>
+      <tr className="bg-gray-100 dark:bg-gray-700">
+        <td className="border border-gray-300 p-2 font-medium">`max_iterations`</td>
+        <td className="border border-gray-300 p-2">Maximum number of search iterations</td>
+        <td className="border border-gray-300 p-2">10</td>
+        <td className="border border-gray-300 p-2">5-15</td>
+      </tr>
+      <tr>
+        <td className="border border-gray-300 p-2 font-medium">`seed_strategy`</td>
+        <td className="border border-gray-300 p-2">Strategy for initial seed queries</td>
+        <td className="border border-gray-300 p-2">"hybrid"</td>
+        <td className="border border-gray-300 p-2">"topk", "hybrid"</td>
+      </tr>
+      <tr className="bg-gray-100 dark:bg-gray-700">
+        <td className="border border-gray-300 p-2 font-medium">`alpha`</td>
+        <td className="border border-gray-300 p-2">Balance between vector and keyword search weights</td>
+        <td className="border border-gray-300 p-2">0.5</td>
+        <td className="border border-gray-300 p-2">0.1-0.9</td>
+      </tr>
+      <tr>
+        <td className="border border-gray-300 p-2 font-medium">`initial_seed_multiplier`</td>
+        <td className="border border-gray-300 p-2">Multiplier for initial seed generation</td>
+        <td className="border border-gray-300 p-2">3</td>
+        <td className="border border-gray-300 p-2">2-5</td>
+      </tr>
+      <tr className="bg-gray-100 dark:bg-gray-700">
+        <td className="border border-gray-300 p-2 font-medium">`enable_presence_penalty_tuning`</td>
+        <td className="border border-gray-300 p-2">Enable dynamic tuning of presence penalty</td>
+        <td className="border border-gray-300 p-2">false</td>
+        <td className="border border-gray-300 p-2">true/false</td>
+      </tr>
+      <tr>
+        <td className="border border-gray-300 p-2 font-medium">`enable_frequency_penalty_tuning`</td>
+        <td className="border border-gray-300 p-2">Enable dynamic tuning of frequency penalty</td>
+        <td className="border border-gray-300 p-2">false</td>
+        <td className="border border-gray-300 p-2">true/false</td>
+      </tr>
+      <tr className="bg-gray-100 dark:bg-gray-700">
+        <td className="border border-gray-300 p-2 font-medium">`enable_temperature_tuning`</td>
+        <td className="border border-gray-300 p-2">Enable dynamic tuning of temperature</td>
+        <td className="border border-gray-300 p-2">false</td>
+        <td className="border border-gray-300 p-2">true/false</td>
+      </tr>
+      <tr>
+        <td className="border border-gray-300 p-2 font-medium">`enable_top_p_tuning`</td>
+        <td className="border border-gray-300 p-2">Enable dynamic tuning of top p</td>
+        <td className="border border-gray-300 p-2">false</td>
+        <td className="border border-gray-300 p-2">true/false</td>
+      </tr>
+      <tr className="bg-gray-100 dark:bg-gray-700">
+        <td className="border border-gray-300 p-2 font-medium" style={{ borderBottomLeftRadius: "4px" }}>`filters`</td>
+        <td className="border border-gray-300 p-2">Optional filters to narrow search results</td>
+        <td className="border border-gray-300 p-2">null</td>
+        <td className="border border-gray-300 p-2" style={{ borderBottomRightRadius: "4px" }}>Depends on use case</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<Tip>
+  The Agentic Search tool is designed to work well with default settings for most use cases. Start with minimal configuration and only adjust parameters if you need to fine-tune the behavior for specific scenarios.
+</Tip>
+
+## Response Format
+
+The Agentic Search tool returns a comprehensive response including:
+
+```json
+{
+  "data": [
+    {
+      "file_id": "file_abc123",
+      "filename": "architecture/authentication.md",
+      "score": 0.94,
+      "content": "JWT security implications include potential vulnerabilities if not properly implemented...",
+      "annotations": [...]
+    },
+    {
+      "file_id": "file_def456",
+      "filename": "security/token-validation.md",
+      "score": 0.92,
+      "content": "Best practices for JWT validation include signature verification, expiration checking...",
+      "annotations": [...]
+    }
+  ],
+  "search_iterations": [
+    {
+      "iteration": 1,
+      "query": "JWT authentication security implications",
+      "reasoning": "Need to understand security risks before implementation details"
+    },
+    {
+      "iteration": 2,
+      "query": "JWT token validation best practices",
+      "reasoning": "Initial results showed common attacks, now need implementation guidance"
+    }
+  ],
+  "knowledge_acquired": "The search process revealed that JWT security implications include token hijacking, weak signature algorithms, and sensitive data exposure..."
+}
+```
+
+## When to Use It
+
+The Agentic Search tool is designed for complex research scenarios requiring deep exploration across multiple documents.
+
+<div className="my-6 overflow-auto max-w-full">
+  <Frame caption="Use Cases for Agentic Search">
+    <table className="w-full text-sm" style={{ borderCollapse: "separate", borderRadius: "4px", overflow: "hidden" }}>
+      <thead>
+        <tr className="bg-gray-200 dark:bg-gray-800">
+          <th className="border border-gray-300 p-2" style={{ borderTopLeftRadius: "4px" }}>Recommended For</th>
+          <th className="border border-gray-300 p-2" style={{ borderTopRightRadius: "4px" }}>Consider Alternatives For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="border border-gray-300 p-2">
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Multi-faceted research questions</li>
+              <li>Technical strategy development</li>
+              <li>Comparative analysis of approaches</li>
+              <li>Complex problem-solving</li>
+              <li>Deep topic exploration</li>
+            </ul>
+          </td>
+          <td className="border border-gray-300 p-2">
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Simple factual queries</li>
+              <li>Time-critical questions</li>
+              <li>Resource-constrained environments</li>
+              <li>Questions requiring minimal context</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </Frame>
+</div>
+
+<Tip>
+  For simpler, direct queries where immediate results are needed, consider using the <a href="/tools/file-search">File Search Tool</a> instead.
+</Tip>
+
+## Example Queries
+
+### Multi-faceted Research
+
+```json
+{
+  "query": "What are the security implications of using JWT for authentication, and how should we implement proper token validation?"
+}
+```
+
+### Comparative Analysis
+
+```json
+{
+  "query": "Compare the performance characteristics of MongoDB and PostgreSQL for our application's workload pattern"
+}
+```
+
+### Technical Strategy
+
+```json
+{
+  "query": "What approaches can we take to implement rate limiting that scales across multiple service instances?"
+}
+```
+
+### Complex Problem-Solving
+
+```json
+{
+  "query": "How can we optimize our API's response time for mobile clients with unreliable connections?"
+}
+```
+
+## Advanced Tuning
+
+### Seed Strategy Options
+
+The `seed_strategy` parameter determines how initial search queries are generated:
+
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+  <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+    <h3 className="font-medium mb-2">"hybrid" (default)</h3>
+    <p className="text-sm">Combines vector and keyword search approaches for balanced results. Best for general-purpose searching across diverse document collections.</p>
+  </div>
+  <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+    <h3 className="font-medium mb-2">"topk"</h3>
+    <p className="text-sm">Uses top-K retrieval, focusing on the most similar documents by vector similarity. Better for specialized document collections with consistent terminology.</p>
+  </div>
+</div>
+
+### Alpha Parameter Tuning
+
+The `alpha` parameter (0.0-1.0) balances vector search vs. keyword search weights:
+
+<div className="relative w-full h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg my-4">
+  <div className="absolute inset-0 flex items-center justify-between px-4 text-white text-sm font-medium">
+    <span>More Keyword (0.1)</span>
+    <span>Balanced (0.5)</span>
+    <span>More Semantic (0.9)</span>
+  </div>
+</div>
+
+- **Higher values** (0.7-0.9): More weight to vector semantic search, better for conceptual questions
+- **Middle values** (0.4-0.6): Balanced approach, good for most questions
+- **Lower values** (0.1-0.3): More weight to keyword search, better for specific technical terms
+
+<Note>
+  If a reranker is enabled in the system configuration, the provided alpha value is ignored and a fixed value of 0.5 is used for pre-reranking result selection only.
+</Note>
+
+### Initial Seed Multiplier
+
+This parameter controls how many initial search seeds are generated:
+
+<div className="grid grid-cols-3 gap-2 my-4">
+  <div className="p-2 border border-gray-200 dark:border-gray-700 rounded-lg text-center">
+    <div className="font-medium">Lower (2)</div>
+    <div className="text-xs text-gray-500 mt-1">More focused</div>
+  </div>
+  <div className="p-2 border border-gray-200 dark:border-gray-700 rounded-lg text-center bg-gray-100 dark:bg-gray-800">
+    <div className="font-medium">Default (3)</div>
+    <div className="text-xs text-gray-500 mt-1">Balanced</div>
+  </div>
+  <div className="p-2 border border-gray-200 dark:border-gray-700 rounded-lg text-center">
+    <div className="font-medium">Higher (5)</div>
+    <div className="text-xs text-gray-500 mt-1">More diverse</div>
+  </div>
+</div>
+
+### Dynamic Parameter Tuning
+
+The following parameters enable dynamic adjustment of the underlying model's parameters based on search results:
+
+<Accordion title="Enable Presence/Frequency Penalty Tuning">
+  Controls automatic tuning of penalties to avoid repetitive content and encourage diversity in search iterations.
+  
+  - **enable_presence_penalty_tuning**: Dynamically adjusts presence penalty
+  - **enable_frequency_penalty_tuning**: Dynamically adjusts frequency penalty
+  
+  Enable these options if you notice search iterations getting stuck in repetitive patterns.
+</Accordion>
+
+<Accordion title="Enable Temperature/Top-P Tuning">
+  Controls automatic tuning of sampling parameters to balance creativity and precision.
+  
+  - **enable_temperature_tuning**: Dynamically adjusts temperature
+  - **enable_top_p_tuning**: Dynamically adjusts top-p sampling
+  
+  Enable these options for exploratory research where creativity in query refinement is beneficial.
+</Accordion>
+
+<Warning>
+  Dynamic parameter tuning options are disabled by default for maximum compatibility with model providers. Enable them only if your model supports these parameters.
+</Warning>
+
+## Integration Examples
+
+### Tool Usage with OpenAI Models
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $OPENAI_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [{
+      "type": "agentic_search",
+      "vector_store_ids": ["vs_architecture_docs", "vs_engineering_blogs"],
+      "max_num_results": 5,
+      "max_iterations": 10,
+      "seed_strategy": "hybrid",
+      "alpha": 0.7,
+      "initial_seed_multiplier": 3,
+      "filters": {
+        "type": "and",
+        "filters": [
+          {
+            "type": "eq",
+            "key": "category",
+            "value": "architecture"
+          },
+          {
+            "type": "eq",
+            "key": "verified",
+            "value": true
+          }
+        ]
+      }
+    }],
+    "input": "What are the architectural tradeoffs between microservices and monoliths?",
+    "instructions": "Provide a comprehensive analysis based on the retrieved information."
+}'
+```
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:8080/v1",
+    api_key="your_openai_api_key"
+)
+
+response = client.responses.create(
+    model="gpt-4o",
+    tools=[{
+        "type": "agentic_search",
+        "vector_store_ids": ["vs_architecture_docs", "vs_engineering_blogs"],
+        "max_num_results": 5,
+        "max_iterations": 10,
+        "seed_strategy": "hybrid",
+        "alpha": 0.7,
+        "initial_seed_multiplier": 3,
+        "filters": {
+            "type": "and",
+            "filters": [
+                {
+                    "type": "eq",
+                    "key": "category",
+                    "value": "architecture"
+                },
+                {
+                    "type": "eq",
+                    "key": "verified",
+                    "value": True
+                }
+            ]
+        }
+    }],
+    "input": "What are the architectural tradeoffs between microservices and monoliths?",
+    "instructions": "Provide a comprehensive analysis based on the retrieved information."
+)
+
+print(response)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  baseURL: "http://localhost:8080/v1",
+  apiKey: "your_openai_api_key"
+});
+
+async function conductResearch() {
+  const response = await openai.responses.create({
+    model: "gpt-4o",
+    tools: [{
+      type: "agentic_search",
+      vector_store_ids: ["vs_architecture_docs", "vs_engineering_blogs"],
+      max_num_results: 5,
+      max_iterations: 10,
+      seed_strategy: "hybrid",
+      alpha: 0.7,
+      initial_seed_multiplier: 3,
+      filters: {
+        type: "and",
+        filters: [
+          {
+            type: "eq",
+            key: "category",
+            value: "architecture"
+          },
+          {
+            type: "eq",
+            key: "verified",
+            value: true
+          }
+        ]
+      }
+    }],
+    input: "What are the architectural tradeoffs between microservices and monoliths?",
+    "instructions": "Provide a comprehensive analysis based on the retrieved information."
+  });
+  
+  console.log(response);
+}
+
+conductResearch();
+```
+</CodeGroup>
+
+<Note>
+  The agentic_search tool automatically performs multiple search iterations and provides the results to the AI model in the same request. This creates an advanced RAG experience where the model can access comprehensive research without additional API calls.
+</Note>
+
+### Configuring Research Depth
+
+For research tasks requiring different levels of depth, you can adjust the configuration:
+
+```javascript
+async function conductResearchWithDepth(query, depth = "standard") {
+  // Configure search parameters based on research depth
+  const toolConfig = {
+    type: "agentic_search",
+    vector_store_ids: ["vs_research_docs", "vs_case_studies"],
+    filters: {
+      type: "and",
+      filters: [
+        { type: "eq", key: "verified", value: true }
+      ]
+    }
+  };
+  
+  // Adjust parameters based on depth requirement
+  if (depth === "deep") {
+    toolConfig.max_iterations = 15;
+    toolConfig.max_num_results = 8;
+    toolConfig.alpha = 0.8;  // More semantic focus
+    toolConfig.enable_temperature_tuning = true;
+  } else if (depth === "quick") {
+    toolConfig.max_iterations = 5;
+    toolConfig.max_num_results = 3;
+    toolConfig.seed_strategy = "topk";
+  }
+  
+  const response = await openai.responses.create({
+    model: "gpt-4o",
+    tools: [toolConfig],
+    input: query,
+    instructions: "Provide a comprehensive analysis based on the retrieved information."
+  });
+  
+  return response;
+}
+```
+
+## Best Practices
+
+<Accordion title="Ask Specific Queries">
+  While the Agentic Search tool excels at complex queries, questions should still be specific and focused.
+  
+  **Good Example**:
+  ```json
+  {
+    "query": "What are the best practices for implementing a CI/CD pipeline for a microservices architecture deployed on Kubernetes?"
+  }
+  ```
+  
+  **Less Effective**:
+  ```json
+  {
+    "query": "Tell me about DevOps"
+  }
+  ```
+</Accordion>
+
+<Accordion title="Provide Context When Relevant">
+  Include relevant context in your query to help guide the search process.
+  
+  **Good Example**:
+  ```json
+  {
+    "query": "We're experiencing memory leaks in our Node.js application running in production. What debugging approaches and tools should we consider?"
+  }
+  ```
+  
+  **Less Effective**:
+  ```json
+  {
+    "query": "How to fix memory leaks?"
+  }
+  ```
+</Accordion>
+
+<Accordion title="Monitor and Adjust Iterations">
+  For critical research queries, monitor the search iterations and adjust parameters if needed.
+  
+  - If iterations seem unfocused, consider reducing `initial_seed_multiplier`
+  - If iterations aren't exploring enough aspects, try increasing `max_iterations`
+  - If results are too literal, increase `alpha` for more semantic search weight
+</Accordion>
+
+## Related Tools
+
+<CardGroup cols={2}>
+  <Card
+    title="Think Tool"
+    icon="brain"
+    href="/tools/think"
+  >
+    For logging thoughts and reasoning processes
+  </Card>
+  <Card
+    title="File Search Tool"
+    icon="file-magnifying-glass"
+    href="/tools/file-search"
+  >
+    For direct vector store searches
+  </Card>
+</CardGroup>
+
+<div className="mt-8 p-6 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900 dark:to-blue-900 rounded-lg">
+  <h3 className="text-lg font-bold mb-2">When to Choose Agentic Search vs. File Search</h3>
+  <p className="mb-4">The Agentic Search tool shines for complex, multi-faceted queries requiring deep exploration, while File Search is better for direct, factual queries when you know exactly what you're looking for.</p>
+  <ul className="list-disc pl-5 space-y-1">
+    <li><strong>Use Agentic Search when:</strong> You need comprehensive research on complex topics, comparative analysis, or multi-step problem solving.</li>
+    <li><strong>Use File Search when:</strong> You need quick answers to specific questions, looking up known information, or when resource constraints are a concern.</li>
+  </ul>
+</div>

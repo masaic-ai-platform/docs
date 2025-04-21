@@ -1,0 +1,519 @@
+---
+title: 'File Search Tool'
+description: 'Find relevant information with direct vector store searches'
+---
+
+The File Search tool provides direct access to your vector stores, enabling semantic search to find relevant content based on the meaning of your query rather than just keyword matching.
+
+## What It Is
+
+The File Search tool connects directly to your vector stores, allowing you to search through your document collections using semantic understanding rather than just keyword matching. It's designed for immediate results on simple, well-defined queries.
+
+<Frame caption="File Search Tool in Action">
+  <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+    <div className="flex flex-col space-y-4">
+      <div className="flex items-center space-x-3">
+        <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-full">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 dark:text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
+        <div className="font-medium">Query: "What is the maximum connection timeout value?"</div>
+      </div>
+      <div className="border-l-2 border-blue-400 pl-6 ml-6">
+        <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Results:</div>
+        <div className="p-3 bg-white dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-700">
+          <div className="text-sm mb-1 font-semibold">From: <span className="text-blue-600 dark:text-blue-400">config/database.md</span></div>
+          <div>The maximum connection timeout value is 300 seconds (5 minutes). This can be configured in the database settings with the `DB_CONNECTION_TIMEOUT` environment variable. For high-latency networks, consider increasing this value.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Frame>
+
+## Configuration
+
+Basic configuration requires a query parameter:
+
+<CodeGroup>
+```json Basic Configuration
+{
+  "query": "Your search query here"
+}
+```
+
+```json Example Query
+{
+  "query": "API rate limiting policy"
+}
+```
+</CodeGroup>
+
+### Configuration Parameters
+
+| Parameter | Description | Default | Required |
+|-----------|-------------|---------|----------|
+| `query` | The search query | - | Yes |
+| `vector_store_ids` | List of vector store IDs to search | - | Yes |
+| `filters` | Optional filters to narrow search results | null | No |
+| `max_num_results` | Maximum number of results to return | 20 | No |
+
+## Response Format
+
+The response includes relevant content chunks with metadata:
+
+```json
+{
+  "data": [
+    {
+      "file_id": "file_abc123",
+      "filename": "config/database.md",
+      "score": 0.92,
+      "content": "The maximum connection timeout value is 300 seconds (5 minutes). This can be configured in the database settings with the `DB_CONNECTION_TIMEOUT` environment variable. For high-latency networks, consider increasing this value.",
+      "annotations": [
+        {
+          "type": "file_citation",
+          "index": 0,
+          "file_id": "file_abc123",
+          "filename": "config/database.md"
+        }
+      ]
+    },
+    {
+      "file_id": "file_def456",
+      "filename": "deployment/networking.md",
+      "score": 0.87,
+      "content": "Connection timeout settings are crucial for system stability. Default values vary by service: database (300s), API services (60s), worker processes (120s).",
+      "annotations": [
+        {
+          "type": "file_citation",
+          "index": 0,
+          "file_id": "file_def456",
+          "filename": "deployment/networking.md"
+        }
+      ]
+    }
+  ]
+}
+```
+
+## When to Use It
+
+The File Search tool excels in specific scenarios where direct, immediate access to information is required.
+
+<div className="my-6 overflow-auto max-w-full">
+  <Frame caption="Use Cases for File Search">
+    <table className="w-full text-sm" style={{ borderCollapse: "separate", borderRadius: "4px", overflow: "hidden" }}>
+      <thead>
+        <tr className="bg-gray-200 dark:bg-gray-800">
+          <th className="border border-gray-300 p-2" style={{ borderTopLeftRadius: "4px" }}>Recommended For</th>
+          <th className="border border-gray-300 p-2" style={{ borderTopRightRadius: "4px" }}>Consider Alternatives For</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="border border-gray-300 p-2">
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Simple, factual queries</li>
+              <li>Finding specific documentation</li>
+              <li>Known-item searches</li>
+              <li>Code examples for specific tasks</li>
+              <li>Looking up configurations or settings</li>
+            </ul>
+          </td>
+          <td className="border border-gray-300 p-2">
+            <ul className="list-disc pl-5 space-y-1">
+              <li>Complex research questions</li>
+              <li>Multi-faceted analysis</li>
+              <li>Questions requiring synthesis of multiple sources</li>
+              <li>Exploratory research without clear goals</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </Frame>
+</div>
+
+<Tip>
+  For complex questions requiring deep research and multiple search iterations, consider using the <a href="/tools/agentic-search">Agentic Search Tool</a> instead.
+</Tip>
+
+## Example Queries
+
+### Simple Factual Queries
+
+```json
+{
+  "query": "What is the maximum file upload size?"
+}
+```
+
+### Finding Code Examples
+
+```json
+{
+  "query": "Show me examples of error handling in async functions"
+}
+```
+
+### Looking Up Configuration
+
+```json
+{
+  "query": "Default Redis cache expiration settings"
+}
+```
+
+## Advanced Usage
+
+### Filtering by Metadata
+
+The `filters` parameter allows you to narrow search results based on document metadata:
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $OPENAI_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [{
+      "type": "file_search",
+      "vector_store_ids": ["vs_security_docs"],
+      "max_num_results": 5,
+      "query": "Authentication best practices",
+      "filters": {
+        "type": "and",
+        "filters": [
+          {
+            "type": "eq",
+            "key": "compliance",
+            "value": "GDPR"
+          },
+          {
+            "type": "gt",
+            "key": "updated_date",
+            "value": "2023-01-01"
+          }
+        ]
+      }
+    }],
+    "input": "What are the best practices for authentication that comply with GDPR?",
+    "instructions": "Answer questions using information from the provided documents."
+}'
+```
+
+<Tip>
+  Filters dramatically improve search relevance by narrowing the search space. Always use them when you know specific attributes of the documents you're looking for.
+</Tip>
+
+### Multi-Store Searching
+
+Searching across multiple vector stores allows you to find information across different document collections:
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $OPENAI_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [{
+      "type": "file_search",
+      "vector_store_ids": ["vs_technical_docs", "vs_code_examples", "vs_architecture"],
+      "max_num_results": 5,
+      "query": "API rate limiting implementation"
+    }],
+    "input": "Explain how to implement API rate limiting",
+    "instructions": "Answer questions using information from the provided documents."
+}'
+```
+
+## Best Practices
+
+<Accordion title="Craft Specific Queries">
+  More specific queries yield better results than vague ones.
+  
+  **Good Example**:
+  ```json
+  {
+    "query": "How to configure JWT token expiration in the auth service"
+  }
+  ```
+  
+  **Less Effective**:
+  ```json
+  {
+    "query": "JWT settings"
+  }
+  ```
+</Accordion>
+
+<Accordion title="Use Natural Language">
+  The vector search works best with natural language queries rather than keyword lists.
+  
+  **Good Example**:
+  ```json
+  {
+    "query": "What are the steps to set up a development environment for the project?"
+  }
+  ```
+  
+  **Less Effective**:
+  ```json
+  {
+    "query": "setup development environment steps"
+  }
+  ```
+</Accordion>
+
+<Accordion title="Combine with Filters">
+  For the most precise results, combine semantic search with metadata filters.
+  
+  ```bash
+  curl --location 'http://localhost:8080/v1/responses' \
+  --header 'Content-Type: application/json' \
+  --header 'Authorization: Bearer $OPENAI_API_KEY' \
+  --header 'x-model-provider: openai' \
+  --data '{
+      "model": "gpt-4o",
+      "tools": [{
+        "type": "file_search",
+        "vector_store_ids": ["vs_engineering_docs"],
+        "max_num_results": 5,
+        "query": "Database migration best practices",
+        "filters": {
+          "type": "and",
+          "filters": [
+            {
+              "type": "eq",
+              "key": "department",
+              "value": "backend"
+            },
+            {
+              "type": "eq",
+              "key": "classification",
+              "value": "internal"
+            }
+          ]
+        }
+      }],
+      "input": "What are the best practices for database migrations?",
+      "instructions": "Answer questions using information from the provided documents."
+  }'
+  ```
+</Accordion>
+
+## Integration Examples
+
+### Tool Usage with OpenAI Models
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $OPENAI_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [{
+      "type": "file_search",
+      "vector_store_ids": ["vs_technical_docs"],
+      "max_num_results": 5,
+      "filters": {
+        "type": "and",
+        "filters": [
+          {
+            "type": "eq",
+            "key": "category",
+            "value": "documentation"
+          },
+          {
+            "type": "eq",
+            "key": "updated_after",
+            "value": "2023-01-01"
+          }
+        ]
+      }
+    }],
+    "input": "How do I implement rate limiting?",
+    "instructions": "Answer questions using information from the provided documents."
+}'
+```
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:8080/v1",
+    api_key="your_openai_api_key"
+)
+
+response = client.responses.create(
+    model="gpt-4o",
+    tools=[{
+        "type": "file_search",
+        "vector_store_ids": ["vs_technical_docs"],
+        "max_num_results": 5,
+        "filters": {
+            "type": "and",
+            "filters": [
+                {
+                    "type": "eq",
+                    "key": "category",
+                    "value": "documentation"
+                },
+                {
+                    "type": "eq",
+                    "key": "updated_after",
+                    "value": "2023-01-01"
+                }
+            ]
+        }
+    }],
+    input="How do I implement rate limiting?",
+    instructions="Answer questions using information from the provided documents."
+)
+
+print(response)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+
+const openai = new OpenAI({
+  baseURL: "http://localhost:8080/v1",
+  apiKey: "your_openai_api_key"
+});
+
+async function searchDocumentation() {
+  const response = await openai.responses.create({
+    model: "gpt-4o",
+    tools: [{
+      type: "file_search",
+      vector_store_ids: ["vs_technical_docs"],
+      max_num_results: 5,
+      filters: {
+        type: "and",
+        filters: [
+          {
+            type: "eq",
+            key: "category",
+            value: "documentation"
+          },
+          {
+            type: "eq",
+            key: "updated_after",
+            value: "2023-01-01"
+          }
+        ]
+      }
+    }],
+    input: "How do I implement rate limiting?",
+    instructions: "Answer questions using information from the provided documents."
+  });
+  
+  console.log(response);
+}
+
+searchDocumentation();
+```
+</CodeGroup>
+
+<Note>
+  The file_search tool automatically performs the search and provides the results to the AI model in the same request. This creates a seamless RAG experience where the model can access and use the information without additional API calls.
+</Note>
+
+### Using with Custom Search Logic
+
+For applications that need more control over the search process, you can implement custom search logic:
+
+```javascript
+async function enhancedResponseWithSearch(query, topic) {
+  // First perform a targeted search
+  const searchFilters = {
+    type: "and", 
+    filters: [
+      { type: "eq", key: "topic", value: topic }
+    ]
+  };
+  
+  // Use the results to enhance your AI response
+  const response = await openai.responses.create({
+    model: "gpt-4o",
+    tools: [{
+      type: "file_search",
+      vector_store_ids: ["vs_docs", "vs_code_examples"],
+      max_num_results: 3,
+      filters: searchFilters
+    }],
+    input: query,
+    instructions: "Provide a detailed answer based on the documentation."
+  });
+  
+  return response;
+}
+```
+
+## Comparing with Other Tools
+
+<div className="my-6 overflow-auto max-w-full">
+  <Frame caption="File Search vs. Agentic Search">
+    <table className="w-full text-sm" style={{ borderCollapse: "separate", borderRadius: "4px", overflow: "hidden" }}>
+      <thead>
+        <tr className="bg-gray-200 dark:bg-gray-800">
+          <th className="border border-gray-300 p-2" style={{ borderTopLeftRadius: "4px" }}>Feature</th>
+          <th className="border border-gray-300 p-2">File Search</th>
+          <th className="border border-gray-300 p-2" style={{ borderTopRightRadius: "4px" }}>Agentic Search</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="border border-gray-300 p-2 font-medium">Query complexity</td>
+          <td className="border border-gray-300 p-2">Simple</td>
+          <td className="border border-gray-300 p-2">Complex</td>
+        </tr>
+        <tr className="bg-gray-100 dark:bg-gray-700">
+          <td className="border border-gray-300 p-2 font-medium">Search iterations</td>
+          <td className="border border-gray-300 p-2">Single</td>
+          <td className="border border-gray-300 p-2">Multiple</td>
+        </tr>
+        <tr>
+          <td className="border border-gray-300 p-2 font-medium">Response time</td>
+          <td className="border border-gray-300 p-2">Fast</td>
+          <td className="border border-gray-300 p-2">Slower</td>
+        </tr>
+        <tr className="bg-gray-100 dark:bg-gray-700">
+          <td className="border border-gray-300 p-2 font-medium">Result quality</td>
+          <td className="border border-gray-300 p-2">Direct matches</td>
+          <td className="border border-gray-300 p-2">Comprehensive</td>
+        </tr>
+        <tr>
+          <td className="border border-gray-300 p-2 font-medium" style={{ borderBottomLeftRadius: "4px" }}>Best for</td>
+          <td className="border border-gray-300 p-2">Known-item searches</td>
+          <td className="border border-gray-300 p-2" style={{ borderBottomRightRadius: "4px" }}>Research questions</td>
+        </tr>
+      </tbody>
+    </table>
+  </Frame>
+</div>
+
+## Related Tools
+
+<CardGroup cols={2}>
+  <Card
+    title="Think Tool"
+    icon="brain"
+    href="/tools/think"
+  >
+    For logging thoughts and reasoning processes
+  </Card>
+  <Card
+    title="Agentic Search Tool"
+    icon="robot"
+    href="/tools/agentic-search"
+  >
+    For AI-guided iterative searches for complex questions
+  </Card>
+</CardGroup> 

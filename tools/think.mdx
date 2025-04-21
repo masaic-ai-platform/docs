@@ -1,0 +1,283 @@
+---
+title: 'Think Tool'
+description: 'Document reasoning steps and decision-making processes without side effects'
+---
+
+The Think tool allows you to log thoughts and reasoning processes without obtaining new information or changing any data, providing a transparent audit trail of decision-making.
+
+## What It Is
+
+The Think tool is a simple utility that documents reasoning or decision-making processes without changing state or having side effects. It's particularly useful when you want to explicitly record the rationale behind decisions.
+
+<Frame caption="Think Tool Overview">
+  <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+    <div className="flex items-start space-x-4">
+      <div className="p-3 bg-primary bg-opacity-20 rounded-full">
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+        </svg>
+      </div>
+      <div>
+        <h3 className="text-lg font-semibold mb-1">Benefits of the Think Tool</h3>
+        <ul className="list-disc pl-5 space-y-1">
+          <li>Document reasoning steps without side effects</li>
+          <li>Create transparent audit trails of decision processes</li>
+          <li>Track thought progression during complex problem-solving</li>
+          <li>Improve explainability of AI-assisted decisions</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</Frame>
+
+## Configuration
+
+The Think tool requires a single parameter:
+
+<CodeGroup>
+```json Basic Configuration
+{
+  "thought": "Your thought goes here"
+}
+```
+
+```json Example Usage
+{
+  "thought": "I need to first consider the user's budget constraints before recommending high-end solutions"
+}
+```
+</CodeGroup>
+
+## Response Format
+
+The Think tool returns a simple acknowledgment of the recorded thought:
+
+```json
+{
+  "thought": "I need to first consider the user's budget constraints before recommending high-end solutions"
+}
+```
+
+## When to Use It
+
+<CardGroup cols={2}>
+  <Card
+    title="Good Use Cases"
+    icon="check-circle"
+  >
+    <ul className="list-disc pl-5 space-y-1">
+      <li>Documenting reasoning steps</li>
+      <li>Creating audit trails of decision processes</li>
+      <li>Explaining why certain options were ruled out</li>
+      <li>Recording assumptions made during analysis</li>
+    </ul>
+  </Card>
+  <Card
+    title="Not Recommended For"
+    icon="exclamation-circle"
+  >
+    <ul className="list-disc pl-5 space-y-1">
+      <li>Retrieving new information</li>
+      <li>Performing actions with side effects</li>
+      <li>Replacing proper documentation</li>
+      <li>Critical decision-making without human oversight</li>
+    </ul>
+  </Card>
+</CardGroup>
+
+## Example Applications
+
+### Decision Documentation
+
+The Think tool is ideal for creating a clear record of decision rationale:
+
+```json
+{
+  "thought": "The user's request for a database solution requires evaluating their scale needs. Their expected 10M daily transactions suggests PostgreSQL would be more suitable than SQLite."
+}
+```
+
+### Analysis Progression
+
+Document the progression of your analysis:
+
+```json
+{
+  "thought": "After reviewing the error logs, I notice that failures primarily occur during peak traffic hours, suggesting a resource contention issue rather than a code bug."
+}
+```
+
+### Assumption Recording
+
+Explicitly record assumptions being made:
+
+```json
+{
+  "thought": "I'm assuming the user is operating in a cloud environment with auto-scaling capabilities based on their mention of AWS in previous messages."
+}
+```
+
+## Best Practices
+
+<Accordion title="Keep Thoughts Concise and Clear">
+  Focus on recording the key decision points or reasoning steps without unnecessary details. This makes the audit trail more valuable and easier to follow.
+  
+  **Good Example**:
+  ```json
+  {
+    "thought": "User's data privacy requirements suggest an on-premises solution would be preferable to cloud hosting."
+  }
+  ```
+  
+  **Less Effective**:
+  ```json
+  {
+    "thought": "Thinking about what to recommend. There are many options. Cloud is one option but maybe not best. On-premises could work better perhaps because of data privacy but not sure yet."
+  }
+  ```
+</Accordion>
+
+<Accordion title="Use Structured Reasoning">
+  When documenting complex reasoning, use a structured format to make your thought process clear.
+  
+  ```json
+  {
+    "thought": "Evaluating the recommendation approach: (1) Security requirements: high, (2) Budget constraints: moderate, (3) Timeline: tight. Given these constraints, will prioritize established solutions with good security track records."
+  }
+  ```
+</Accordion>
+
+<Accordion title="Integrate with Other Tools">
+  The Think tool works best when used in conjunction with other tools in a complete workflow.
+  
+  ```
+  1. Use Think to document initial approach
+  2. Use File Search to gather information
+  3. Use Think again to document how the new information affects the approach
+  4. Use Agentic Search for deeper analysis
+  5. Use Think to document final reasoning
+  ```
+</Accordion>
+
+## Integration Examples
+
+### Integration with Agentic Search
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $OPENAI_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [
+      {
+        "type": "think"
+      },
+      {
+        "type": "agentic_search",
+        "vector_store_ids": ["vs_tech_docs"]
+      }
+    ],
+    "input": "What are the best practices for microservice communication patterns?",
+    "instructions": "First document your search strategy using the think tool, then perform the search, and finally document your insights from the search results."
+}'
+```
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:8080/v1",
+    api_key="your_openai_api_key"
+)
+
+response = client.responses.create(
+    model="gpt-4o",
+    tools=[
+        {
+            "type": "think"
+        },
+        {
+            "type": "agentic_search",
+            "vector_store_ids": ["vs_tech_docs"]
+        }
+    ],
+    input="What are the best practices for microservice communication patterns?",
+    instructions="First document your search strategy using the think tool, then perform the search, and finally document your insights from the search results."
+)
+
+print(response)
+```
+</CodeGroup>
+
+### Recording Decision-Making Process
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $OPENAI_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [
+      {
+        "type": "think"
+      },
+      {
+        "type": "file_search",
+        "vector_store_ids": ["vs_product_docs"]
+      }
+    ],
+    "input": "Compare the performance characteristics of our SQL and NoSQL database options for the user authentication service.",
+    "instructions": "Document your analysis process using the think tool at each step of your evaluation."
+}'
+```
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:8080/v1",
+    api_key="your_openai_api_key"
+)
+
+response = client.responses.create(
+    model="gpt-4o",
+    tools=[
+        {
+            "type": "think"
+        },
+        {
+            "type": "file_search",
+            "vector_store_ids": ["vs_product_docs"]
+        }
+    ],
+    input="Compare the performance characteristics of our SQL and NoSQL database options for the user authentication service.",
+    instructions="Document your analysis process using the think tool at each step of your evaluation."
+)
+
+print(response)
+```
+</CodeGroup>
+
+## Related Tools
+
+<CardGroup cols={2}>
+  <Card
+    title="File Search Tool"
+    icon="file-magnifying-glass"
+    href="/tools/file-search"
+  >
+    For direct vector store searches to retrieve information
+  </Card>
+  <Card
+    title="Agentic Search Tool"
+    icon="robot"
+    href="/tools/agentic-search"
+  >
+    For AI-guided iterative searches for complex questions
+  </Card>
+</CardGroup> 

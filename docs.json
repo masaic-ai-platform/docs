@@ -58,6 +58,15 @@
               "rag/search-api",
               "rag/embedding"
             ]
+          },
+          {
+            "group": "Built-In Tools",
+            "pages": [
+              "tools/overview",
+              "tools/file-search",
+              "tools/agentic-search",
+              "tools/think"
+            ]
           }
         ]
       }

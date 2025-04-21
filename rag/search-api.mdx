@@ -584,6 +584,99 @@ print(response)
   The file_search tool automatically performs the search and provides the results to the AI model in the same request. This creates a seamless RAG experience.
 </Note>
 
+## Using the agentic_search Tool
+
+The `agentic_search` tool offers an AI-guided approach to search that handles complex research queries by performing multiple search iterations. Instead of a single search, it breaks down complex questions and refines queries iteratively until finding the most comprehensive results.
+
+### Tool Usage with OpenAI Models
+
+<CodeGroup>
+```bash cURL
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $OPENAI_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [{
+      "type": "agentic_search",
+      "vector_store_ids": ["vs_abc123"],
+      "max_num_results": 5,
+      "max_iterations": 10,
+      "seed_strategy": "hybrid",
+      "alpha": 0.7,
+      "initial_seed_multiplier": 3,
+      "filters": {
+        "type": "and",
+        "filters": [
+          {
+            "type": "eq",
+            "key": "category",
+            "value": "architecture"
+          },
+          {
+            "type": "eq",
+            "key": "verified",
+            "value": true
+          }
+        ]
+      }
+    }],
+    "input": "What are the architectural tradeoffs between microservices and monoliths?",
+    "instructions": "Provide a comprehensive analysis based on the retrieved information."
+}'
+```
+
+```python Python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:8080/v1",
+    api_key="your_openai_api_key"
+)
+
+response = client.responses.create(
+    model="gpt-4o",
+    tools=[{
+        "type": "agentic_search",
+        "vector_store_ids": ["vs_abc123"],
+        "max_num_results": 5,
+        "max_iterations": 10,
+        "seed_strategy": "hybrid",
+        "alpha": 0.7,
+        "initial_seed_multiplier": 3,
+        "filters": {
+            "type": "and",
+            "filters": [
+                {
+                    "type": "eq",
+                    "key": "category",
+                    "value": "architecture"
+                },
+                {
+                    "type": "eq",
+                    "key": "verified",
+                    "value": true
+                }
+            ]
+        }
+    }],
+    input="What are the architectural tradeoffs between microservices and monoliths?",
+    instructions="Provide a comprehensive analysis based on the retrieved information."
+)
+
+print(response)
+```
+</CodeGroup>
+
+<Note>
+  The agentic_search tool performs multiple search iterations automatically and provides comprehensive results to the AI model. This is ideal for complex research questions requiring deep exploration across multiple documents.
+</Note>
+
+<Tip>
+  For more detailed information and advanced configuration options, see the full [Agentic Search Tool](/tools/agentic-search) documentation.
+</Tip>
+
 ## Advanced Search Techniques
 
 ### Query Rewriting (Coming Soon)

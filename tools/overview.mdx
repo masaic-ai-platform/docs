@@ -1,0 +1,196 @@
+---
+title: 'Built-In Tools Overview'
+description: 'Powerful tools to enhance your AI applications with search and information retrieval capabilities'
+---
+
+Our API offers several powerful built-in tools that enable advanced search and information retrieval capabilities for your AI applications.
+
+## Tools Overview
+
+<CardGroup cols={3}>
+  <Card
+    title="Think Tool"
+    icon="brain"
+    href="/tools/think"
+  >
+    For logging thoughts without changing state
+  </Card>
+  <Card
+    title="File Search Tool"
+    icon="file-magnifying-glass"
+    href="/tools/file-search"
+  >
+    For direct vector store searches
+  </Card>
+  <Card
+    title="Agentic Search Tool"
+    icon="robot"
+    href="/tools/agentic-search"
+  >
+    For AI-guided iterative searches
+  </Card>
+</CardGroup>
+
+<div className="my-6 overflow-auto max-w-full">
+  <Frame caption="Built-In Tools Comparison">
+    <table className="w-full text-sm" style={{ borderCollapse: "separate", borderRadius: "4px", overflow: "hidden" }}>
+      <thead>
+        <tr className="bg-gray-200 dark:bg-gray-800">
+          <th className="border border-gray-300 p-2" style={{ borderTopLeftRadius: "4px" }}>Feature</th>
+          <th className="border border-gray-300 p-2">Think Tool</th>
+          <th className="border border-gray-300 p-2">File Search Tool</th>
+          <th className="border border-gray-300 p-2" style={{ borderTopRightRadius: "4px" }}>Agentic Search Tool</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td className="border border-gray-300 p-2 font-medium">Purpose</td>
+          <td className="border border-gray-300 p-2">Document reasoning</td>
+          <td className="border border-gray-300 p-2">Direct information retrieval</td>
+          <td className="border border-gray-300 p-2">Complex research</td>
+        </tr>
+        <tr className="bg-gray-100 dark:bg-gray-700">
+          <td className="border border-gray-300 p-2 font-medium">Complexity</td>
+          <td className="border border-gray-300 p-2">Simple</td>
+          <td className="border border-gray-300 p-2">Moderate</td>
+          <td className="border border-gray-300 p-2">High</td>
+        </tr>
+        <tr>
+          <td className="border border-gray-300 p-2 font-medium">Best for</td>
+          <td className="border border-gray-300 p-2">Audit trails</td>
+          <td className="border border-gray-300 p-2">Known-item searches</td>
+          <td className="border border-gray-300 p-2">Research questions</td>
+        </tr>
+        <tr className="bg-gray-100 dark:bg-gray-700">
+          <td className="border border-gray-300 p-2 font-medium">Search iterations</td>
+          <td className="border border-gray-300 p-2">None</td>
+          <td className="border border-gray-300 p-2">Single</td>
+          <td className="border border-gray-300 p-2">Multiple</td>
+        </tr>
+        <tr>
+          <td className="border border-gray-300 p-2 font-medium" style={{ borderBottomLeftRadius: "4px" }}>Response time</td>
+          <td className="border border-gray-300 p-2">Instant</td>
+          <td className="border border-gray-300 p-2">Fast</td>
+          <td className="border border-gray-300 p-2" style={{ borderBottomRightRadius: "4px" }}>Moderate</td>
+        </tr>
+      </tbody>
+    </table>
+  </Frame>
+</div>
+
+## How Built-In Tools Work
+
+<div className="my-8 overflow-auto">
+  <Frame caption="Built-In Tools Data Flow">
+    <div style={{ minWidth: "600px" }}>
+      ```mermaid
+      %%{init: {'theme': 'neutral', 'themeVariables': {'primaryColor': '#f0f0f0', 'primaryTextColor': '#333', 'primaryBorderColor': '#666', 'lineColor': '#555', 'secondaryColor': '#e6e6e6', 'tertiaryColor': '#d9d9d9', 'linkColor': '#ffffff', 'edgeLabelBackground': '#333333'}}}%%
+      flowchart TD
+        User[User Query] --> AI[AI Assistant]
+        AI --> ToolSelection{Tool Selection}
+        
+        ToolSelection -->|Document Reasoning| Think[Think Tool]
+        ToolSelection -->|Simple Search| FileSearch[File Search Tool]
+        ToolSelection -->|Complex Research| AgenticSearch[Agentic Search Tool]
+        
+        Think --> Logs[Thought Logs]
+        
+        FileSearch --> VectorStore[Vector Store]
+        VectorStore --> Results[Search Results]
+        
+        AgenticSearch --> SearchIter[Search Iterations]
+        SearchIter --> VectorStore
+        SearchIter --> Refinement[Query Refinement]
+        Refinement --> SearchIter
+        
+        Results --> Response[Enhanced Response]
+        Logs --> Response
+        
+        Response --> User
+      ```
+    </div>
+  </Frame>
+</div>
+
+## Choosing the Right Tool
+
+- **Think Tool**: Use when you need to document reasoning steps or decision processes without changing state.
+- **File Search Tool**: Ideal for direct, immediate results on simple queries when you know exactly what you're looking for.
+- **Agentic Search Tool**: Perfect for complex, multi-faceted questions requiring comprehensive information gathering and deep exploration.
+
+## Getting Started
+
+### Basic Configuration
+
+Start with minimal configuration for each tool:
+
+<CodeGroup>
+```json Think Tool
+{
+  "thought": "Your thought goes here"
+}
+```
+
+```json File Search Tool
+{
+  "query": "Your search query here",
+  "vector_store_ids": ["vs_abc123"]
+}
+```
+
+```json Agentic Search Tool
+{
+  "question": "Your complex question here",
+  "vector_store_ids": ["vs_abc123"]
+}
+```
+</CodeGroup>
+
+### Advanced Options
+
+For more control, each tool offers additional configuration parameters:
+
+<Accordion title="File Search Tool Options">
+  - `filters`: Optional filters to narrow search results
+  - `max_num_results`: Maximum number of results to return (default: 20)
+</Accordion>
+
+<Accordion title="Agentic Search Tool Options">
+  - `max_num_results`: Maximum number of final results to return
+  - `max_iterations`: Maximum number of search iterations
+  - `seed_strategy`: Strategy for initial seed queries
+  - `alpha`: Balance between vector and keyword search weights
+  - `initial_seed_multiplier`: Multiplier for initial seed generation
+  - `enable_presence_penalty_tuning`: Enable dynamic tuning of presence penalty
+  - `enable_frequency_penalty_tuning`: Enable dynamic tuning of frequency penalty
+  - `enable_temperature_tuning`: Enable dynamic tuning of temperature
+  - `enable_top_p_tuning`: Enable dynamic tuning of top p
+  - `filters`: Optional filters to narrow search results
+</Accordion>
+
+<Tip>
+  For detailed configuration options and best practices for each tool, refer to the individual tool documentation pages.
+</Tip>
+
+## Example Applications
+
+- **Customer Support**: Use the Agentic Search Tool to research complex customer issues across your knowledge base.
+- **Legal Research**: Find relevant precedents and statutes with the File Search Tool.
+- **Code Documentation**: Document reasoning behind architectural decisions with the Think Tool.
+- **Medical Research**: Use Agentic Search for comprehensive literature reviews on medical topics.
+
+## Performance Considerations
+
+- File Search is faster but less thorough
+- Agentic Search provides better results for complex questions but uses more resources
+- For time-critical applications, set appropriate timeouts and consider using File Search
+
+<div className="mt-8 p-6 bg-gray-100 dark:bg-gray-800 rounded-lg">
+  <h3 className="text-lg font-bold mb-2">Ready to Get Started?</h3>
+  <p className="mb-4">Explore the detailed documentation for each built-in tool to learn more about their capabilities and how to implement them in your applications.</p>
+  <div className="flex flex-wrap gap-4">
+    <a href="/tools/think" className="inline-block px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90">Think Tool</a>
+    <a href="/tools/file-search" className="inline-block px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90">File Search Tool</a>
+    <a href="/tools/agentic-search" className="inline-block px-4 py-2 bg-primary text-white rounded-md hover:bg-opacity-90">Agentic Search Tool</a>
+  </div>
+</div> 
