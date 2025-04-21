@@ -125,7 +125,7 @@ Our API offers several powerful built-in tools that enable advanced search and i
 Start with minimal configuration for each tool:
 
 <CodeGroup>
-```bash API Request Example
+```bash Think Tool
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
@@ -142,7 +142,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 }'
 ```
 
-```bash With File Search Tool
+```bash File Search Tool
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
@@ -160,7 +160,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 }'
 ```
 
-```bash Multiple Tools Example
+```bash Agentic Search Tool
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
@@ -169,15 +169,12 @@ curl --location 'http://localhost:8080/v1/responses' \
     "model": "gpt-4o",
     "tools": [
       {
-        "type": "think"
-      },
-      {
-        "type": "file_search",
+        "type": "agentic_search",
         "vector_store_ids": ["vs_product_docs"]
       }
     ],
-    "input": "Compare the performance characteristics of our SQL and NoSQL database options for the user authentication service.",
-    "instructions": "Document your analysis process using the think tool at each step of your evaluation."
+    "input": "Compare the performance characteristics of our SQL and NoSQL database options",
+    "instructions": "Perform a comprehensive search to evaluate database options."
 }'
 ```
 </CodeGroup>

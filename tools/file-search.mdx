@@ -36,16 +36,40 @@ The File Search tool connects directly to your vector stores, allowing you to se
 Basic configuration requires a query parameter:
 
 <CodeGroup>
-```json Basic Configuration
-{
-  "query": "Your search query here"
-}
+```bash Basic Configuration
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [
+      {
+        "type": "file_search",
+        "vector_store_ids": ["vs_product_docs"]
+      }
+    ],
+    "input": "What is the recommended database connection timeout?",
+    "instructions": "Search the product documentation to find specific recommendations."
+}'
 ```
 
-```json Example Query
-{
-  "query": "API rate limiting policy"
-}
+```bash Example Query
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [
+      {
+        "type": "file_search",
+        "vector_store_ids": ["vs_product_docs"]
+      }
+    ],
+    "input": "API rate limiting policy",
+    "instructions": "Find information about our API rate limiting policies."
+}'
 ```
 </CodeGroup>
 

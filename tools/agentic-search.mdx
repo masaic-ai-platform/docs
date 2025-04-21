@@ -62,24 +62,46 @@ Unlike the simpler File Search tool, the Agentic Search tool employs AI to break
 Basic configuration requires a query parameter and vector store IDs:
 
 <CodeGroup>
-```json Basic Configuration
-{
-  "query": "Your complex query here",
-  "vector_store_ids": ["vs_abc123"]
-}
+```bash Basic Configuration
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [
+      {
+        "type": "agentic_search",
+        "vector_store_ids": ["vs_product_docs"]
+      }
+    ],
+    "input": "What approaches can we take to implement rate limiting that scales across multiple service instances?",
+    "instructions": "Perform a comprehensive search to evaluate different approaches."
+}'
 ```
 
-```json Advanced Configuration
-{
-  "query": "What approaches can we take to implement rate limiting that scales across multiple service instances?",
-  "vector_store_ids": ["vs_architecture_docs", "vs_code_examples"],
-  "max_num_results": 5,
-  "max_iterations": 8,
-  "seed_strategy": "hybrid",
-  "alpha": 0.7,
-  "initial_seed_multiplier": 3,
-  "enable_temperature_tuning": true
-}
+```bash Advanced Configuration
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [
+      {
+        "type": "agentic_search",
+        "vector_store_ids": ["vs_architecture_docs", "vs_code_examples"],
+        "max_num_results": 5,
+        "max_iterations": 8,
+        "seed_strategy": "hybrid",
+        "alpha": 0.7,
+        "initial_seed_multiplier": 3,
+        "enable_temperature_tuning": true
+      }
+    ],
+    "input": "What approaches can we take to implement rate limiting that scales across multiple service instances?",
+    "instructions": "Perform an in-depth analysis of different rate limiting approaches and provide recommendations."
+}'
 ```
 </CodeGroup>
 

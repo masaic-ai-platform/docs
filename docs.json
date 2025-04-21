@@ -35,6 +35,12 @@
             ]
           },
           {
+            "group": "Model Providers",
+            "pages": [
+              "model-providers"
+            ]
+          },
+          {
             "group": "Use Cases & Demos",
             "pages": [
               "use-cases/codex-demo"
