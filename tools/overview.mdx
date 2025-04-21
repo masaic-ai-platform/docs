@@ -125,24 +125,60 @@ Our API offers several powerful built-in tools that enable advanced search and i
 Start with minimal configuration for each tool:
 
 <CodeGroup>
-```json Think Tool
-{
-  "thought": "Your thought goes here"
-}
+```bash API Request Example
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [
+      {
+        "type": "think"
+      }
+    ],
+    "input": "Analyze the pros and cons of microservices architecture",
+    "instructions": "Document your analysis process using the think tool."
+}'
 ```
 
-```json File Search Tool
-{
-  "query": "Your search query here",
-  "vector_store_ids": ["vs_abc123"]
-}
+```bash With File Search Tool
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [
+      {
+        "type": "file_search",
+        "vector_store_ids": ["vs_product_docs"]
+      }
+    ],
+    "input": "What is the recommended database connection timeout?",
+    "instructions": "Search the product documentation to find specific recommendations."
+}'
 ```
 
-```json Agentic Search Tool
-{
-  "question": "Your complex question here",
-  "vector_store_ids": ["vs_abc123"]
-}
+```bash Multiple Tools Example
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--header 'x-model-provider: openai' \
+--data '{
+    "model": "gpt-4o",
+    "tools": [
+      {
+        "type": "think"
+      },
+      {
+        "type": "file_search",
+        "vector_store_ids": ["vs_product_docs"]
+      }
+    ],
+    "input": "Compare the performance characteristics of our SQL and NoSQL database options for the user authentication service.",
+    "instructions": "Document your analysis process using the think tool at each step of your evaluation."
+}'
 ```
 </CodeGroup>
 
