@@ -82,19 +82,4 @@ The format for specifying a model is `provider@model-name` or `model_endpoint@mo
 
 ## Supported Model Providers
 
-OpenResponses supports the following model providers that can be used with the `provider@model_name` convention:
-
-| Provider | API Endpoint |
-|----------|--------------|
-| openai | https://api.openai.com/v1 |
-| claude | https://api.anthropic.com/v1 |
-| anthropic | https://api.anthropic.com/v1 |
-| groq | https://api.groq.com/openai/v1 |
-| togetherai | https://api.together.xyz/v1 |
-| gemini | https://generativelanguage.googleapis.com/v1beta/openai/ |
-| google | https://generativelanguage.googleapis.com/v1beta/openai/ |
-| deepseek | https://api.deepseek.com |
-| ollama | http://localhost:11434/v1 |
-| xai | https://api.x.ai/v1 |
-
-For any model provider not listed in the table above, you can use the `model_endpoint@model_name` convention by directly specifying the full API endpoint URL. This works for both locally deployed models and any third-party API services that follow the OpenAI-compatible chat/completions format. 
+OpenResponses supports a variety of model providers that can be used with the `provider@model_name` convention. For a complete list of supported providers with detailed examples for each, see our [Model Providers](/model-providers) documentation. 

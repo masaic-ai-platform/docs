@@ -1,0 +1,205 @@
+---
+title: 'Model Providers'
+description: 'Supported model providers and how to use them with OpenResponses'
+---
+
+# Model Providers
+
+OpenResponses supports various model providers that can be used with the `provider@model_name` convention. This page provides examples of how to use each supported provider with curl commands.
+
+## Supported Model Providers
+
+| Provider | API Endpoint |
+|----------|--------------|
+| openai | https://api.openai.com/v1 |
+| claude | https://api.anthropic.com/v1 |
+| anthropic | https://api.anthropic.com/v1 |
+| groq | https://api.groq.com/openai/v1 |
+| togetherai | https://api.together.xyz/v1 |
+| gemini | https://generativelanguage.googleapis.com/v1beta/openai/ |
+| google | https://generativelanguage.googleapis.com/v1beta/openai/ |
+| deepseek | https://api.deepseek.com |
+| ollama | http://localhost:11434/v1 |
+| xai | https://api.x.ai/v1 |
+
+## Provider Examples
+
+### OpenAI
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $OPENAI_API_KEY' \
+--data '{
+    "model": "openai@gpt-4o",
+    "tools": [{
+      "type": "file_search",
+      "vector_store_ids": ["vs_technical_docs"],
+      "max_num_results": 5,
+      "filters": {
+        "type": "and",
+        "filters": [
+          {
+            "type": "eq",
+            "key": "category",
+            "value": "documentation"
+          }
+        ]
+      }
+    }],
+    "input": "How do I implement rate limiting?",
+    "instructions": "Answer questions using information from the provided documents."
+}'
+```
+
+### Claude / Anthropic
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $ANTHROPIC_API_KEY' \
+--data '{
+    "model": "claude@claude-3-5-sonnet-20240620",
+    "tools": [{
+      "type": "file_search",
+      "vector_store_ids": ["vs_technical_docs"],
+      "max_num_results": 5
+    }],
+    "input": "Explain the architecture of the system",
+    "instructions": "Be technical and concise in your answers."
+}'
+```
+
+### Groq
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $GROQ_API_KEY' \
+--data '{
+    "model": "groq@llama3-70b-8192",
+    "tools": [{
+      "type": "function_call",
+      "functions": [
+        {
+          "name": "get_weather",
+          "description": "Get the current weather in a given location",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "location": {
+                "type": "string",
+                "description": "The city and state, e.g. San Francisco, CA"
+              }
+            },
+            "required": ["location"]
+          }
+        }
+      ]
+    }],
+    "input": "What's the weather like in San Francisco?",
+    "instructions": "Use the provided tools to answer questions."
+}'
+```
+
+### TogetherAI
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $TOGETHER_API_KEY' \
+--data '{
+    "model": "togetherai@mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "tools": [{
+      "type": "code_interpreter"
+    }],
+    "input": "Plot a sine wave from 0 to 2π",
+    "instructions": "Use code interpreter when mathematical calculations are needed."
+}'
+```
+
+### Google / Gemini
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $GOOGLE_API_KEY' \
+--data '{
+    "model": "google@gemini-2.0-flash",
+    "tools": [{
+      "type": "web_search"
+    }],
+    "input": "What are the latest developments in quantum computing?",
+    "instructions": "Use web search to provide up-to-date information."
+}'
+```
+
+### DeepSeek
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $DEEPSEEK_API_KEY' \
+--data '{
+    "model": "deepseek@deepseek-chat",
+    "input": "Help me debug this Python function: def factorial(n): return n * factorial(n-1)",
+    "instructions": "Provide code improvements with explanations."
+}'
+```
+
+### Ollama (Local)
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--data '{
+    "model": "ollama@llama3",
+    "input": "Generate a short story about a robot learning to paint.",
+    "instructions": "Be creative and descriptive."
+}'
+```
+
+### xAI
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $XAI_API_KEY' \
+--data '{
+    "model": "xai@grok-2",
+    "input": "Explain how neural networks work",
+    "instructions": "Explain complex topics in simple terms."
+}'
+```
+
+## Using Custom Model Providers
+
+For any model provider not listed above, you can use the `model_endpoint@model_name` convention by directly specifying the full API endpoint URL:
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer $YOUR_API_KEY' \
+--data '{
+    "model": "http://your-custom-model-endpoint.com/v1@your-model-name",
+    "input": "Summarize this technical document",
+    "instructions": "Be thorough but concise."
+}'
+```
+
+### Example with Local LLM Server
+
+```bash
+curl --location 'http://localhost:8080/v1/responses' \
+--header 'Content-Type: application/json' \
+--data '{
+    "model": "http://localhost:1234/v1@local-model",
+    "input": "Generate unit tests for this function",
+    "instructions": "Focus on edge cases and error handling."
+}'
+```
+
+The format for specifying a model is always `provider@model-name` or `model_endpoint@model_name`, where:
+- `provider`: The model provider (e.g., claude, deepseek, google, openai)
+- `model_endpoint`: For locally deployed models or any custom model provider, the endpoint URL where chat/completions is available
+- `model-name`: The specific model to use from that provider or endpoint 
