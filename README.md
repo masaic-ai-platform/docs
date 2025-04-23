@@ -2,6 +2,7 @@
 
 This repository contains the documentation for OpenResponses, built with [Mintlify](https://mintlify.com/).
 
+
 ## Getting Started
 
 ### Prerequisites
