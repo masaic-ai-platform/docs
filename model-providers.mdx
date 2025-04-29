@@ -19,7 +19,6 @@ OpenResponses supports various model providers that can be used with the `provid
 | gemini | https://generativelanguage.googleapis.com/v1beta/openai/ |
 | google | https://generativelanguage.googleapis.com/v1beta/openai/ |
 | deepseek | https://api.deepseek.com |
-| ollama | http://localhost:11434/v1 |
 | xai | https://api.x.ai/v1 |
 
 ## Provider Examples
@@ -153,7 +152,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --data '{
-    "model": "ollama@llama3",
+    "model": "http://localhost:11434/v1@llama3",
     "input": "Generate a short story about a robot learning to paint.",
     "instructions": "Be creative and descriptive."
 }'
