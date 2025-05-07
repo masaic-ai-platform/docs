@@ -38,26 +38,23 @@ This service provides methods to:
 
 ## Metrics
 
-You can view the collected metrics via the Spring Actuator endpoint: `http://localhost:8080/actuator/metrics`
+You can view the collected metrics in any metrics tool (like Prometheus)
 
 The system produces the following key metrics:
 
 | Metric Name | Description |
 |------------|-------------|
-| `builtin.tool.execute` | Measures tool execution performance |
-| `gen_ai.client.operation.duration` | Tracks duration of model API calls |
-| `gen_ai.client.token.usage` | Counts input and output token usage |
-| `open.responses.create` | Measures non-streaming response generation time |
-| `open.responses.createStream` | Measures streaming response generation time |
+| `execute_tool` | Measures internal tool execution performance |
+| `gen_ai_client_operation_duration` | Tracks duration of model API calls |
+| `gen_ai_client_token_usage` | Counts input and output token usage |
 
 ## Traces
 
 The system creates traces for:
 
-1. HTTP POST requests to `/v1/responses`
-2. Model response generation via `open.responses.create`
-3. Built-in tool execution via `builtin.tool.execute`
-4. Streaming response generation via `open.responses.createStream`
+1. HTTP POST requests to `/v1/responses` or `/chat/completions`
+2. Model response generation via `{gen_ai.operation.name} {gen_ai.request.model}`
+3. Built-in tool execution via `execute_tool`
 
 ## How to Export Telemetry Data
 
@@ -67,12 +64,14 @@ OpenResponses is designed to work with the OpenTelemetry ecosystem for exporting
 
 1. To enable the OpenTelemetry collector integration, start the service with:
    ```
-   spring.profiles.active=otel
+   OTEL_SDK_DISABLED=false
    ```
 
-2. The OpenTelemetry collector collects data from the service using OTLP (OpenTelemetry Protocol) over gRPC or HTTP.
+2. The OpenTelemetry collector collects data from the service using OTLP (OpenTelemetry Protocol).
 
 3. Configuration of the collector is done via its config file, typically located in the deployment environment.
+
+4. All opentelemetry [sdk-environment-variables](https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/) are supported.
 
 ### Exporting to Monitoring Tools
 
@@ -80,7 +79,7 @@ The collected data can be shipped to various monitoring tools:
 
 - **For Metrics**: Prometheus and Grafana
 - **For Traces**: Jaeger, Zipkin, or other tracing backends
-- **For Logs**: Various log aggregation systems
+- **For Logs**: plug your own log aggregation systems
 
 ## Observability in Action
 
@@ -116,9 +115,9 @@ In addition to GenAI-specific observability, OpenResponses emits standard Spring
 
 These metrics provide a holistic view of the application's performance beyond just the AI model interactions.
 
-## OpenTelemetry Compatibility
+## OpenTelemetry Compatibility [WIP: For complete compliance with OTEL Specs]
 
-The built-in observability system in OpenResponses is highly flexible and compatible with any OpenTelemetry-compliant tool. This allows you to:
+The built-in observability system in OpenResponses follows opentelemetry specifications. This allows you to:
 
 - Use SigNoz, Jaeger, or Dynatrace for distributed tracing
 - Implement Prometheus and Grafana for metrics and dashboards
@@ -134,4 +133,12 @@ The implementation follows OpenTelemetry specifications for:
 - Metrics: [GenAI Metrics](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-metrics/)
 - Events: [GenAI Events](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-events/)
 
-This ensures compatibility with standard observability tools and dashboards that support OpenTelemetry. 
+This ensures compatibility with standard observability tools and dashboards that support OpenTelemetry.
+
+## OpenTelemetry span attributes that are under implementation are:
+  1. gen_ai.request.choice.count
+  2. gen_ai.request.seed
+  3. gen_ai.request.frequency_penalty
+  4. gen_ai.request.presence_penalty
+  5. gen_ai.request.stop_sequences
+  6. gen_ai.request.top_k

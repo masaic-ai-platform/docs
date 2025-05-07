@@ -29,11 +29,12 @@ This guide provides step-by-step instructions for running the Open Responses ser
    docker-compose --profile mcp up open-responses-otel
    ```
 
-4. **Note:** You might see momentary exceptions like:
+4. **Note:** You might see momentary exceptions like this for spans, logs and metrics.
    ```
-   Failed to publish metrics to OTLP receiver (context: url=http://localhost:4318/v1/metrics)
+   ERROR [OkHttp http://otel-collector:4318/...] [unknown] [unknown] i.o.e.internal.http.HttpExporter - Failed to export spans. The request could not be executed. Full error message: otel-collector
    ```
    This is normal during startup.
+   **Note:** by default setup do not configure log exporter in otel-collector. Feel free to connect your favourite logging system.
 
 5. Once all services are running properly, these errors should disappear.
 
