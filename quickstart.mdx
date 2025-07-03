@@ -106,9 +106,8 @@ For a complete list of all supported model providers with detailed curl examples
     curl --location 'http://localhost:8080/v1/responses' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer OPENAI_API_KEY' \
-    --header 'x-model-provider: openai' \
     --data '{
-        "model": "gpt-4o",
+        "model": "openai@gpt-4o",
         "stream": false,
         "input": [
             {
@@ -127,7 +126,7 @@ For a complete list of all supported model providers with detailed curl examples
     --header 'Authorization: Bearer ANTHROPIC_API_KEY' \
     --header 'x-model-provider: claude' \
     --data '{
-        "model": "claude-3-5-sonnet-20241022",
+        "model": "claude@claude-3-5-sonnet-20241022",
         "stream": false,
         "input": [
             {
@@ -230,7 +229,7 @@ Stop previously running docker-compose (if any) before running this command.
     --header 'Authorization: Bearer OPENAI_API_KEY' \
     --header 'x-model-provider: openai' \
     --data '{
-        "model": "gpt-4o",
+        "model": "openai@gpt-4o",
         "stream": false,
         "tools": [
             {
@@ -253,7 +252,7 @@ Stop previously running docker-compose (if any) before running this command.
     --header 'Authorization: Bearer ANTHROPIC_API_KEY' \
     --header 'x-model-provider: claude' \
     --data '{
-        "model": "claude-3-7-sonnet-20250219",
+        "model": "claude@claude-3-7-sonnet-20250219",
         "stream": false,
         "tools": [
            {"type": "think"}
@@ -422,7 +421,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 --header 'Authorization: Bearer OPENAI_API_KEY' \
 --header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "store": true,
     "input": [
         {
@@ -493,7 +492,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 --header 'Authorization: Bearer OPENAI_API_KEY' \
 --header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "store": true,
     "previous_response_id": "chatcmpl-BLB88IDIyyHjupNiAqOZQvAfT2T3K",
     "input": [
@@ -656,7 +655,7 @@ docker-compose --profile qdrant-mongodb up
     --header 'Authorization: Bearer OPENAI_API_KEY' \
     --header 'x-model-provider: openai' \
     --data '{
-        "model": "gpt-4o",
+        "model": "openai@gpt-4o",
         "tools": [{
           "type": "file_search",
           "vector_store_ids": ["YOUR_VECTOR_STORE_ID"],
@@ -674,7 +673,7 @@ docker-compose --profile qdrant-mongodb up
     --header 'Authorization: Bearer ANTHROPIC_API_KEY' \
     --header 'x-model-provider: claude' \
     --data '{
-        "model": "claude-3-5-sonnet-20241022",
+        "model": "claude@claude-3-5-sonnet-20241022",
         "tools": [{
           "type": "file_search",
           "vector_store_ids": ["YOUR_VECTOR_STORE_ID"],
