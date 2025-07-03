@@ -42,7 +42,7 @@ Use the `store` parameter in your API requests to control whether responses are 
 
 ```json
 {
-  "model": "gpt-4o",
+  "model": "openai@gpt-4o",
   "input": "Tell me a bedtime story about a unicorn.",
   "store": true  // Set to true to store the conversation
 }
@@ -107,9 +107,8 @@ docker-compose --profile mongodb up -d
 curl http://localhost:8080/v1/responses \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "x-model-provider: openai" \
   -d '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "input": [
       {"role": "user", "content": "Tell me a three sentence bedtime story about a unicorn."}
     ],
@@ -173,9 +172,8 @@ To reference a previously stored conversation, use the response ID:
 curl http://localhost:8080/v1/responses \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
-  -H "x-model-provider: openai" \
   -d '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "previous_response_id": "chatcmpl-BLB88IDIyyHjupNiAqOZQvAfT2T3K",
     "input": [
       {"role": "user", "content": "Make the story longer."}
