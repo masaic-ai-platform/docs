@@ -168,9 +168,8 @@ Explicitly record assumptions being made:
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
---header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "tools": [
       {
         "type": "think"
@@ -221,7 +220,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "tools": [
       {
         "type": "think"

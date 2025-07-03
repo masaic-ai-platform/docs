@@ -40,9 +40,8 @@ Basic configuration requires a query parameter:
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
---header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "tools": [
       {
         "type": "file_search",
@@ -60,7 +59,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "tools": [
       {
         "type": "file_search",
@@ -201,7 +200,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "tools": [{
       "type": "file_search",
       "vector_store_ids": ["vs_security_docs"],
@@ -242,7 +241,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "tools": [{
       "type": "file_search",
       "vector_store_ids": ["vs_technical_docs", "vs_code_examples", "vs_architecture"],
@@ -301,7 +300,7 @@ curl --location 'http://localhost:8080/v1/responses' \
   --header 'Authorization: Bearer $OPENAI_API_KEY' \
   --header 'x-model-provider: openai' \
   --data '{
-      "model": "gpt-4o",
+      "model": "openai@gpt-4o",
       "tools": [{
         "type": "file_search",
         "vector_store_ids": ["vs_engineering_docs"],
@@ -340,7 +339,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "tools": [{
       "type": "file_search",
       "vector_store_ids": ["vs_technical_docs"],

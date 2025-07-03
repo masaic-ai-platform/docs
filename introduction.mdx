@@ -50,11 +50,10 @@ import os
 
 openai_client = OpenAI(
     base_url="http://localhost:8080/v1", 
-    api_key=os.getenv("OPENAI_API_KEY"), 
-    default_headers={'x-model-provider': 'openai'}
+    api_key=os.getenv("OPENAI_API_KEY")
 )
 
-response = openai_client.responses.create(
+response = openai_client.chat.completions.create(
     model="gpt-4o-mini",
     input="Tell me a joke"
 )
@@ -68,8 +67,7 @@ import os
 
 client = AsyncOpenAI(
     base_url="http://localhost:8080/v1", 
-    api_key=os.getenv("OPENAI_API_KEY"), 
-    default_headers={'x-model-provider': 'openai'}
+    api_key=os.getenv("OPENAI_API_KEY")
 )
 
 agent = Agent(
@@ -84,9 +82,8 @@ agent = Agent(
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer OPENAI_API_KEY' \
---header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "stream": false,
     "input": [
         {
