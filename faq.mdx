@@ -69,8 +69,7 @@ import os
 
 openai_client = OpenAI(
     base_url="http://localhost:8080/v1", 
-    api_key=os.getenv("OPENAI_API_KEY"), 
-    default_headers={'x-model-provider': 'openai'}
+    api_key=os.getenv("OPENAI_API_KEY")
 )
 
 response = openai_client.responses.create(
@@ -88,8 +87,7 @@ import os
 
 client = AsyncOpenAI(
     base_url="http://localhost:8080/v1", 
-    api_key=os.getenv("OPENAI_API_KEY"), 
-    default_headers={'x-model-provider': 'openai'}
+    api_key=os.getenv("OPENAI_API_KEY")
 )
 
 agent = Agent(

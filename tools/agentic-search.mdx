@@ -67,9 +67,8 @@ Basic configuration requires a query parameter and vector store IDs:
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
---header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "tools": [
       {
         "type": "agentic_search",
@@ -85,9 +84,8 @@ curl --location 'http://localhost:8080/v1/responses' \
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
---header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "tools": [
       {
         "type": "agentic_search",
@@ -398,9 +396,8 @@ The following parameters enable dynamic adjustment of the underlying model's par
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
---header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "tools": [{
       "type": "agentic_search",
       "vector_store_ids": ["vs_architecture_docs", "vs_engineering_blogs"],

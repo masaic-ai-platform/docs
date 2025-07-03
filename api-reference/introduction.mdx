@@ -24,12 +24,6 @@ All API requests require authentication using an API key. The API key should be 
 Authorization: Bearer YOUR_API_KEY
 ```
 
-For model-specific requests, you need to specify the model provider using the `x-model-provider` header:
-
-```
-x-model-provider: openai
-```
-
 Supported model providers include:
 - `openai` - OpenAI models (GPT-4o, GPT-3.5 Turbo, etc.)
 - `claude` - Anthropic models (Claude 3.5 Sonnet, Claude 3 Opus, etc.)
@@ -113,8 +107,7 @@ OpenResponses is designed to work with existing OpenAI SDKs:
     
     client = OpenAI(
         base_url="http://localhost:8080/v1",
-        api_key="your-api-key",
-        default_headers={'x-model-provider': 'openai'}
+        api_key="your-api-key"
     )
     
     response = client.chat.completions.create(
@@ -133,8 +126,7 @@ OpenResponses is designed to work with existing OpenAI SDKs:
     
     const openai = new OpenAI({
       baseURL: 'http://localhost:8080/v1',
-      apiKey: 'your-api-key',
-      defaultHeaders: {'x-model-provider': 'openai'}
+      apiKey: 'your-api-key'
     });
     
     async function main() {

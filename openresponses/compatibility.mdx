@@ -362,7 +362,7 @@ curl -X POST https://api.openai.com/v1/responses \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer YOUR_API_KEY" \
 -d '{
-  "model": "gpt-4o",
+  "model": "openai@gpt-4o",
   "input": "Hello, world!"
 }'
 ```
@@ -379,7 +379,7 @@ curl -X POST https://api.openai.com/v1/responses \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer YOUR_API_KEY" \
 -d '{
-  "model": "gpt-4o",
+  "model": "openai@gpt-4o",
   "instructions": "Answer concisely.",
   "input": "Explain AI."
 }'
@@ -394,7 +394,7 @@ curl -X POST https://api.openai.com/v1/responses \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer YOUR_API_KEY" \
 -d '{
-  "model": "gpt-4o",
+  "model": "openai@gpt-4o",
   "temperature": 0.5,
   "input": "Suggest a creative startup idea."
 }'
@@ -412,7 +412,7 @@ curl -X POST https://api.openai.com/v1/responses \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer YOUR_API_KEY" \
 -d '{
-    "model": "gpt-4o-2024-08-06",
+    "model": "openai@gpt-4o-2024-08-06",
     "input": [
       {
         "role": "system",
@@ -465,7 +465,7 @@ curl -X POST https://api.openai.com/v1/responses \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer YOUR_API_KEY" \
 -d '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "input": [
       {
         "role": "user",
@@ -493,7 +493,7 @@ curl -X POST https://api.openai.com/v1/responses \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer YOUR_API_KEY" \
 -d '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "input": "What is the weather like in Boston today?",
     "tools": [
       {
@@ -532,7 +532,7 @@ curl -N -X POST https://api.openai.com/v1/responses \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer YOUR_API_KEY" \
 -d '{
-  "model": "gpt-4o",
+  "model": "openai@gpt-4o",
   "input": "Stream your response.",
   "stream": true
 }'
@@ -548,7 +548,7 @@ curl -X POST https://api.openai.com/v1/responses \
 -H "Content-Type: application/json" \
 -H "Authorization: Bearer YOUR_API_KEY" \
 -d '{
-  "model": "gpt-4o",
+  "model": "openai@gpt-4o",
   "input": "Metadata example.",
   "store": true,
   "metadata": {

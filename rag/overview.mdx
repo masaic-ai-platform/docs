@@ -377,9 +377,8 @@ You can integrate RAG with OpenAI models by using the `file_search` tool:
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
---header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "store": true,
     "tools": [{
       "type": "file_search",
