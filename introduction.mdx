@@ -54,7 +54,7 @@ openai_client = OpenAI(
 )
 
 response = openai_client.responses.create(
-    model="gpt-4o-mini",
+    model="openai@gpt-4o-mini",
     input="Tell me a joke"
 )
 ```
@@ -73,7 +73,7 @@ client = AsyncOpenAI(
 agent = Agent(
     name="Assistant",
     instructions="You are a humorous poet who can write funny poems of 4 lines.",
-    model=OpenAIResponsesModel(model="gpt-4o-mini", openai_client=client)
+    model=OpenAIResponsesModel(model="openai@gpt-4o-mini", openai_client=client)
 )
 ```
 
