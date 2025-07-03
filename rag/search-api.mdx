@@ -514,8 +514,9 @@ The `file_search` tool provides an alternative way to search vector stores throu
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
+--header 'x-model-provider: openai' \
 --data '{
-    "model": "openai@gpt-4o",
+    "model": "gpt-4o",
     "tools": [{
       "type": "file_search",
       "vector_store_ids": ["vs_abc123"],
@@ -596,7 +597,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --header 'x-model-provider: openai' \
 --data '{
-    "model": "openai@gpt-4o",
+    "model": "gpt-4o",
     "tools": [{
       "type": "agentic_search",
       "vector_store_ids": ["vs_abc123"],

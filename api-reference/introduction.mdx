@@ -113,7 +113,8 @@ OpenResponses is designed to work with existing OpenAI SDKs:
     
     client = OpenAI(
         base_url="http://localhost:8080/v1",
-        api_key="your-api-key"
+        api_key="your-api-key",
+        default_headers={'x-model-provider': 'openai'}
     )
     
     response = client.chat.completions.create(
@@ -132,7 +133,8 @@ OpenResponses is designed to work with existing OpenAI SDKs:
     
     const openai = new OpenAI({
       baseURL: 'http://localhost:8080/v1',
-      apiKey: 'your-api-key'
+      apiKey: 'your-api-key',
+      defaultHeaders: {'x-model-provider': 'openai'}
     });
     
     async function main() {
