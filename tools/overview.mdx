@@ -129,9 +129,8 @@ Start with minimal configuration for each tool:
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
---header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "tools": [
       {
         "type": "think"
@@ -146,9 +145,8 @@ curl --location 'http://localhost:8080/v1/responses' \
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
---header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "tools": [
       {
         "type": "file_search",
@@ -164,9 +162,8 @@ curl --location 'http://localhost:8080/v1/responses' \
 curl --location 'http://localhost:8080/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
---header 'x-model-provider: openai' \
 --data '{
-    "model": "gpt-4o",
+    "model": "openai@gpt-4o",
     "tools": [
       {
         "type": "agentic_search",
