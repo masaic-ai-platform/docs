@@ -64,7 +64,7 @@ Basic configuration requires a query parameter and vector store IDs:
 
 <CodeGroup>
 ```bash Basic Configuration
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --data '{
@@ -81,7 +81,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 ```
 
 ```bash Advanced Configuration
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --data '{
@@ -393,7 +393,7 @@ The following parameters enable dynamic adjustment of the underlying model's par
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --data '{
@@ -431,12 +431,12 @@ curl --location 'http://localhost:8080/v1/responses' \
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="http://localhost:8080/v1",
+    base_url="http://localhost:6644/v1",
     api_key="your_openai_api_key"
 )
 
 response = client.responses.create(
-    model="gpt-4o",
+    model="openai@gpt-4o",
     tools=[{
         "type": "agentic_search",
         "vector_store_ids": ["vs_architecture_docs", "vs_engineering_blogs"],
@@ -472,13 +472,13 @@ print(response)
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  baseURL: "http://localhost:8080/v1",
+  baseURL: "http://localhost:6644/v1",
   apiKey: "your_openai_api_key"
 });
 
 async function conductResearch() {
   const response = await openai.responses.create({
-    model: "gpt-4o",
+    model: "openai@gpt-4o",
     tools: [{
       type: "agentic_search",
       vector_store_ids: ["vs_architecture_docs", "vs_engineering_blogs"],
@@ -559,7 +559,7 @@ async function conductResearchWithDepth(query, depth = "standard") {
   }
   
   const response = await openai.responses.create({
-    model: "gpt-4o",
+    model: "openai@gpt-4o",
     tools: [toolConfig],
     input: query,
     instructions: "Provide a comprehensive analysis based on the retrieved information."

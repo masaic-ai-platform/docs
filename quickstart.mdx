@@ -103,7 +103,7 @@ For a complete list of all supported model providers with detailed curl examples
 <Tabs>
   <Tab title="OpenAI">
     ```bash
-    curl --location 'http://localhost:8080/v1/responses' \
+    curl --location 'http://localhost:6644/v1/responses' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer OPENAI_API_KEY' \
     --data '{
@@ -121,7 +121,7 @@ For a complete list of all supported model providers with detailed curl examples
   </Tab>
   <Tab title="Claude">
     ```bash
-    curl --location 'http://localhost:8080/v1/responses' \
+    curl --location 'http://localhost:6644/v1/responses' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer ANTHROPIC_API_KEY' \
     --data '{
@@ -139,7 +139,7 @@ For a complete list of all supported model providers with detailed curl examples
   </Tab>
   <Tab title="Groq">
     ```bash
-    curl --location 'http://localhost:8080/v1/responses' \
+    curl --location 'http://localhost:6644/v1/responses' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer GROQ_API_KEY' \
     --data '{
@@ -201,7 +201,7 @@ Stop previously running docker-compose (if any) before running this command.
 <Tabs>
   <Tab title="Web Search">
     ```bash
-    curl --location 'http://localhost:8080/v1/responses' \
+    curl --location 'http://localhost:6644/v1/responses' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer GROQ_API_KEY' \
     --data '{
@@ -223,7 +223,7 @@ Stop previously running docker-compose (if any) before running this command.
   </Tab>
   <Tab title="GitHub Search">
     ```bash
-    curl --location 'http://localhost:8080/v1/responses' \
+    curl --location 'http://localhost:6644/v1/responses' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer OPENAI_API_KEY' \
     --data '{
@@ -245,7 +245,7 @@ Stop previously running docker-compose (if any) before running this command.
   </Tab>
   <Tab title="Claude Think">
     ```bash
-    curl --location 'http://localhost:8080/v1/responses' \
+    curl --location 'http://localhost:6644/v1/responses' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer ANTHROPIC_API_KEY' \
     --data '{
@@ -309,7 +309,7 @@ You can run examples provided by the openai-agent-python SDK using your locally 
 1. Start the service using:
 
 ```bash
-docker-compose up open-responses-with-openai
+docker-compose up open-responses
 ```
 
 <Note>
@@ -327,7 +327,7 @@ cd openai-agents-python
 
    - Define the environment variable `OPENAI_API_KEY` with your OpenAI API key
    - Define the environment variable `OPEN_RESPONSES_URL` to specify the URL for your local open-responses API
-   - If not set, it will default to "http://localhost:8080/v1"
+   - If not set, it will default to "http://localhost:6644/v1"
 
 4. Run the examples:
    - Follow [Get started](https://github.com/masaic-ai-platform/openai-agents-python/tree/main?tab=readme-ov-file#get-started) instructions to install the SDK
@@ -413,7 +413,7 @@ This will launch both the MongoDB database and the Open Responses service config
 To test that responses are being stored, make an API call with the `store` parameter set to `true`:
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer OPENAI_API_KEY' \
 --data '{
@@ -440,7 +440,7 @@ When you make a request to store a conversation, you'll receive a response that 
     "incomplete_details": null,
     "instructions": null,
     "metadata": null,
-    "model": "gpt-4o-2024-08-06",
+    "model": "openai@gpt-4o-2024-08-06",
     "object": "response",
     "output": [
         {
@@ -483,7 +483,7 @@ The response will include an `id` that you can use to reference this conversatio
 To continue a stored conversation, use the `previous_response_id` from your earlier response:
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer OPENAI_API_KEY' \
 --data '{
@@ -542,7 +542,7 @@ docker-compose --profile qdrant-mongodb up
     First, upload a file to be processed and stored:
 
     ```bash
-    curl --location 'http://localhost:8080/v1/files' \
+    curl --location 'http://localhost:6644/v1/files' \
     --header 'Authorization: Bearer YOUR_LLM_API_KEY' \
     --form 'file=@"./path/to/your/document.pdf"' \
     --form 'purpose="vector_search"'
@@ -554,7 +554,7 @@ docker-compose --profile qdrant-mongodb up
     Create a vector store to hold your document embeddings:
 
     ```bash
-    curl --location 'http://localhost:8080/v1/vector_stores' \
+    curl --location 'http://localhost:6644/v1/vector_stores' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer YOUR_LLM_API_KEY' \
     --data '{
@@ -568,7 +568,7 @@ docker-compose --profile qdrant-mongodb up
     Add your uploaded file to the vector store:
 
     ```bash
-    curl --location 'http://localhost:8080/v1/vector_stores/YOUR_VECTOR_STORE_ID/files' \
+    curl --location 'http://localhost:6644/v1/vector_stores/YOUR_VECTOR_STORE_ID/files' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer YOUR_LLM_API_KEY' \
     --data '{
@@ -591,7 +591,7 @@ docker-compose --profile qdrant-mongodb up
     You can directly search for content in your vector store:
 
     ```bash
-    curl --location 'http://localhost:8080/v1/vector_stores/YOUR_VECTOR_STORE_ID/search' \
+    curl --location 'http://localhost:6644/v1/vector_stores/YOUR_VECTOR_STORE_ID/search' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer YOUR_LLM_API_KEY' \
     --data '{
@@ -609,7 +609,7 @@ docker-compose --profile qdrant-mongodb up
     Use the file_search tool to answer questions based on your documents:
 
     ```bash
-    curl --location 'http://localhost:8080/v1/responses' \
+    curl --location 'http://localhost:6644/v1/responses' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer YOUR_LLM_API_KEY' \
     --data '{
@@ -645,7 +645,7 @@ docker-compose --profile qdrant-mongodb up
 <Tabs>
   <Tab title="OpenAI">
     ```bash
-    curl --location 'http://localhost:8080/v1/responses' \
+    curl --location 'http://localhost:6644/v1/responses' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer OPENAI_API_KEY' \
     --data '{
@@ -662,7 +662,7 @@ docker-compose --profile qdrant-mongodb up
   </Tab>
   <Tab title="Claude">
     ```bash
-    curl --location 'http://localhost:8080/v1/responses' \
+    curl --location 'http://localhost:66644/v1/responses' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer ANTHROPIC_API_KEY' \
     --data '{
@@ -679,7 +679,7 @@ docker-compose --profile qdrant-mongodb up
   </Tab>
   <Tab title="Groq (Default)">
     ```bash
-    curl --location 'http://localhost:8080/v1/responses' \
+    curl --location 'http://localhost:6644/v1/responses' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer GROQ_API_KEY' \
     --data '{

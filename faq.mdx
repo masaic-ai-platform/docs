@@ -68,12 +68,12 @@ from openai import OpenAI
 import os
 
 openai_client = OpenAI(
-    base_url="http://localhost:8080/v1", 
+    base_url="http://localhost:6644/v1",
     api_key=os.getenv("OPENAI_API_KEY")
 )
 
 response = openai_client.responses.create(
-    model="gpt-4o-mini",
+    model="openai@gpt-4o-mini",
     input="Tell me a joke"
 )
 ```
@@ -86,14 +86,14 @@ from openai.agents import Agent, OpenAIResponsesModel
 import os
 
 client = AsyncOpenAI(
-    base_url="http://localhost:8080/v1", 
+    base_url="http://localhost:6644/v1",
     api_key=os.getenv("OPENAI_API_KEY")
 )
 
 agent = Agent(
     name="Assistant",
     instructions="You are a humorous poet who can write funny poems of 4 lines.",
-    model=OpenAIResponsesModel(model="gpt-4o-mini", openai_client=client)
+    model=OpenAIResponsesModel(model="openai@gpt-4o-mini", openai_client=client)
 )
 ```
 

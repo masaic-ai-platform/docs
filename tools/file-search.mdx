@@ -37,7 +37,7 @@ Basic configuration requires a query parameter:
 
 <CodeGroup>
 ```bash Basic Configuration
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --data '{
@@ -54,7 +54,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 ```
 
 ```bash Example Query
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --data '{
@@ -194,7 +194,7 @@ The File Search tool excels in specific scenarios where direct, immediate access
 The `filters` parameter allows you to narrow search results based on document metadata:
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --data '{
@@ -234,7 +234,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 Searching across multiple vector stores allows you to find information across different document collections:
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --data '{
@@ -292,7 +292,7 @@ curl --location 'http://localhost:8080/v1/responses' \
   For the most precise results, combine semantic search with metadata filters.
   
   ```bash
-  curl --location 'http://localhost:8080/v1/responses' \
+  curl --location 'http://localhost:6644/v1/responses' \
   --header 'Content-Type: application/json' \
   --header 'Authorization: Bearer $OPENAI_API_KEY' \
   --data '{
@@ -330,7 +330,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --data '{
@@ -364,12 +364,12 @@ curl --location 'http://localhost:8080/v1/responses' \
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="http://localhost:8080/v1",
+    base_url="http://localhost:6644/v1",
     api_key="your_openai_api_key"
 )
 
 response = client.responses.create(
-    model="gpt-4o",
+    model="openai@gpt-4o",
     tools=[{
         "type": "file_search",
         "vector_store_ids": ["vs_technical_docs"],
@@ -401,13 +401,13 @@ print(response)
 import OpenAI from "openai";
 
 const openai = new OpenAI({
-  baseURL: "http://localhost:8080/v1",
+  baseURL: "http://localhost:6644/v1",
   apiKey: "your_openai_api_key"
 });
 
 async function searchDocumentation() {
   const response = await openai.responses.create({
-    model: "gpt-4o",
+    model: "openai@gpt-4o",
     tools: [{
       type: "file_search",
       vector_store_ids: ["vs_technical_docs"],
@@ -469,7 +469,7 @@ async function enhancedResponseWithSearch(query, topic) {
   
   // Use the results to enhance your AI response
   const response = await openai.responses.create({
-    model: "gpt-4o",
+    model: "openai@gpt-4o",
     tools: [{
       type: "file_search",
       vector_store_ids: ["vs_docs", "vs_code_examples"],

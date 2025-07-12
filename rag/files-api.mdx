@@ -51,7 +51,7 @@ Upload a document to make it available for vector stores and semantic search.
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/files' \
+curl --location 'http://localhost:6644/v1/files' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --form 'file=@"/path/to/your/document.pdf"' \
 --form 'purpose="user_data"'
@@ -60,7 +60,7 @@ curl --location 'http://localhost:8080/v1/files' \
 ```python Python
 import requests
 
-url = "http://localhost:8080/v1/files"
+url = "http://localhost:6644/v1/files"
 headers = {
     "Authorization": f"Bearer {your_api_key}"
 }
@@ -108,14 +108,14 @@ Retrieve a list of all files you've uploaded, with optional filtering.
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/files?purpose=user_data&limit=10&order=desc' \
+curl --location 'http://localhost:6644/v1/files?purpose=user_data&limit=10&order=desc' \
 --header 'Authorization: Bearer $YOUR_API_KEY'
 ```
 
 ```python Python
 import requests
 
-url = "http://localhost:8080/v1/files"
+url = "http://localhost:6644/v1/files"
 params = {
     "purpose": "user_data",
     "limit": 10,
@@ -159,14 +159,14 @@ Get metadata about a specific file.
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/files/file_abc123' \
+curl --location 'http://localhost:6644/v1/files/file_abc123' \
 --header 'Authorization: Bearer $YOUR_API_KEY'
 ```
 
 ```python Python
 import requests
 
-url = f"http://localhost:8080/v1/files/{file_id}"
+url = f"http://localhost:6644/v1/files/{file_id}"
 headers = {
     "Authorization": f"Bearer {your_api_key}"
 }
@@ -200,7 +200,7 @@ Download the content of a specific file.
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/files/file_abc123/content' \
+curl --location 'http://localhost:6644/v1/files/file_abc123/content' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --output downloaded_document.pdf
 ```
@@ -208,7 +208,7 @@ curl --location 'http://localhost:8080/v1/files/file_abc123/content' \
 ```python Python
 import requests
 
-url = f"http://localhost:8080/v1/files/{file_id}/content"
+url = f"http://localhost:6644/v1/files/{file_id}/content"
 headers = {
     "Authorization": f"Bearer {your_api_key}"
 }
@@ -233,14 +233,14 @@ Delete a file when it's no longer needed.
 
 <CodeGroup>
 ```bash cURL
-curl --location --request DELETE 'http://localhost:8080/v1/files/file_abc123' \
+curl --location --request DELETE 'http://localhost:6644/v1/files/file_abc123' \
 --header 'Authorization: Bearer $YOUR_API_KEY'
 ```
 
 ```python Python
 import requests
 
-url = f"http://localhost:8080/v1/files/{file_id}"
+url = f"http://localhost:6644/v1/files/{file_id}"
 headers = {
     "Authorization": f"Bearer {your_api_key}"
 }
@@ -271,7 +271,7 @@ After uploading a file, you can add it to a vector store for semantic search. Th
   <Step title="Upload a File">
     Use the Files API to upload your document
     ```bash
-    curl --location 'http://localhost:8080/v1/files' \
+    curl --location 'http://localhost:6644/v1/files' \
     --header 'Authorization: Bearer $YOUR_API_KEY' \
     --form 'file=@"/path/to/your/document.pdf"' \
     --form 'purpose="user_data"'
@@ -280,7 +280,7 @@ After uploading a file, you can add it to a vector store for semantic search. Th
   <Step title="Create a Vector Store">
     If you don't already have a vector store, create one
     ```bash
-    curl --location 'http://localhost:8080/v1/vector_stores' \
+    curl --location 'http://localhost:6644/v1/vector_stores' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer $YOUR_API_KEY' \
     --data '{
@@ -292,7 +292,7 @@ After uploading a file, you can add it to a vector store for semantic search. Th
   <Step title="Add the File to Vector Store">
     Add your uploaded file to the vector store
     ```bash
-    curl --location 'http://localhost:8080/v1/vector_stores/vs_def456/files' \
+    curl --location 'http://localhost:6644/v1/vector_stores/vs_def456/files' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer $YOUR_API_KEY' \
     --data '{
@@ -310,7 +310,7 @@ After uploading a file, you can add it to a vector store for semantic search. Th
   <Step title="Search for Content">
     Now you can search for content in your documents
     ```bash
-    curl --location 'http://localhost:8080/v1/vector_stores/vs_def456/search' \
+    curl --location 'http://localhost:6644/v1/vector_stores/vs_def456/search' \
     --header 'Content-Type: application/json' \
     --header 'Authorization: Bearer $YOUR_API_KEY' \
     --data '{

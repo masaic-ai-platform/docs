@@ -164,7 +164,7 @@ Upload documents using the Files API:
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/files' \
+curl --location 'http://localhost:6644/v1/files' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --form 'file=@"/path/to/your/document.pdf"' \
 --form 'purpose="user_data"'
@@ -173,7 +173,7 @@ curl --location 'http://localhost:8080/v1/files' \
 ```python Python
 import requests
 
-url = "http://localhost:8080/v1/files"
+url = "http://localhost:6644/v1/files"
 headers = {
     "Authorization": f"Bearer {your_api_key}"
 }
@@ -207,7 +207,7 @@ Create a vector store to hold document embeddings:
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/vector_stores' \
+curl --location 'http://localhost:6644/v1/vector_stores' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --data '{
@@ -219,7 +219,7 @@ curl --location 'http://localhost:8080/v1/vector_stores' \
 import requests
 import json
 
-url = "http://localhost:8080/v1/vector_stores"
+url = "http://localhost:6644/v1/vector_stores"
 headers = {
     "Content-Type": "application/json",
     "Authorization": f"Bearer {your_api_key}"
@@ -251,7 +251,7 @@ Add your uploaded files to the vector store:
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/vector_stores/vs_def456/files' \
+curl --location 'http://localhost:6644/v1/vector_stores/vs_def456/files' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --data '{
@@ -274,7 +274,7 @@ curl --location 'http://localhost:8080/v1/vector_stores/vs_def456/files' \
 import requests
 import json
 
-url = "http://localhost:8080/v1/vector_stores/vs_def456/files"
+url = "http://localhost:6644/v1/vector_stores/vs_def456/files"
 headers = {
     "Content-Type": "application/json",
     "Authorization": f"Bearer {your_api_key}"
@@ -328,7 +328,7 @@ Search for relevant content:
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/vector_stores/vs_def456/search' \
+curl --location 'http://localhost:6644/v1/vector_stores/vs_def456/search' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --data '{
@@ -346,7 +346,7 @@ curl --location 'http://localhost:8080/v1/vector_stores/vs_def456/search' \
 import requests
 import json
 
-url = "http://localhost:8080/v1/vector_stores/vs_def456/search"
+url = "http://localhost:6644/v1/vector_stores/vs_def456/search"
 headers = {
     "Content-Type": "application/json",
     "Authorization": f"Bearer {your_api_key}"
@@ -374,7 +374,7 @@ You can integrate RAG with OpenAI models by using the `file_search` tool:
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --data '{
@@ -410,12 +410,12 @@ curl --location 'http://localhost:8080/v1/responses' \
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="http://localhost:8080/v1",
+    base_url="http://localhost:6644/v1",
     api_key="your_openai_api_key"
 )
 
 response = client.responses.create(
-    model="gpt-4o",
+    model="openai@gpt-4o",
     store=True,
     tools=[{
         "type": "file_search",

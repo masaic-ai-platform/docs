@@ -27,7 +27,7 @@ OpenResponses supports various model providers that can be used with the `provid
 ### OpenAI
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --data '{
@@ -55,7 +55,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 ### Claude / Anthropic
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $ANTHROPIC_API_KEY' \
 --data '{
@@ -73,7 +73,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 ### Groq
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $GROQ_API_KEY' \
 --data '{
@@ -105,7 +105,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 ### TogetherAI
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $TOGETHER_API_KEY' \
 --data '{
@@ -121,7 +121,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 ### Google / Gemini
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $GOOGLE_API_KEY' \
 --data '{
@@ -137,7 +137,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 ### DeepSeek
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $DEEPSEEK_API_KEY' \
 --data '{
@@ -150,7 +150,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 ### Ollama (Local)
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --data '{
     "model": "ollama@llama3",
@@ -162,7 +162,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 ### xAI
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $XAI_API_KEY' \
 --data '{
@@ -177,7 +177,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 For any model provider not listed above, you can use the `model_endpoint@model_name` convention by directly specifying the full API endpoint URL:
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --data '{
@@ -190,7 +190,7 @@ curl --location 'http://localhost:8080/v1/responses' \
 ### Example with Local LLM Server
 
 ```bash
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --data '{
     "model": "http://localhost:1234/v1@local-model",
