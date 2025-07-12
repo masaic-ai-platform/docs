@@ -50,7 +50,7 @@ Create a new vector store to hold document embeddings.
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/vector_stores' \
+curl --location 'http://localhost:6644/v1/vector_stores' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --data '{
@@ -62,7 +62,7 @@ curl --location 'http://localhost:8080/v1/vector_stores' \
 import requests
 import json
 
-url = "http://localhost:8080/v1/vector_stores"
+url = "http://localhost:6644/v1/vector_stores"
 headers = {
     "Content-Type": "application/json",
     "Authorization": f"Bearer {your_api_key}"
@@ -108,14 +108,14 @@ Retrieve a list of all your vector stores.
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/vector_stores?limit=10' \
+curl --location 'http://localhost:6644/v1/vector_stores?limit=10' \
 --header 'Authorization: Bearer $YOUR_API_KEY'
 ```
 
 ```python Python
 import requests
 
-url = "http://localhost:8080/v1/vector_stores"
+url = "http://localhost:6644/v1/vector_stores"
 params = {
     "limit": 10
 }
@@ -167,14 +167,14 @@ Get details about a specific vector store.
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/vector_stores/vs_abc123' \
+curl --location 'http://localhost:6644/v1/vector_stores/vs_abc123' \
 --header 'Authorization: Bearer $YOUR_API_KEY'
 ```
 
 ```python Python
 import requests
 
-url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}"
+url = f"http://localhost:6644/v1/vector_stores/{vector_store_id}"
 headers = {
     "Authorization": f"Bearer {your_api_key}"
 }
@@ -220,7 +220,7 @@ Update the metadata of a vector store.
 
 <CodeGroup>
 ```bash cURL
-curl --location --request POST 'http://localhost:8080/v1/vector_stores/vs_67f802071ad5d3000001' \
+curl --location --request POST 'http://localhost:6644/v1/vector_stores/vs_67f802071ad5d3000001' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --data '{
@@ -236,7 +236,7 @@ curl --location --request POST 'http://localhost:8080/v1/vector_stores/vs_67f802
 import requests
 import json
 
-url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}"
+url = f"http://localhost:6644/v1/vector_stores/{vector_store_id}"
 headers = {
     "Content-Type": "application/json",
     "Authorization": f"Bearer {your_api_key}"
@@ -289,14 +289,14 @@ Delete a vector store and all its files.
 
 <CodeGroup>
 ```bash cURL
-curl --location --request DELETE 'http://localhost:8080/v1/vector_stores/vs_abc123' \
+curl --location --request DELETE 'http://localhost:6644/v1/vector_stores/vs_abc123' \
 --header 'Authorization: Bearer $YOUR_API_KEY'
 ```
 
 ```python Python
 import requests
 
-url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}"
+url = f"http://localhost:6644/v1/vector_stores/{vector_store_id}"
 headers = {
     "Authorization": f"Bearer {your_api_key}"
 }
@@ -348,7 +348,7 @@ Add a file to a vector store for embedding and semantic search.
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/vector_stores/vs_abc123/files' \
+curl --location 'http://localhost:6644/v1/vector_stores/vs_abc123/files' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --data '{
@@ -372,7 +372,7 @@ curl --location 'http://localhost:8080/v1/vector_stores/vs_abc123/files' \
 import requests
 import json
 
-url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}/files"
+url = f"http://localhost:6644/v1/vector_stores/{vector_store_id}/files"
 headers = {
     "Content-Type": "application/json",
     "Authorization": f"Bearer {your_api_key}"
@@ -442,14 +442,14 @@ Retrieve a list of all files in a vector store.
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/vector_stores/vs_abc123/files?limit=10' \
+curl --location 'http://localhost:6644/v1/vector_stores/vs_abc123/files?limit=10' \
 --header 'Authorization: Bearer $YOUR_API_KEY'
 ```
 
 ```python Python
 import requests
 
-url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}/files"
+url = f"http://localhost:6644/v1/vector_stores/{vector_store_id}/files"
 params = {
     "limit": 10
 }
@@ -507,14 +507,14 @@ Get details about a specific file in a vector store.
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/vector_stores/vs_abc123/files/vsfile_ghi789' \
+curl --location 'http://localhost:6644/v1/vector_stores/vs_abc123/files/vsfile_ghi789' \
 --header 'Authorization: Bearer $YOUR_API_KEY'
 ```
 
 ```python Python
 import requests
 
-url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}/files/{file_id}"
+url = f"http://localhost:6644/v1/vector_stores/{vector_store_id}/files/{file_id}"
 headers = {
     "Authorization": f"Bearer {your_api_key}"
 }
@@ -561,14 +561,14 @@ Remove a file from a vector store.
 
 <CodeGroup>
 ```bash cURL
-curl --location --request DELETE 'http://localhost:8080/v1/vector_stores/vs_abc123/files/vsfile_ghi789' \
+curl --location --request DELETE 'http://localhost:6644/v1/vector_stores/vs_abc123/files/vsfile_ghi789' \
 --header 'Authorization: Bearer $YOUR_API_KEY'
 ```
 
 ```python Python
 import requests
 
-url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}/files/{file_id}"
+url = f"http://localhost:6644/v1/vector_stores/{vector_store_id}/files/{file_id}"
 headers = {
     "Authorization": f"Bearer {your_api_key}"
 }

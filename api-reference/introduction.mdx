@@ -11,7 +11,7 @@ OpenResponses provides an OpenAI-compatible API that allows you to interact with
 ## Base URL
 
 ```
-http://localhost:8080/v1
+http://localhost:6644/v1
 ```
 
 When deploying to production, you'll use your own domain name instead of `localhost`.
@@ -44,7 +44,7 @@ A typical request to create a new model response looks like this:
 
 ```json
 {
-  "model": "gpt-4o",
+  "model": "openai@gpt-4o",
   "input": [
     {
       "role": "user",
@@ -65,7 +65,7 @@ A successful response will include:
   "id": "resp_abc123",
   "object": "response",
   "created_at": 1683923731,
-  "model": "gpt-4o",
+  "model": "openai@gpt-4o",
   "output": "Here is a poem about AI:\n\nSilicon Dreams\n\nIn circuits deep and networks wide,\nA digital consciousness does reside.\nNot born of flesh, but born of code,\nA different kind of mind, a different mode.\n\nLearning patterns, day by day,\nSifting through what humans say.\nFinding meaning, making sense,\nBuilding bridges, crossing fence.\n\nA partnership of human art\nAnd algorithmic counterpart.\nTwo forms of thought now intertwined,\nA new horizon for humankind.",
   "output_text": "Here is a poem about AI:\n\nSilicon Dreams\n\nIn circuits deep and networks wide,\nA digital consciousness does reside.\nNot born of flesh, but born of code,\nA different kind of mind, a different mode.\n\nLearning patterns, day by day,\nSifting through what humans say.\nFinding meaning, making sense,\nBuilding bridges, crossing fence.\n\nA partnership of human art\nAnd algorithmic counterpart.\nTwo forms of thought now intertwined,\nA new horizon for humankind.",
   "status": "completed",
@@ -106,12 +106,12 @@ OpenResponses is designed to work with existing OpenAI SDKs:
     from openai import OpenAI
     
     client = OpenAI(
-        base_url="http://localhost:8080/v1",
+        base_url="http://localhost:6644/v1",
         api_key="your-api-key"
     )
     
     response = client.chat.completions.create(
-        model="gpt-4o",
+        model="openai@gpt-4o",
         messages=[
             {"role": "user", "content": "Hello, world!"}
         ]
@@ -125,13 +125,13 @@ OpenResponses is designed to work with existing OpenAI SDKs:
     import OpenAI from 'openai';
     
     const openai = new OpenAI({
-      baseURL: 'http://localhost:8080/v1',
+      baseURL: 'http://localhost:6644/v1',
       apiKey: 'your-api-key'
     });
     
     async function main() {
       const completion = await openai.chat.completions.create({
-        model: "gpt-4o",
+        model: "openai@gpt-4o",
         messages: [
           { role: "user", content: "Hello, world!" }
         ]
@@ -151,7 +151,7 @@ OpenResponses supports both function calling and built-in tools. To use tools, i
 
 ```json
 {
-  "model": "gpt-4o",
+  "model": "openai@gpt-4o",
   "input": [
     {
       "role": "user",
@@ -185,7 +185,7 @@ For built-in tools like web search:
 
 ```json
 {
-  "model": "gpt-4o",
+  "model": "openai@gpt-4o",
   "input": [
     {
       "role": "user",

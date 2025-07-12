@@ -104,7 +104,7 @@ docker-compose --profile mongodb up -d
 ### Storing a New Conversation
 
 ```bash
-curl http://localhost:8080/v1/responses \
+curl http://localhost:6644/v1/responses \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{
@@ -128,7 +128,7 @@ When you make a request to store a conversation, you'll receive a response that 
     "incomplete_details": null,
     "instructions": null,
     "metadata": null,
-    "model": "gpt-4o-2024-08-06",
+    "model": "openai@gpt-4o-2024-08-06",
     "object": "response",
     "output": [
         {
@@ -169,7 +169,7 @@ When you make a request to store a conversation, you'll receive a response that 
 To reference a previously stored conversation, use the response ID:
 
 ```bash
-curl http://localhost:8080/v1/responses \
+curl http://localhost:6644/v1/responses \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $OPENAI_API_KEY" \
   -d '{

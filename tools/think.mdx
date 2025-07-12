@@ -165,7 +165,7 @@ Explicitly record assumptions being made:
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --data '{
@@ -188,12 +188,12 @@ curl --location 'http://localhost:8080/v1/responses' \
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="http://localhost:8080/v1",
+    base_url="http://localhost:6644/v1",
     api_key="your_openai_api_key"
 )
 
 response = client.responses.create(
-    model="gpt-4o",
+    model="openai@gpt-4o",
     tools=[
         {
             "type": "think"
@@ -215,7 +215,7 @@ print(response)
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --data '{
@@ -238,12 +238,12 @@ curl --location 'http://localhost:8080/v1/responses' \
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="http://localhost:8080/v1",
+    base_url="http://localhost:6644/v1",
     api_key="your_openai_api_key"
 )
 
 response = client.responses.create(
-    model="gpt-4o",
+    model="openai@gpt-4o",
     tools=[
         {
             "type": "think"

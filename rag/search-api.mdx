@@ -56,7 +56,7 @@ Search for relevant content within a vector store.
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/vector_stores/vs_67f8046b1ad5d3000012/search' \
+curl --location 'http://localhost:6644/v1/vector_stores/vs_67f8046b1ad5d3000012/search' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $YOUR_API_KEY' \
 --data '{
@@ -87,7 +87,7 @@ curl --location 'http://localhost:8080/v1/vector_stores/vs_67f8046b1ad5d3000012/
 import requests
 import json
 
-url = f"http://localhost:8080/v1/vector_stores/{vector_store_id}/search"
+url = f"http://localhost:6644/v1/vector_stores/{vector_store_id}/search"
 headers = {
     "Content-Type": "application/json",
     "Authorization": f"Bearer {your_api_key}"
@@ -511,7 +511,7 @@ The `file_search` tool provides an alternative way to search vector stores throu
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --data '{
@@ -545,12 +545,12 @@ curl --location 'http://localhost:8080/v1/responses' \
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="http://localhost:8080/v1",
+    base_url="http://localhost:6644/v1",
     api_key="your_openai_api_key"
 )
 
 response = client.responses.create(
-    model="gpt-4o",
+    model="openai@gpt-4o",
     tools=[{
         "type": "file_search",
         "vector_store_ids": ["vs_abc123"],
@@ -591,7 +591,7 @@ The `agentic_search` tool offers an AI-guided approach to search that handles co
 
 <CodeGroup>
 ```bash cURL
-curl --location 'http://localhost:8080/v1/responses' \
+curl --location 'http://localhost:6644/v1/responses' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer $OPENAI_API_KEY' \
 --data '{
@@ -629,12 +629,12 @@ curl --location 'http://localhost:8080/v1/responses' \
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="http://localhost:8080/v1",
+    base_url="http://localhost:6644/v1",
     api_key="your_openai_api_key"
 )
 
 response = client.responses.create(
-    model="gpt-4o",
+    model="openai@gpt-4o",
     tools=[{
         "type": "agentic_search",
         "vector_store_ids": ["vs_abc123"],
